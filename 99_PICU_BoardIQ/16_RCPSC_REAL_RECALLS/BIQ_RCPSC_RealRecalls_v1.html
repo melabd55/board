@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>RCPSC Real Recalls — Pediatric Neurocritical Care</title>
+<style>
+:root{
+  --bg:#06122A; --surface:#0F1F3D; --surface-2:#18294A; --hover:#1F3358;
+  --border:#1F3358; --teal:#14B8A6; --blue:#1B6CB6; --amber:#F59E0B;
+  --coral:#EF4444; --green:#22C55E; --text:#E2ECFF; --dim:#9BB3D9;
+}
+*{box-sizing:border-box;}
+body{margin:0;padding:0;font-family:system-ui,-apple-system,Segoe UI,Inter,Arial;
+  background:radial-gradient(circle at top left,#0a2540 0%,#06122A 60%) fixed;
+  color:var(--text);line-height:1.6;min-height:100vh;}
+.wrap{max-width:980px;margin:0 auto;padding:24px 24px 80px;}
+.back-bar{background:var(--surface);border:1px solid var(--border);border-radius:10px;
+  padding:10px 18px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;}
+.back-bar a{color:var(--teal);text-decoration:none;font-weight:600;font-size:0.95em;}
+.back-bar a:hover{color:#fff;}
+.back-bar .meta{color:var(--dim);font-size:0.88em;}
+header{background:linear-gradient(135deg,#0F1F3D 0%,#1B6CB6 60%,#14B8A6 130%);
+  color:#fff;padding:26px 30px;border-radius:16px;margin-bottom:22px;
+  box-shadow:0 8px 28px rgba(0,0,0,0.25);}
+header h1{margin:0 0 6px;font-size:1.8em;letter-spacing:-0.01em;}
+header p{margin:6px 0 0;opacity:0.95;}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;}
+.btn{background:var(--surface);border:1px solid var(--border);color:var(--text);
+  padding:9px 16px;border-radius:8px;font-weight:600;cursor:pointer;font-size:0.92em;
+  transition:all .15s;font-family:inherit;}
+.btn:hover{background:var(--hover);border-color:var(--teal);color:#fff;}
+.btn.primary{background:var(--teal);color:#06122A;border-color:var(--teal);}
+.btn.primary:hover{background:#0d9488;color:#fff;}
+.qcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:22px 26px;margin-bottom:18px;box-shadow:0 4px 18px rgba(0,0,0,0.2);}
+.qcard.answered{border-left:4px solid var(--teal);}
+.q-num{display:inline-block;background:var(--blue);color:#fff;padding:3px 12px;
+  border-radius:14px;font-size:0.82em;font-weight:700;margin-right:8px;}
+.q-tag{display:inline-block;background:rgba(20,184,166,0.15);color:var(--teal);
+  padding:3px 10px;border-radius:10px;font-size:0.78em;font-weight:600;margin-right:6px;}
+.q-stem{margin:14px 0;color:var(--text);font-size:1.02em;}
+.q-stem strong{color:#fff;}
+.q-prompt{margin:14px 0;padding:14px 18px;background:var(--surface-2);
+  border-left:3px solid var(--amber);border-radius:6px;font-weight:600;color:#fff;}
+.reveal-btn{margin:10px 0;padding:10px 18px;background:var(--teal);color:#06122A;
+  border:none;border-radius:8px;font-weight:700;cursor:pointer;font-family:inherit;}
+.reveal-btn:hover{background:#0d9488;color:#fff;}
+.answer-block{display:none;margin-top:14px;padding:18px 22px;background:var(--surface-2);
+  border:1px solid var(--teal);border-radius:10px;}
+.answer-block.shown{display:block;}
+.answer-block h4{margin:0 0 8px;color:var(--teal);font-size:1.05em;letter-spacing:0.5px;}
+.answer-block .reasoning{margin:10px 0;padding:10px 14px;background:rgba(20,184,166,0.06);
+  border-left:3px solid var(--teal);border-radius:4px;}
+.answer-block .reasoning b{color:var(--amber);}
+.answer-block .pearl{margin-top:12px;padding:10px 14px;background:rgba(245,158,11,0.10);
+  border-left:3px solid var(--amber);border-radius:4px;color:var(--text);font-size:0.93em;}
+.answer-block .pearl b{color:var(--amber);}
+.chapter-ref{display:inline-block;margin-top:10px;color:var(--dim);font-size:0.85em;}
+.progress-summary{background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:14px 20px;margin-bottom:18px;display:flex;gap:24px;
+  flex-wrap:wrap;font-size:0.92em;}
+.progress-summary span{color:var(--dim);}
+.progress-summary b{color:var(--teal);font-size:1.1em;}
+.placeholder-card{background:var(--surface);border:1px dashed var(--border);
+  border-radius:14px;padding:20px;margin-bottom:18px;color:var(--dim);text-align:center;
+  font-style:italic;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="back-bar">
+  <a href="../00_APP/PICU_BoardIQ_v2.html">← Back to PICU BoardIQ</a>
+  <span class="meta">RCPSC Real Recalls · Pediatric Neurocritical Care</span>
+</div>
+
+<header>
+  <h1>RCPSC Real Recalls</h1>
+  <p>High-yield short-answer questions covering Rogers Ch 53–68. Each question requires <strong>2–3 layers of clinical reasoning</strong> — recognize the syndrome, apply pathophysiology, and choose the most time-critical action.</p>
+</header>
+
+<div class="progress-summary">
+  <span><b id="totalQ">0</b> total questions</span>
+  <span><b id="seenQ">0</b> revealed</span>
+  <span><b>Target: 32</b> · all original content</span>
+</div>
+
+<div class="toolbar">
+  <button class="btn primary" onclick="revealAll()">Reveal all answers</button>
+  <button class="btn" onclick="hideAll()">Hide all answers</button>
+  <button class="btn" onclick="window.print()">Print / Save as PDF</button>
+</div>
+
+<div id="questions"></div>
+
+<div class="placeholder-card">
+  RCPSC Real Recalls bank <strong>COMPLETE</strong> — 32 / 32 short-answer questions with multi-layered reasoning. Use the buttons above to reveal model answers.
+</div>
+
+<script>
+const RECALLS = [
+  {
+    id: "RR01",
+    tags: ["Status epilepticus", "Ch 64"],
+    stem: "A 6-year-old presents with a generalized tonic-clonic seizure that began 35 minutes ago. He has received two IV doses of lorazepam (each 0.1 mg/kg, 5 min apart) and a full loading dose of fosphenytoin (20 mg PE/kg). He is still seizing. Vitals: HR 150, BP 110/70, SpO2 97% on 100% non-rebreather, glucose 5.6 mmol/L. There is no history of trauma, intoxication, or known epilepsy.",
+    prompt: "List, in order of priority, the next four steps in management. For each, state the key threshold or end-point that should drive your decision.",
+    answer: `
+      <h4>Model answer</h4>
+      <div class="reasoning">
+        <b>Layer 1 — Stage of status:</b> He now meets the definition of <i>refractory status epilepticus</i> (RSE) — seizing beyond 30 min and failed 2 first-line + 1 second-line agent. Time-to-RSE is the strongest predictor of mortality and long-term morbidity; further delay carries unacceptable risk.
+      </div>
+      <div class="reasoning">
+        <b>Layer 2 — Airway and circulation precede further drugs:</b> Anaesthetic doses of induction agents collapse blood pressure; an intubated airway and a vasopressor-ready line are mandatory before bolus.
+      </div>
+      <ol>
+        <li><strong>Rapid sequence intubation with continuous video EEG initiation.</strong> End-point: secured airway, capnography, and EEG leads applied within ≤10 min.</li>
+        <li><strong>Induce burst-suppression with a continuous infusion</strong> (midazolam 0.2 mg/kg bolus then 0.1–2 mg/kg/h, OR pentobarbital 5 mg/kg bolus then 1–5 mg/kg/h, OR propofol if &gt; 16 y). End-point: EEG burst-suppression (1–2 bursts/10 sec) for ≥ 24 h.</li>
+        <li><strong>Identify and treat reversible cause.</strong> Send glucose, sodium, calcium, magnesium, ammonia, lactate, blood gas, toxicology, and CSF (after head CT). Empiric pyridoxine 100 mg IV under any age &lt; 18 m. Empiric acyclovir + ceftriaxone + vancomycin if CSF pending. End-point: documented or excluded metabolic/infectious cause.</li>
+        <li><strong>Hemodynamic support and complication surveillance.</strong> Arterial line, MAP target appropriate for age (rough &gt; 65 + 1.5 × age in years), watch for propofol infusion syndrome (lactate, CK, triglycerides q12h), pressure injury, ileus, and infection. End-point: MAP target maintained without rising lactate or rhabdo.</li>
+      </ol>
+      <div class="pearl">
+        <b>Pearl:</b> The single most important number in RSE is the <i>time since seizure onset</i>, not which drug was given last. Every additional minute of electrographic activity adds neuronal injury independent of clinical convulsion.
+      </div>
+      <div class="chapter-ref">Cross-references: Ch 64 (Status Epilepticus), Ch 59 (Monitoring).</div>
+    `
+  },
+  {
+    id: "RR02",
+    tags: ["Severe TBI", "ICP crisis", "Ch 62"],
+    stem: "A 14-year-old is admitted after a high-speed motor vehicle collision. GCS 5 at the scene; he was intubated in the field. CT shows diffuse axonal injury, small bifrontal contusions, and effacement of basal cisterns without midline shift. An external ventricular drain (EVD) is placed; opening ICP is 28 mmHg, MAP is 85, and after 20 min of head-of-bed elevation, neutral neck positioning, deep sedation, and a CSF drain to 12 cmH₂O, ICP is still 26 mmHg.",
+    prompt: "Outline your tiered escalation over the next 60 minutes. Specify (a) the next pharmacologic intervention and dosing, (b) the haemodynamic target you must hit before that intervention, (c) the two physiologic end-points you will follow, and (d) two interventions you must explicitly avoid.",
+    answer: `
+      <h4>Model answer</h4>
+      <div class="reasoning">
+        <b>Layer 1 — Failed Tier 1:</b> Sedation, neutral positioning, CSF drainage are tier 1. Failure means escalate to <strong>tier 2 hyperosmolar therapy</strong>, not jump to hyperventilation.
+      </div>
+      <div class="reasoning">
+        <b>Layer 2 — CPP precedes osmoles:</b> CPP target in adolescents is roughly 60–70 mmHg. With ICP 26 and MAP 85, CPP = 59 mmHg — borderline. Hyperosmolar agents can cause transient pressure drop; ensure norepinephrine ready and a CPP &gt; 60 BEFORE bolus.
+      </div>
+      <ul>
+        <li><strong>(a) 3% hypertonic saline 5 mL/kg over 15 minutes</strong> via central access (alternative: mannitol 0.5–1 g/kg IV bolus if euvolemic and serum osm &lt; 320).</li>
+        <li><strong>(b) MAP target ≥ 75</strong> to keep CPP ≥ 60 during and after bolus. Start norepinephrine 0.05 mcg/kg/min if needed.</li>
+        <li><strong>(c) Two end-points:</strong> (i) ICP ≤ 20 mmHg sustained ≥ 30 min, (ii) serum sodium 145–155 mmol/L without exceeding 160; serum osm ≤ 320 if mannitol used.</li>
+        <li><strong>(d) Avoid:</strong> (i) prophylactic hyperventilation to PaCO₂ &lt; 30 (causes ischaemic vasoconstriction); (ii) corticosteroids in TBI (CRASH trial — increased mortality).</li>
+      </ul>
+      <div class="pearl">
+        <b>Pearl:</b> Hypertonic 3% saline is preferred over mannitol when the patient is hypovolaemic or hypotensive because it expands intravascular volume, where mannitol causes osmotic diuresis. Both raise serum sodium — but only mannitol drops volume.
+      </div>
+      <div class="chapter-ref">Cross-references: Ch 62 (TBI), Ch 59 (Monitoring), Ch 61 (Neurosurgical CC).</div>
+    `
+  },
+  {
+    id: "RR03",
+    tags: ["Brain death", "Apnea test", "Ch 68"],
+    stem: "An 11-year-old is being assessed for neurologic determination of death (NDD) after severe anoxic injury (downtime ≈ 25 min, post-cardiac arrest day 4). Core temperature 36.4 °C, MAP 70, no sedation for 48 h. Family has been counselled. The intensivist intends to proceed with the first apnea test.",
+    prompt: "List the four physiologic prerequisites that must be met before the apnea test, the technique you will use, and the two criteria that confirm a positive (apnea-test-supportive-of-NDD) result. State one absolute contraindication that mandates an ancillary test instead.",
+    answer: `
+      <h4>Model answer</h4>
+      <div class="reasoning">
+        <b>Layer 1 — Confounders must be excluded</b> before any element of the brain death examination, not only before the apnea test.
+      </div>
+      <div class="reasoning">
+        <b>Layer 2 — The apnea test is a CO₂ stimulus test</b>: you are documenting that the brainstem fails to drive respiration despite a strong respiratory acidosis stimulus.
+      </div>
+      <strong>Prerequisites (all four required):</strong>
+      <ol>
+        <li>Core temperature ≥ 36 °C (≥ 36.5 °C in neonates per most pediatric guidelines).</li>
+        <li>Systolic BP appropriate for age (≥ 5th percentile) — usually requires MAP ≥ 60.</li>
+        <li>Euvolemia and electrolytes in safe range (Na 130–160, glucose &gt; 3.3 mmol/L).</li>
+        <li>No CNS-depressant drug effect, no neuromuscular blockade, and no severe metabolic derangement that could mimic brain death.</li>
+      </ol>
+      <strong>Technique:</strong> Pre-oxygenate to PaO₂ &gt; 200 with FiO₂ 1.0 for 10 min. Establish baseline PaCO₂ 35–45 (or eucapnia if known chronic CO₂ retention). Disconnect ventilator; deliver O₂ at 6 L/min via tracheal catheter or T-piece. Observe for spontaneous respiratory effort for 8–10 min. Draw repeat ABG.
+      <br><br>
+      <strong>Two positive criteria:</strong> (i) PaCO₂ ≥ 60 mmHg <em>AND</em> ≥ 20 mmHg above the patient's baseline, AND (ii) absence of any respiratory effort during the observation period.
+      <br><br>
+      <strong>Absolute contraindication →</strong> ancillary test (e.g., 4-vessel angiography, radionuclide cerebral perfusion, or transcranial Doppler): inability to safely tolerate disconnection (severe hypoxia, refractory shock), high cervical cord injury, severe hypercapnia at baseline (chronic lung disease), or new sedation/paralysis effects that cannot be cleared.
+      <div class="pearl">
+        <b>Pearl:</b> In Canada, two independent physicians perform separate examinations; in patients ≥ 1 year, an inter-examination interval is recommended but not strictly mandated. Ancillary tests are <em>not</em> required if the clinical exam and apnea test are unambiguous.
+      </div>
+      <div class="chapter-ref">Cross-references: Ch 68 (Brain death).</div>
+    `
+  },
+  {
+    id: "RR04",
+    tags: ["HIE", "Therapeutic hypothermia", "Ch 66"],
+    stem: "A term newborn (39 + 4 weeks, birth weight 3.2 kg) was born by emergency C-section after a placental abruption. Apgars were 2 / 4 / 6 at 1 / 5 / 10 min. Cord arterial pH 6.92, base deficit 18. The baby was intubated at 8 min, and at 30 min of life is hypotonic with poor suck, intermittent eye-rolling, and pupils 3 mm and sluggishly reactive. Current age: 75 min.",
+    prompt: "(a) State whether this infant meets eligibility for therapeutic hypothermia and justify with two criteria sets. (b) Specify the target core temperature, duration, time-to-initiate window, and rewarming rate. (c) Name three physiologic complications you will actively monitor for during cooling.",
+    answer: `
+      <h4>Model answer</h4>
+      <div class="reasoning">
+        <b>Layer 1 — Eligibility uses BOTH a perinatal/biochemical criterion AND a neurologic criterion.</b>
+      </div>
+      <div class="reasoning">
+        <b>Layer 2 — Window matters:</b> initiation should be within 6 h of birth; benefit is reduced or absent beyond that. Continuous aEEG/EEG is required where available.
+      </div>
+      <strong>(a) Eligible — meets both arms:</strong>
+      <ul>
+        <li><em>Set A — perinatal/biochemical:</em> cord pH &lt; 7.0 OR base deficit ≥ 16 (this patient: pH 6.92, BD 18). Adjunctive: low Apgar at 10 min, need for resuscitation beyond 10 min.</li>
+        <li><em>Set B — neurologic:</em> moderate-to-severe encephalopathy on standardized exam (e.g., modified Sarnat: ≥ 3 of altered consciousness/spontaneous activity/posture/tone/primitive reflexes/autonomic — this patient: hypotonia, poor suck, abnormal eye movements). Or aEEG demonstrating moderate-severe abnormality.</li>
+      </ul>
+      <strong>(b)</strong> Core temperature <strong>33.5 °C</strong> (whole-body) for <strong>72 hours</strong>, started <strong>within 6 h of birth</strong>, rewarmed at <strong>0.5 °C per hour</strong>.
+      <br><br>
+      <strong>(c) Active monitoring (any three):</strong>
+      <ol>
+        <li>Bradycardia and prolonged QTc — keep HR appropriate for temperature; monitor for arrhythmia.</li>
+        <li>Coagulopathy and thrombocytopenia (cooling worsens both); plus subcutaneous fat necrosis after 1 week.</li>
+        <li>Hypoglycemia, hypocalcemia, and hyperkalaemia at rewarming.</li>
+        <li>Pulmonary hypertension and refractory hypoxemia (especially with concurrent meconium aspiration).</li>
+        <li>Seizures — clinical and electrographic — these often emerge at 24–48 h and may be subclinical; continuous EEG is essential.</li>
+      </ol>
+      <div class="pearl">
+        <b>Pearl:</b> Do NOT delay cooling for transfer or for imaging. Passive cooling (turning off the warmer, removing covers) can be safely begun during transport while you reach a facility with active cooling and EEG.
+      </div>
+      <div class="chapter-ref">Cross-references: Ch 66 (HIE), Ch 59 (Monitoring).</div>
+    `
+  },
+  {
+    id: "RR05",
+    tags: ["Acute neuromuscular", "GBS", "Ch 54"],
+    stem: "A 9-year-old presents with 4 days of progressive ascending weakness. He now cannot walk unaided. Reflexes are absent throughout. Forced vital capacity is 14 mL/kg (down from 22 mL/kg this morning), maximal inspiratory pressure (NIF) is −22 cmH₂O, and he has a weak cough with pooled secretions. He is awake and afebrile; vitals: HR 130 with periods of bradycardia, BP 145/95 alternating with 95/55, RR 28.",
+    prompt: "(a) Name the syndrome and the variant you suspect from autonomic features. (b) State whether intubation should be elective or only on respiratory arrest, and give the two pulmonary thresholds that should trigger you. (c) Name the disease-modifying therapy and the most important contraindication to consider before giving it.",
+    answer: `
+      <h4>Model answer</h4>
+      <div class="reasoning">
+        <b>Layer 1 — Recognize Guillain-Barré syndrome</b> (ascending areflexic weakness, days after presumed viral prodrome). Autonomic lability (BP and HR swings) is classic for severe demyelinating disease.
+      </div>
+      <div class="reasoning">
+        <b>Layer 2 — Anticipate, don't react.</b> Wait-and-see leads to crash intubation under cholinergic conditions and aspirated stomach contents.
+      </div>
+      <strong>(a)</strong> Guillain-Barré syndrome — likely acute inflammatory demyelinating polyneuropathy (AIDP); the prominent dysautonomia (alternating tachy/brady, labile BP) is more typical of severe demyelinating forms; bulbar predominant variants such as Miller-Fisher are less consistent here.
+      <br><br>
+      <strong>(b) Elective intubation now.</strong> Thresholds (the "20/30/40 rule"):
+      <ul>
+        <li>NIF less negative than −20 cmH₂O (this patient: −22, deteriorating).</li>
+        <li>FVC &lt; 20 mL/kg or falling by &gt; 30% in 24 h (this patient: from 22 → 14 in &lt; 12 h).</li>
+        <li>Maximal expiratory pressure &lt; 40 cmH₂O.</li>
+      </ul>
+      Any one triggers proactive ICU intubation; meeting two or more is an emergency. Bulbar weakness with pooled secretions independently warrants airway protection.
+      <br><br>
+      <strong>(c)</strong> Either <strong>IVIG 2 g/kg over 2–5 days</strong> or <strong>plasma exchange</strong>. The most important contraindication / caution before IVIG is <strong>IgA deficiency</strong> (risk of anaphylactic reaction with IgA-containing preparations); also check for known hypersensitivity, severe renal impairment (use sucrose-free preparations and slow rate), and pre-existing thrombotic risk.
+      <div class="pearl">
+        <b>Pearl:</b> Avoid succinylcholine for intubation in any patient with subacute denervation — risk of hyperkalemic arrest from up-regulated extra-junctional acetylcholine receptors. Use rocuronium 1.0 mg/kg.
+      </div>
+      <div class="chapter-ref">Cross-references: Ch 54 (Acute Neuromuscular Disease), Ch 53 (Electrodiagnostic Techniques).</div>
+    `
+  },
+  {
+    id: "RR06",
+    tags: ["Pediatric stroke", "Sickle cell", "Ch 65"],
+    stem: "A 7-year-old with known HbSS sickle cell disease presents with acute right hemiparesis and dysphasia, onset 90 minutes ago. He has had no prior strokes and last transfusion was 3 weeks ago (HbS = 28%). Vitals: HR 110, BP 120/72, SpO2 96% on room air, temperature 37.8 °C, Hb 78 g/L. CT shows no haemorrhage; MRI/MRA confirms acute left MCA territory infarct with proximal MCA stenosis.",
+    prompt: "(a) Identify the immediate disease-specific definitive therapy and your target endpoint (state the laboratory value). (b) Explain why IV tPA is generally avoided in this patient even though he is within window. (c) After the acute event, what secondary-prevention strategy is recommended and on what surveillance is it adjusted?",
+    answer: `
+      <h4>Model answer</h4>
+      <div class="reasoning">
+        <b>Layer 1 — Sickle stroke is a flow problem driven by HbS percentage</b>, not a thromboembolus. The definitive acute treatment reduces HbS.
+      </div>
+      <div class="reasoning">
+        <b>Layer 2 — Standard ischemic-stroke pathways do not apply</b>: tPA, antiplatelets, and mechanical thrombectomy lack supportive data in this population and carry incremental risk.
+      </div>
+      <strong>(a)</strong> <strong>Emergent exchange transfusion</strong> targeting HbS &lt; 30% (some recommend &lt; 20% acutely) while keeping total Hb roughly 100–110 g/L (avoid over-transfusion above 110 — hyperviscosity worsens infarction). Begin simple transfusion immediately if exchange will be delayed.
+      <br><br>
+      <strong>(b)</strong> Pediatric tPA dosing and safety in this age group are not established, and intravenous thrombolysis has not been shown to improve outcomes in sickle-related stroke where the dominant pathology is vasculopathy + sickled erythrocytes rather than thromboembolism. Risk of intracranial haemorrhage is presumed higher.
+      <br><br>
+      <strong>(c)</strong> <strong>Chronic transfusion programme</strong> (simple or exchange) maintained for years, with the target of <strong>HbS &lt; 30%</strong>. Adjustment is based on serial <strong>transcranial Doppler (TCD)</strong> middle-cerebral artery velocity (TCD-guided primary prevention is the STOP-trial model: TCD velocity &gt; 200 cm/s identifies high stroke risk) and on iron overload metrics (serum ferritin, MRI T2*); chelation is added when ferritin persistently &gt; 1500–2500 ng/mL.
+      <div class="pearl">
+        <b>Pearl:</b> Hydroxyurea is not a substitute for transfusion in the first months after stroke. Switch to hydroxyurea-based regimens only under careful protocol (TWiTCH trial supported transition after ≥ 1 year of stable disease in select patients).
+      </div>
+      <div class="chapter-ref">Cross-references: Ch 65 (Stroke), Ch 60 (Imaging).</div>
+    `
+  },
+  {
+    id: "RR07",
+    tags: ["Abusive head trauma", "Ch 63"],
+    stem: "A previously well 5-month-old infant is brought to the emergency department by parents reporting that he 'fell off the couch'. He is lethargic with a bulging fontanelle. CT shows bilateral subdural haematomas of differing densities (some hypoattenuating, some hyperattenuating), and skeletal survey reveals two posterior rib fractures and a classic metaphyseal lesion of the distal femur. Fundoscopy shows multilayered retinal haemorrhages extending to the periphery.",
+    prompt: "(a) State the most likely mechanism with two findings that argue against the stated history. (b) Name three immediate medical priorities for the child. (c) State your legal/forensic obligations and what you would request from another team before discharge planning.",
+    answer: `
+      <h4>Model answer</h4>
+      <div class="reasoning">
+        <b>Layer 1 — Pattern recognition</b>: subdural haemorrhages of mixed age + posterior rib + classic metaphyseal lesion + multilayered retinal haemorrhage = highly specific for abusive head trauma (formerly "shaken baby syndrome").
+      </div>
+      <div class="reasoning">
+        <b>Layer 2 — Medical care and forensic care run in parallel</b>; the medical team does not investigate but does document and refer.
+      </div>
+      <strong>(a) Abusive head trauma.</strong> The history of a couch fall is inconsistent because: (i) <em>differing densities of subdural blood</em> imply two or more bleeding events of different ages — incompatible with a single recent fall; (ii) <em>classic metaphyseal lesion + posterior rib fractures</em> require shaking/squeezing or twisting forces, not a low-height fall. Multilayered retinal haemorrhage extending to the periphery is rarely seen with accidental low-height trauma.
+      <br><br>
+      <strong>(b) Three medical priorities:</strong>
+      <ol>
+        <li>Manage raised ICP (head-up, sedation, hypertonic saline if signs of herniation; consider neurosurgical evacuation if a clot is large or mass-effect symptomatic).</li>
+        <li>Investigate and control seizures (continuous EEG; treat clinical or electrographic seizures with levetiracetam or phenobarbital).</li>
+        <li>Identify and reverse coagulopathy, correct anaemia and electrolytes, ensure airway is secure if GCS &lt; 9 or progressive.</li>
+      </ol>
+      <strong>(c) Forensic / legal duties:</strong>
+      <ul>
+        <li>Mandatory report to child-protection services and (where required) police — non-discretionary; do not wait for "proof".</li>
+        <li>Engage the child protection medical team (or pediatric subspecialist where available) for an independent assessment.</li>
+        <li>Detailed documentation with timed entries, photographs of bruising (with consent of the child welfare worker if separating from family).</li>
+        <li>Skeletal survey now and repeat at 2 weeks (occult fractures may become apparent only with callus); ophthalmology for formal retinal exam; coagulation work-up to exclude haemophilia/factor deficiencies and to document non-coagulopathic baseline.</li>
+        <li>Do NOT discharge home until child protection has cleared placement.</li>
+      </ul>
+      <div class="pearl">
+        <b>Pearl:</b> The differential includes glutaric aciduria type 1 (subdurals + macrocephaly in infants) and benign external hydrocephalus (susceptibility to small subdurals with minor trauma). Order urine organic acids and head circumference trend; these do not, however, alter the obligation to report concerns.
+      </div>
+      <div class="chapter-ref">Cross-references: Ch 63 (Abusive Head Trauma), Ch 62 (Trauma), Ch 67 (Metabolic).</div>
+    `
+  },
+  {
+    id: "RR08",
+    tags: ["CNS infection", "Empiric therapy", "Ch 61"],
+    stem: "A previously healthy 3-year-old presents with 12 hours of fever to 40 °C, headache, vomiting, and a single generalized seizure. On arrival: GCS 11, neck stiffness, photophobia, purpuric rash on the trunk and shins. Vitals: HR 160, BP 80/45, capillary refill 4 sec, lactate 4.2 mmol/L. Coagulation: INR 1.6, platelets 89.",
+    prompt: "(a) Give the most likely organism with the single feature that most strongly supports it. (b) State the order of your first three actions, identifying which step the lumbar puncture must NOT delay and why. (c) Give the empiric antibiotic regimen with doses and any adjunctive therapy.",
+    answer: `
+      <h4>Model answer</h4>
+      <div class="reasoning">
+        <b>Layer 1 — Pattern</b>: fever + neck stiffness + purpuric rash + shock = meningococcaemia until proven otherwise.
+      </div>
+      <div class="reasoning">
+        <b>Layer 2 — Shock and coagulopathy are contraindications to immediate LP</b>. Antibiotics must not be delayed by imaging or LP.
+      </div>
+      <strong>(a)</strong> <em>Neisseria meningitidis</em> (meningococcaemia with meningitis). The <strong>purpuric/petechial rash</strong> is the single most specific feature in this clinical context; the rapid progression and shock physiology are highly consistent.
+      <br><br>
+      <strong>(b) Order of action:</strong>
+      <ol>
+        <li><strong>Resuscitate and start empiric IV antibiotics WITHIN 1 HOUR</strong> — do not wait for LP. Give 20 mL/kg balanced crystalloid bolus (reassess after each bolus; start epinephrine 0.05–0.1 mcg/kg/min after 40 mL/kg if persistent shock).</li>
+        <li><strong>Defer LP</strong> because of (i) shock with refractory hypoperfusion, (ii) coagulopathy (INR 1.6, platelets 89, DIC physiology), (iii) clinical features suggesting raised ICP (depressed GCS + focal seizure may herald herniation risk). Imaging is not mandatory before antibiotics — antibiotics first; LP can be done within 4 h after stabilisation if coagulopathy corrects and no focal signs.</li>
+        <li><strong>Send blood cultures, meningococcal PCR, CBC, coagulation, lactate, electrolytes</strong> before antibiotics if it does not delay them by &gt; 5 minutes.</li>
+      </ol>
+      <strong>(c) Empiric regimen:</strong>
+      <ul>
+        <li>Ceftriaxone 100 mg/kg IV (max 4 g) once, then 50 mg/kg q12h.</li>
+        <li>Vancomycin 15 mg/kg IV q6h (covers possible penicillin-resistant pneumococcus until cultures clarify).</li>
+        <li>Acyclovir 10–15 mg/kg q8h if encephalitis cannot be excluded.</li>
+        <li><strong>Dexamethasone 0.15 mg/kg q6h × 4 days</strong> ideally given before or with the first antibiotic dose — proven outcome benefit in H. influenzae meningitis and reasonable for empiric pneumococcal cover; insufficient evidence in meningococcus alone but commonly given pending organism.</li>
+        <li>Notify Public Health for contact prophylaxis (rifampin or ciprofloxacin or ceftriaxone IM for close contacts).</li>
+      </ul>
+      <div class="pearl">
+        <b>Pearl:</b> The classic teaching "LP before antibiotics" is wrong when shock, coagulopathy, focal neurology, or seizures are present. Cultures remain useful for hours after first antibiotic dose; CSF can be obtained later. Antibiotic delay kills.
+      </div>
+      <div class="chapter-ref">Cross-references: Ch 61 (Neurosurgical & Neuroradiologic CC), Ch 64 (Status Epilepticus).</div>
+    `
+  }
+,
+  {
+    id: "RR09",
+    tags: ["TB meningitis", "Ch 61"],
+    stem: "A 4-year-old recently immigrated child presents with 3 weeks of low-grade fever, anorexia, and behavioural change, followed by 3 days of drowsiness and now a generalized seizure. Examination: GCS 11, neck stiffness, no focal motor signs. CT: basilar meningeal enhancement, mild communicating hydrocephalus, small left thalamic infarct. CSF: protein 1.8 g/L, glucose 1.4 mmol/L (serum 5.0), WBC 220/mm³ lymphocytic, Gram negative. Chest X-ray: hilar adenopathy.",
+    prompt: "(a) Stage the disease per modified MRC framework and state its prognostic implication. (b) Name the four-drug induction regimen and the most important adjunctive therapy. (c) State the two complications that most often kill this patient if not specifically managed.",
+    answer: ` <h4>Model answer</h4>
+      <div class="reasoning"><b>Layer 1 — Recognize TBM:</b> Sub-acute illness + basilar enhancement + lymphocytic hypoglycorrhachic CSF + hydrocephalus + thalamic stroke (vasculitis) = tuberculous meningitis.</div>
+      <div class="reasoning"><b>Layer 2 — Staging drives outcome:</b> treatment delay is the largest preventable predictor of mortality and disability; treat empirically before microbiological confirmation.</div>
+      <strong>(a) Modified MRC stage II</strong> — GCS 11–14 OR focal neurology without coma. Stage I: GCS 15, no focal signs; Stage III: GCS &lt; 11 or hemiparesis. Mortality rises from ~10% (I) to &gt; 50% (III).
+      <br><br><strong>(b) Induction (2 months):</strong> isoniazid 10 mg/kg + rifampin 15–20 mg/kg + pyrazinamide 35 mg/kg + ethambutol 20 mg/kg. Continuation 7–10 months with INH + RIF.
+      <br>Adjunct: <strong>dexamethasone 0.6 mg/kg/day IV × 1 week, then taper over 6–8 weeks</strong> — improves survival across HIV status.
+      <br>Add pyridoxine to prevent INH neuropathy.
+      <br><br><strong>(c) Two killers if not managed:</strong>
+      <ol><li><em>Obstructive or communicating hydrocephalus</em> — needs CSF diversion (EVD acutely; VP shunt or ETV later).</li>
+      <li><em>Tuberculous vasculitis with stroke</em> — basal-ganglia / thalamic territory; consider antiplatelet, careful BP control, continue steroids.</li></ol>
+      <div class="pearl"><b>Pearl:</b> CSF AFB smear positive in &lt; 30%; PCR / Xpert MTB/RIF higher yield but negative does not exclude. Treat on clinical + CSF gestalt — do not wait for cultures.</div>
+      <div class="chapter-ref">Cross-references: Ch 61, Ch 65 (Stroke).</div>
+    `
+  },
+  {
+    id: "RR10",
+    tags: ["Autonomic dysreflexia", "Chronic SCI", "Ch 62"],
+    stem: "A 13-year-old with chronic T4 paraplegia from a previous spinal tumour resection presents with a pounding headache, flushing above the nipple line, pallor and goose-pimples below, and BP 195/120 with HR 50. Two hours earlier she was placed in a wheelchair after physiotherapy.",
+    prompt: "(a) Diagnose the syndrome and state the spinal-cord-level threshold above which it typically occurs. (b) Outline your management priorities in the first 5 minutes. (c) Name two end-organ complications and the most common precipitant to look for at the bedside.",
+    answer: ` <h4>Model answer</h4>
+      <div class="reasoning"><b>Layer 1 — Recognize autonomic dysreflexia:</b> above-lesion vasodilation (headache, flushing) + below-lesion vasoconstriction (pallor) + paradoxical bradycardia + hypertension = unopposed sympathetic outflow below the lesion in response to noxious stimulus.</div>
+      <div class="reasoning"><b>Layer 2 — Mechanical first, drug second.</b></div>
+      <strong>(a)</strong> Autonomic dysreflexia. Occurs in lesions at or above <strong>T6</strong> (above splanchnic sympathetic outflow).
+      <br><br><strong>(b) First 5 minutes:</strong>
+      <ol><li>Sit the patient upright (orthostatic drop reduces BP).</li>
+      <li>Loosen tight clothing / abdominal binders / restrictive straps.</li>
+      <li>Find and remove the precipitant — <strong>bladder distension is the most common</strong> (kinked or blocked catheter). Drain the bladder with gentle lidocaine gel; if no relief, digital rectal exam (with lidocaine ointment) for impacted stool.</li>
+      <li>If BP &gt; 150 systolic after mechanical measures: short-acting vasodilator — nifedipine 0.25 mg/kg immediate-release bitten capsule, or IV nitroprusside. Avoid long-acting agents (rebound hypotension).</li></ol>
+      <strong>(c) End-organ complications:</strong> intracerebral haemorrhage, hypertensive encephalopathy with seizures, retinal haemorrhage, pulmonary oedema, myocardial ischaemia. Most common precipitant: bladder distension; second: bowel impaction. Other triggers: pressure injury, ingrown toenail, labour, surgical pain.
+      <div class="pearl"><b>Pearl:</b> Patients have a chronically low baseline BP — 160/100 represents a major rise. Treat aggressively but anticipate rebound hypotension once the precipitant is removed.</div>
+      <div class="chapter-ref">Cross-references: Ch 62 (Spinal Cord), Ch 65 (Stroke complications).</div>
+    `
+  },
+  {
+    id: "RR11",
+    tags: ["Infant botulism", "Ch 54"],
+    stem: "A previously well 5-month-old presents with 3 days of poor feeding, constipation, weak cry, head lag, and a progressively weak suck. Examination: alert but hypotonic, ptosis, sluggish pupillary light response, weak gag, generalized weakness with preserved reflexes that fatigue with repeated elicitation. No fever. The family lives on a small farm and the infant has been given honey on a soother.",
+    prompt: "(a) Name the diagnosis and the pathophysiologic basis for the exam findings. (b) State the diagnostic gold standard and the single definitive therapy with its name and route. (c) List two supportive-care interventions, and one drug class you must explicitly avoid.",
+    answer: ` <h4>Model answer</h4>
+      <div class="reasoning"><b>Layer 1 — Recognize infant botulism:</b> constipation + descending bulbar weakness + ptosis + hypotonia in an infant under 1 year + honey exposure / rural environment = classic. Distinguishes from GBS (ascending, areflexic) and SMA (preserved suck initially, tongue fasciculations, no autonomic features).</div>
+      <div class="reasoning"><b>Layer 2 — Mechanism:</b> Clostridium botulinum spores colonize the immature gut, produce toxin that cleaves SNARE proteins (SNAP-25, syntaxin, synaptobrevin), preventing acetylcholine release at presynaptic motor and autonomic cholinergic terminals — hence weakness + autonomic features (dilated pupils, dry mouth, ileus).</div>
+      <strong>(a)</strong> Infant botulism (toxin types A and B most common in North America).<br><br>
+      <strong>(b) Gold standard:</strong> isolation of C. botulinum organism or toxin from stool (most sensitive; takes days). Serum toxin is less sensitive. Treat empirically.<br>
+      <strong>Definitive therapy:</strong> <strong>BabyBIG (Botulism Immune Globulin Intravenous human, BIG-IV)</strong> 50 mg/kg IV single dose. Shortens hospital LOS by weeks; sourced via public health.<br><br>
+      <strong>(c) Supportive (any two):</strong>
+      <ol><li>Airway protection: intubate proactively if cough is weak or respiratory failure imminent.</li>
+      <li>Nutrition via NG/NJ feeds; treat constipation cautiously without prokinetics.</li>
+      <li>Mechanical DVT prophylaxis in older infants immobilised for weeks.</li></ol>
+      <strong>Avoid:</strong> <strong>aminoglycosides</strong> (and clindamycin) — they potentiate neuromuscular blockade and worsen weakness. Avoid succinylcholine if intubation needed.
+      <div class="pearl"><b>Pearl:</b> Reflexes can be PRESERVED early (unlike GBS), then fatigue with repeated elicitation. Preserved early reflexes plus descending paralysis with autonomic features is near-pathognomonic.</div>
+      <div class="chapter-ref">Cross-references: Ch 54 (Acute Neuromuscular).</div>
+    `
+  },
+  {
+    id: "RR12",
+    tags: ["Cerebral venous sinus thrombosis", "Ch 65"],
+    stem: "A 14-year-old girl on combined oral contraceptives presents with 3 days of escalating headache, papilloedema on day 2, and now a focal left-arm seizure followed by post-ictal weakness. Recent history: started doxycycline 5 days ago, Mycoplasma pneumonia treated 3 weeks ago. CT brain shows a small right parietal hyperdensity with surrounding hypodensity; MRI/MRV confirms thrombosis of the right transverse and sigmoid sinuses with venous infarction and a small petechial haemorrhagic component.",
+    prompt: "(a) Justify the indication for anticoagulation in the presence of haemorrhagic conversion. (b) Specify the agent, route, target anticoagulation parameter, and total duration. (c) Name three pro-thrombotic conditions to screen for, and one acute complication to monitor for in the first 72 hours.",
+    answer: ` <h4>Model answer</h4>
+      <div class="reasoning"><b>Layer 1 — CVST physiology:</b> the thrombus is in the venous outflow; ongoing thrombosis raises venous pressure and worsens infarction and oedema. Anticoagulation is paradoxically safe and improves outcomes even with small haemorrhagic conversion, because it prevents thrombus propagation.</div>
+      <div class="reasoning"><b>Layer 2 — Evidence base:</b> ISCVT and Coutinho trials support anticoagulation in adults; paediatric guidelines (ACCP, AHA) extrapolate to recommend anticoagulation even with petechial haemorrhage. Large parenchymal haematoma with mass effect is the exception.</div>
+      <strong>(a)</strong> The bleeding is a consequence of venous obstruction; anticoagulation prevents propagation, lowers venous pressure, and improves outcome. Large haematoma with mass effect or progressive expansion is the exception.<br><br>
+      <strong>(b)</strong> <strong>Low-molecular-weight heparin (enoxaparin) 1 mg/kg subcutaneously every 12 hours</strong> initially; target anti-Xa 0.5–1.0 U/mL. Transition to warfarin (INR 2–3) or DOAC (in adolescents) for 3–6 months in provoked CVST, 6–12 months or longer for unprovoked or persistent risk.<br><br>
+      <strong>(c) Prothrombotic screen (any three):</strong> Factor V Leiden, prothrombin G20210A mutation, protein C / protein S / antithrombin deficiency, antiphospholipid antibody syndrome (lupus anticoagulant, anti-β2-glycoprotein-I, anti-cardiolipin), elevated homocysteine. Acquired triggers: pregnancy / postpartum, OCP, dehydration, sepsis, head/neck infection (mastoiditis, otitis), malignancy.<br>
+      <strong>Acute complication to monitor:</strong> raised ICP / impending herniation (manage with head-up positioning, sedation, hypertonic saline; consider acetazolamide for raised CSF pressure once thrombosis stabilises). Less commonly, secondary haemorrhage expansion.
+      <div class="pearl"><b>Pearl:</b> Stop the OCP, treat the predisposing infection, replace volume — never delay heparin in confirmed CVST.</div>
+      <div class="chapter-ref">Cross-references: Ch 65 (Stroke), Ch 60 (Imaging).</div>
+    `
+  },
+  {
+    id: "RR13",
+    tags: ["ADEM vs MS", "Demyelinating", "Ch 60-61"],
+    stem: "A 9-year-old presents with a first episode of multifocal demyelination after a recent viral illness: encephalopathy, optic neuritis, and a partial right hemiparesis. MRI shows large, asymmetric, ill-defined T2 lesions in subcortical white matter, both thalami, and the splenium of the corpus callosum, with patchy enhancement. CSF is mildly lymphocytic; oligoclonal bands are absent. He responds to IV methylprednisolone and is asymptomatic at 8 weeks. At 16 months he re-presents with isolated optic neuritis; CSF now shows oligoclonal bands and MRI shows new periventricular ovoid lesions without thalamic involvement.",
+    prompt: "(a) Give the initial diagnosis and the radiologic and CSF features that supported it. (b) State the new diagnosis at the second presentation with the McDonald-style features. (c) Name two antibodies that must be sent to exclude alternative diagnoses that strongly change treatment.",
+    answer: ` <h4>Model answer</h4>
+      <div class="reasoning"><b>Layer 1 — ADEM is encephalopathic, multifocal, large-lesion, monophasic, oligoclonal-bands-negative.</b></div>
+      <div class="reasoning"><b>Layer 2 — A relapse with periventricular ovoid lesions and oligoclonal bands shifts the diagnosis toward multiple sclerosis</b> (the index event may be an "ADEM-like" first MS attack in retrospect).</div>
+      <strong>(a)</strong> Acute disseminated encephalomyelitis (ADEM): encephalopathy + multifocal large ill-defined T2 lesions with deep grey matter involvement + post-infectious context + lymphocytic CSF + negative oligoclonal bands.<br><br>
+      <strong>(b)</strong> Pediatric multiple sclerosis (relapsing-remitting). McDonald-style features: new periventricular ovoid lesions (dissemination in space), new attack ≥ 30 days after the index event (dissemination in time), oligoclonal bands now positive (intrathecal IgG synthesis).<br><br>
+      <strong>(c) Send two antibodies before MS disease-modifying therapy:</strong>
+      <ol><li><strong>Aquaporin-4 (AQP4) IgG</strong> — diagnoses neuromyelitis optica spectrum disorder (NMOSD). Treatment differs (rituximab / eculizumab / satralizumab); interferon and natalizumab worsen NMOSD.</li>
+      <li><strong>MOG (myelin oligodendrocyte glycoprotein) IgG</strong> — MOGAD can mimic ADEM, MS, or optic neuritis. Treatment with steroids / IVIG / rituximab differs from MS.</li></ol>
+      <div class="pearl"><b>Pearl:</b> A second demyelinating event without encephalopathy after a presumed ADEM should prompt re-classification toward MS, NMOSD, or MOGAD. Wrong disease-modifying therapy can accelerate disability.</div>
+      <div class="chapter-ref">Cross-references: Ch 60 (Imaging), Ch 61 (Neuroimaging CC).</div>
+    `
+  },
+  {
+    id: "RR14",
+    tags: ["Moyamoya", "Pediatric stroke", "Ch 65"],
+    stem: "An 8-year-old child of East Asian descent presents with recurrent transient right-arm weakness during hyperventilation while playing wind instruments at school. MRI shows multiple small subcortical infarcts of varying ages; MRA shows bilateral terminal internal carotid stenosis with collateral basal ganglia vessels (\"puff of smoke\"). She had a Kawasaki-like febrile illness in infancy.",
+    prompt: "(a) Name the disease and its single most specific imaging feature. (b) State the acute and surgical-prevention strategies, including the lifestyle precaution with the strongest physiologic basis. (c) State the single physiologic stimulus you must avoid during anaesthesia in this patient and why.",
+    answer: ` <h4>Model answer</h4>
+      <div class="reasoning"><b>Layer 1 — Recognize moyamoya:</b> progressive bilateral terminal ICA stenosis with characteristic collateral lenticulostriate "puff of smoke" pattern, presenting with TIA/stroke triggered by hyperventilation (crying, blowing instruments) in children.</div>
+      <div class="reasoning"><b>Layer 2 — Disease vs syndrome:</b> moyamoya disease (primary, idiopathic; East Asian predilection) vs moyamoya syndrome (secondary — sickle cell, Down syndrome, NF-1, post-radiation, Kawasaki disease).</div>
+      <strong>(a)</strong> Moyamoya disease. Single most specific MRA / angiographic feature: <strong>bilateral terminal internal carotid stenosis with basal collateral lenticulostriate vessels producing the "puff of smoke" appearance.</strong><br><br>
+      <strong>(b)</strong> Acute: maintain perfusion (euvolaemia, avoid hypotension), aspirin 3–5 mg/kg/day, manage any acute infarct as ischaemic stroke (no tPA in moyamoya).<br>
+      Surgical prevention: <strong>indirect revascularisation</strong> (encephalo-duro-arterio-synangiosis, EDAS, or encephalo-myo-synangiosis, EMS) or direct STA–MCA bypass in older / adult patients. Surgery is the only intervention shown to reduce stroke recurrence.<br>
+      Lifestyle: <strong>avoid hyperventilation</strong> — wind instruments, crying spells, balloon-blowing, hot food — because hypocapnia causes cerebral vasoconstriction overlaid on already-narrowed vessels and provokes ischaemia.<br><br>
+      <strong>(c)</strong> <strong>Avoid hypocapnia (hyperventilation).</strong> Maintain end-tidal CO₂ 40–45 mmHg, normotension, normothermia, normovolaemia, and adequate haemoglobin. Hypocapnia constricts the collaterals; hypotension drops perfusion to the watershed; both precipitate intra-operative stroke.
+      <div class="pearl"><b>Pearl:</b> Anti-coagulation is generally avoided because of haemorrhage risk from fragile collateral vessels.</div>
+      <div class="chapter-ref">Cross-references: Ch 65 (Stroke), Ch 60 (Imaging), Ch 61 (Neurosurgical CC).</div>
+    `
+  },
+  {
+    id: "RR15",
+    tags: ["MELAS", "Mitochondrial", "Ch 67"],
+    stem: "A 12-year-old short-stature, sensorineurally-deaf boy presents with a sudden severe headache, right hemianopia, fluent aphasia, and a focal seizure. CT is normal. MRI shows a left occipito-temporal cortical/sub-cortical hyperintensity on diffusion and FLAIR that crosses vascular territories. Serum lactate is 6.2 mmol/L; CSF lactate is elevated.",
+    prompt: "(a) Identify the syndrome with the metabolic clue. (b) State the genetic basis and the most common mutation. (c) Outline acute and chronic management, including two supplements that have specific physiologic rationale.",
+    answer: ` <h4>Model answer</h4>
+      <div class="reasoning"><b>Layer 1 — Cross-territorial cortical lesion + raised CSF/serum lactate + short stature + sensorineural deafness</b> = mitochondrial encephalopathy with lactic acidosis and stroke-like episodes (MELAS).</div>
+      <div class="reasoning"><b>Layer 2 — Not a vascular stroke:</b> the lesion crosses vascular territories because pathology is metabolic (energy failure in metabolically active neurons), not embolic / thrombotic. tPA is harmful and not indicated.</div>
+      <strong>(a)</strong> MELAS. The metabolic clue is elevated serum and CSF lactate; basal-ganglia calcifications and maternal-line history reinforce the diagnosis.<br><br>
+      <strong>(b)</strong> Mitochondrial DNA mutation — most common is <strong>m.3243A>G in MT-TL1</strong> (tRNA-leucine UUR), present in over 80% of MELAS. Maternally inherited; heteroplasmy explains variable phenotype.<br><br>
+      <strong>(c) Acute:</strong> support oxygenation, treat seizures (avoid valproate — mitochondrial toxin in MELAS), keep glucose above 4.0 mmol/L, treat fever aggressively. Some centres use <strong>L-arginine 0.5 g/kg IV during acute stroke-like episode</strong> (improves NO bioavailability and vasodilation), then oral maintenance.<br>
+      <strong>Chronic supplements with rationale:</strong>
+      <ol><li><strong>Coenzyme Q10</strong> 5–10 mg/kg/day — electron-transport carrier between complex I/II and III.</li>
+      <li><strong>L-arginine</strong> oral 0.15–0.30 g/kg/day — chronic prophylactic vasodilation in stroke-like episodes.</li>
+      <li>Adjuncts considered (lesser evidence): riboflavin, thiamine, L-carnitine, taurine, idebenone.</li></ol>
+      <strong>Avoid:</strong> valproate, metformin, statins, aminoglycosides, propofol infusions, and prolonged fasting — all can precipitate mitochondrial decompensation.
+      <div class="pearl"><b>Pearl:</b> Any stroke-like episode that crosses vascular territories or follows fever / exercise / seizure should trigger consideration of MELAS in a child with short stature, deafness, or maternal-line neurologic disease.</div>
+      <div class="chapter-ref">Cross-references: Ch 67 (Metabolic Encephalopathies), Ch 65 (Stroke), Ch 64 (Seizures).</div>
+    `
+  },
+  {
+    id: "RR16",
+    tags: ["Vein of Galen malformation", "Neonatal high-output failure", "Ch 65"],
+    stem: "A term newborn presents on day 2 of life with progressive cyanosis, tachypnea, hepatomegaly, and a continuous cranial bruit audible over the anterior fontanelle. Echocardiogram shows dilated right heart with right-to-left ductal shunting and elevated pulmonary pressures. Head ultrasound shows a large midline anechoic structure with high venous turbulent flow.",
+    prompt: "(a) Name the lesion and explain why the heart, not the brain, dominates the early presentation. (b) State your immediate haemodynamic and ventilatory management. (c) Identify the definitive treatment, optimal timing, and two complications you must monitor for during transcatheter intervention.",
+    answer: ` <h4>Model answer</h4>
+      <div class="reasoning"><b>Layer 1 — Recognize Vein of Galen malformation</b> (median prosencephalic vein of Markowski persistence) — a high-flow arteriovenous shunt directly into the venous system, causing right-heart volume overload.</div>
+      <div class="reasoning"><b>Layer 2 — The neonate decompensates from cardiac failure, not from neurologic injury initially</b> — massive left-to-right shunt across the malformation behaves like a huge AV fistula, leading to pulmonary hypertension and high-output cardiac failure.</div>
+      <strong>(a)</strong> Vein of Galen malformation (VOGM). High-flow AV shunting steals systemic output into the venous return; the heart cannot meet both systemic and shunt demand, leading to high-output failure, pulmonary hypertension, and end-organ hypoperfusion.<br><br>
+      <strong>(b) Immediate management:</strong>
+      <ol><li>Inotropic support — milrinone if myocardial function is preserved but afterload reduction is needed; epinephrine or norepinephrine if cardiac output critically low.</li>
+      <li>Diuresis carefully; avoid aggressive volume loading (worsens shunt).</li>
+      <li>Ventilation strategy: <strong>permissive hypercapnia (PaCO₂ 45–55), gentle PEEP, avoid high FiO₂</strong> — paradoxically, hyperoxia and hypocapnia reduce pulmonary vascular resistance and may INCREASE shunt-flow, worsening systemic perfusion. Target SpO₂ around 80–85% (similar to single-ventricle physiology).</li>
+      <li>Prostaglandin E1 generally NOT indicated — patency of the duct can actually be harmful by increasing flow.</li></ol>
+      <strong>(c) Definitive treatment:</strong> endovascular embolisation (transarterial coil or glue / n-BCA, sometimes transvenous) by an experienced neuro-interventional team. Optimal timing depends on Bicêtre score / clinical stability — emergent embolisation if heart failure cannot be medically controlled (typically several weeks of stabilisation, then staged embolisation between 4–6 months when feasible).<br>
+      <strong>Complications during embolisation:</strong> intracranial haemorrhage from sudden pressure changes; hydrocephalus (impaired venous drainage); ischaemic injury from non-target embolisation; renal failure from contrast load; acute heart failure from rapid flow redistribution.
+      <div class="pearl"><b>Pearl:</b> In any neonate with cardiac failure plus a continuous cranial bruit, image the brain — VOGM is often misdiagnosed as primary cardiac disease.</div>
+      <div class="chapter-ref">Cross-references: Ch 65 (Stroke), Ch 60 (Imaging), Ch 61 (Neurosurgical CC).</div>
+    `
+  },
+  {
+    id: "RR17",
+    tags: ["Lyme neuroborreliosis", "Ch 61"],
+    stem: "A 10-year-old returns from a summer camp in a Lyme-endemic area with 3 weeks of low-grade fever, an expanding annular rash (now mostly faded), then 5 days of severe headache, neck stiffness, right-sided peripheral facial-nerve palsy, and bilateral radicular pain. CSF: WBC 180/mm³ (90% lymphocytes), protein 0.9 g/L, glucose normal; serum Lyme IgM positive by ELISA and confirmed by Western blot.",
+    prompt: "(a) Name the syndrome with its three classic CNS manifestations. (b) State the recommended antibiotic regimen (drug, route, duration) and the rationale for that route. (c) Name two outcomes and one common diagnostic pitfall.",
+    answer: ` <h4>Model answer</h4>
+      <div class="reasoning"><b>Layer 1 — Recognize early disseminated neuroborreliosis</b> (Borrelia burgdorferi): triad of lymphocytic meningitis, cranial neuropathy (most often unilateral or bilateral facial palsy), and painful radiculoneuritis (Bannwarth syndrome). Erythema migrans days–weeks earlier supports it.</div>
+      <div class="reasoning"><b>Layer 2 — IV vs oral choice</b> depends on presence of CNS / parenchymal disease. Meningitis or radiculoneuritis warrants parenteral therapy; isolated cranial nerve VII palsy without other CNS features may be treated orally per current adult guidelines, but in children with clear CSF inflammation, IV therapy is preferred.</div>
+      <strong>(a)</strong> Lyme neuroborreliosis — three classic CNS manifestations: lymphocytic meningitis, cranial neuritis (especially facial palsy, often bilateral), and painful radiculoneuritis.<br><br>
+      <strong>(b)</strong> <strong>Ceftriaxone 50–75 mg/kg/day IV (max 2 g)</strong> for <strong>14–28 days</strong>. Cefotaxime and IV penicillin G are alternatives. IV route ensures CNS penetration; oral doxycycline (4 mg/kg/day) is acceptable in select older children with isolated VII palsy and no CSF abnormality, where doxycycline penetration is sufficient.<br><br>
+      <strong>(c) Outcomes:</strong> excellent with prompt antibiotic therapy; facial palsy resolves in most over weeks–months; radicular pain settles. Post-treatment Lyme disease syndrome can persist with fatigue / cognitive symptoms — additional antibiotics not helpful.<br>
+      <strong>Diagnostic pitfall:</strong> serology is two-tier (ELISA then Western blot); IgM alone after weeks of illness is unreliable — interpret with IgG and CSF data. False-positive ELISA from cross-reactivity. CSF Lyme antibody index (CSF/serum) increases specificity. Do not treat asymptomatic seropositivity without clinical syndrome.
+      <div class="pearl"><b>Pearl:</b> Unilateral or bilateral facial palsy plus lymphocytic CSF in a child from an endemic area is Lyme until proven otherwise — treat empirically while serology returns.</div>
+      <div class="chapter-ref">Cross-references: Ch 61 (CNS Infection).</div>
+    `
+  },
+  {
+    id: "RR18",
+    tags: ["Wernicke encephalopathy", "Thiamine deficiency", "Ch 67"],
+    stem: "A 16-year-old with anorexia nervosa is admitted for refeeding after 6 months of severe restriction. On day 2 of refeeding she develops confusion, horizontal nystagmus, bilateral lateral rectus weakness, and an unsteady gait. She is afebrile. Labs: glucose 6.2 mmol/L, phosphate 0.3 mmol/L, magnesium 0.6 mmol/L, lactate 2.8.",
+    prompt: "(a) Name the syndrome and its three classic findings. (b) State the immediate management, including correct dosing and the critical sequencing rule with glucose. (c) Name one chronic complication if treatment is delayed and one related electrolyte hazard during refeeding to monitor.",
+    answer: ` <h4>Model answer</h4>
+      <div class="reasoning"><b>Layer 1 — Recognize Wernicke encephalopathy:</b> classic triad of encephalopathy (confusion), ophthalmoplegia (esp. lateral rectus / nystagmus), and ataxia, in a thiamine-deficient host (anorexia, hyperemesis, malabsorption, alcohol misuse).</div>
+      <div class="reasoning"><b>Layer 2 — Critical sequencing:</b> giving glucose before thiamine to a thiamine-deficient patient precipitates or worsens Wernicke encephalopathy (glucose metabolism consumes residual thiamine). Always give thiamine first, then glucose.</div>
+      <strong>(a)</strong> Wernicke encephalopathy. Three classic findings: encephalopathy, ophthalmoplegia / nystagmus, and ataxia (only ~ 16% have all three; suspect with any one in a high-risk host).<br><br>
+      <strong>(b) Immediate management:</strong> <strong>IV thiamine 500 mg three times daily for 2–3 days, then 250 mg daily until improvement, then 100 mg daily PO</strong>. Give parenterally — oral bioavailability is poor in malnourished gut. <strong>Give thiamine BEFORE any glucose-containing fluid</strong> in a suspected case.<br><br>
+      <strong>(c)</strong> Untreated → Korsakoff syndrome (irreversible anterograde amnesia with confabulation) and persistent ataxia. Refeeding hazard: <strong>refeeding syndrome with hypophosphataemia, hypokalaemia, hypomagnesaemia</strong> (intracellular phosphate / potassium shift with carbohydrate-driven insulin surge); monitor and replace these before / during refeeding, advance calories slowly (initial 5–10 kcal/kg/day in severe malnutrition, increase gradually with electrolyte vigilance).
+      <div class="pearl"><b>Pearl:</b> In any malnourished or alcohol-abusing patient presenting with new neurologic features, give IV thiamine empirically before any glucose. The dose is high (500 mg) — small doses are inadequate.</div>
+      <div class="chapter-ref">Cross-references: Ch 67 (Metabolic Encephalopathies).</div>
+    `
+  },
+  {
+    id: "RR19",
+    tags: ["Pediatric tPA", "Acute ischemic stroke", "Ch 65"],
+    stem: "A 14-year-old presents with sudden onset of right-sided weakness, expressive aphasia, and right facial droop 75 minutes ago. He has a history of a recent upper-respiratory infection but no chronic illness. NIHSS-like assessment scores his deficit moderate-severe. CT brain excludes haemorrhage; CT angiography shows a left M1 middle cerebral artery occlusion. INR 1.0, platelets 240, BP 132/82, glucose 5.4 mmol/L.",
+    prompt: "(a) State the time windows within which (i) IV thrombolysis and (ii) mechanical thrombectomy are considered in paediatric AIS, and the strongest absolute contraindication to each. (b) List four exclusion criteria you must check before recommending IV alteplase. (c) State the post-thrombolysis observation priorities for the first 24 hours.",
+    answer: ` <h4>Model answer</h4>
+      <div class="reasoning"><b>Layer 1 — Paediatric stroke time windows</b> are extrapolated from adult evidence with caution; randomized paediatric trials are limited (TIPS trial stopped early for low enrolment). Decision is institutional, with neurology / interventional radiology input, and individual benefit-risk discussion.</div>
+      <div class="reasoning"><b>Layer 2 — Sickle cell disease and moyamoya are NOT treated with tPA</b>; they need exchange transfusion (sickle) or perfusion support / surgical revascularisation (moyamoya).</div>
+      <strong>(a)</strong> <strong>IV alteplase 0.9 mg/kg (max 90 mg, 10% bolus, remainder over 1 h)</strong> generally considered within <strong>4.5 hours</strong> of onset in selected children (age ≥ 2, NIHSS ≥ 6 in many protocols), with experienced multi-disciplinary input.<br>
+      <strong>Mechanical thrombectomy</strong> for large-vessel occlusion within <strong>6 hours</strong> from onset (some adult evidence extends to 24 h with perfusion mismatch — DAWN / DEFUSE-3; paediatric data emerging).<br>
+      <strong>Strongest absolute contraindications:</strong>
+      <ul><li>Thrombolysis: intracerebral haemorrhage; recent (≤ 3 weeks) major trauma / surgery; INR > 1.7 or therapeutic anticoagulation; platelets < 100; sickle cell or moyamoya as the mechanism; haemorrhagic conversion of established infarct.</li>
+      <li>Thrombectomy: large established infarct core (ASPECTS very low), small calibre vessels in young children where catheter trauma risk is high.</li></ul>
+      <strong>(b) Four exclusion criteria for IV alteplase:</strong> uncontrolled BP > 180/105, glucose < 2.7 or > 22 mmol/L, recent major surgery / GI bleeding within 21 days, known intracranial neoplasm / aneurysm / AVM, INR > 1.7, recent therapeutic LMWH, platelet count < 100, pregnancy (relative), age < 2.<br><br>
+      <strong>(c) Post-thrombolysis (first 24 h):</strong> neuro checks q15 min × 2 h, q30 min × 6 h, then hourly; BP < 180/105 (treat with labetalol or nicardipine); avoid antiplatelets / anticoagulants for 24 h; serial CBC, fibrinogen, coagulation; immediate CT for any neuro deterioration to exclude haemorrhage; aspirate management (NPO for 24 h, swallow screen).
+      <div class="pearl"><b>Pearl:</b> If you cannot establish stroke onset (\"wake-up stroke\"), perfusion imaging (MR or CT perfusion) helps identify salvageable tissue and may extend window; coordinate with a paediatric stroke centre.</div>
+      <div class="chapter-ref">Cross-references: Ch 65 (Stroke), Ch 60 (Imaging).</div>
+    `
+  },
+  {
+    id: "RR20",
+    tags: ["Carbon monoxide poisoning", "Ch 67"],
+    stem: "A family of four is brought to the ED after being found unconscious at home in the morning. The 8-year-old child has a GCS of 12, headache, vomiting, and rosy mucosa. SpO₂ on pulse oximetry reads 98% on room air. Co-oximetry: carboxyhaemoglobin 32%, methaemoglobin 1%, oxyhaemoglobin 64%. Arterial PaO₂ 92 on 100% non-rebreather. Lactate 4.8. Troponin slightly elevated.",
+    prompt: "(a) Explain why standard SpO₂ is misleadingly normal. (b) State the first-line treatment with mechanism, and the indications for hyperbaric oxygen. (c) Name two delayed neurologic sequelae you must counsel the family about.",
+    answer: ` <h4>Model answer</h4>
+      <div class="reasoning"><b>Layer 1 — Mechanism:</b> CO binds haemoglobin with ~ 250× the affinity of O₂, forming COHb that cannot carry O₂ and shifts the oxyhaemoglobin dissociation curve LEFT (impaired offloading at the tissue level). CO also binds cytochrome aa3 in mitochondria, directly impairing cellular respiration. Hence systemic hypoxia at normal PaO₂.</div>
+      <div class="reasoning"><b>Layer 2 — Pulse oximetry pitfall:</b> standard SpO₂ uses two wavelengths and cannot distinguish OxyHb from COHb (similar absorbance at 660 nm). Co-oximetry (4+ wavelengths) is required to detect COHb and metHb.</div>
+      <strong>(a)</strong> Pulse oximetry sees COHb as OxyHb, so SpO₂ reads near-normal even with severe hypoxia at the tissue level. Always co-oximeter in suspected CO poisoning.<br><br>
+      <strong>(b) First-line treatment:</strong> <strong>100% normobaric oxygen via tight-fitting non-rebreather (or intubation if airway / GCS compromised)</strong>. Mechanism: O₂ competitively displaces CO from haemoglobin and reduces the COHb half-life from ~ 320 min on room air to ~ 75 min on 100% O₂, and to ~ 20–30 min on hyperbaric oxygen at 2.5–3 atm.<br>
+      <strong>Hyperbaric oxygen (HBO) indications:</strong> COHb level above ~ 25% (lower in pregnancy: > 15%), loss of consciousness at any point, neurologic deficit, cardiac ischaemia, severe metabolic acidosis, age extremes (pregnancy, infant). Best benefit if started within 6 h of exposure. Consult HBO centre — local protocols vary.<br><br>
+      <strong>(c) Delayed neurologic sequelae:</strong> <strong>delayed neuropsychiatric syndrome</strong> (cognitive impairment, parkinsonism, gait disturbance, mood changes) emerging 2–40 days after recovery from acute illness; also persistent cognitive impairment, peripheral neuropathy, parkinsonism with bilateral globus-pallidus injury on MRI. Counsel families and arrange neurology follow-up.
+      <div class="pearl"><b>Pearl:</b> Cherry-red mucosa is a late, post-mortem finding; do not rely on it. The cluster pattern (multiple people from one location ill simultaneously) is the strongest historical clue.</div>
+      <div class="chapter-ref">Cross-references: Ch 67 (Toxicology / Metabolic), Ch 60 (Imaging).</div>
+    `
+  },
+  {
+    id: "RR21",
+    tags: ["Opsoclonus-myoclonus", "Neuroblastoma", "Ch 67"],
+    stem: "A previously well 18-month-old presents with several weeks of progressive unsteady gait, sleep disturbance, irritability, multidirectional chaotic eye movements (saccadic, present at rest and persisting through sleep), and brief shock-like jerks of trunk and limbs. Examination is otherwise non-focal. CT abdomen reveals a suprarenal heterogeneous mass; urinary VMA and HVA are elevated.",
+    prompt: "(a) Name the syndrome and the most likely underlying tumour. (b) State the diagnostic work-up and first-line treatment for the neurologic syndrome. (c) State the long-term neurocognitive risk and one supportive strategy.",
+    answer: ` <h4>Model answer</h4>
+      <div class="reasoning"><b>Layer 1 — Pattern recognition:</b> opsoclonus (chaotic multidirectional saccades) + myoclonus + ataxia + behavioural disturbance in a toddler is opsoclonus-myoclonus-ataxia syndrome (OMAS, \"dancing eyes dancing feet\"). About 50% of paediatric OMAS cases are paraneoplastic to occult neuroblastoma.</div>
+      <div class="reasoning"><b>Layer 2 — Two parallel tracks:</b> find and treat the tumour, AND suppress the autoimmune neurologic syndrome. Tumour resection alone often does not resolve the neurologic syndrome.</div>
+      <strong>(a)</strong> Opsoclonus-myoclonus-ataxia syndrome (OMAS) with paraneoplastic neuroblastoma (most often low-stage / favourable histology).<br><br>
+      <strong>(b) Work-up:</strong> urinary catecholamines (VMA, HVA), CT/MRI of chest, abdomen, pelvis (paraspinal masses), MIBG scintigraphy. Biopsy if mass identified. Neurologic work-up: MRI brain (usually normal), CSF (mild pleocytosis, oligoclonal bands variable). Auto-antibody panel including anti-Hu, anti-Ri, anti-Yo (often negative in paediatric cases).<br>
+      <strong>First-line treatment for OMAS:</strong> immunotherapy combination — high-dose IV methylprednisolone or ACTH + IVIG, often with rituximab (FOPP / front-line OMS protocols). Tumour resection alone is inadequate for neurologic outcome.<br><br>
+      <strong>(c)</strong> Long-term: most children develop persistent cognitive, behavioural, and motor deficits despite oncologic cure of neuroblastoma; ~ 70%+ have measurable cognitive sequelae. Supportive: early, aggressive immunotherapy escalation; multi-disciplinary neuro-rehabilitation; school accommodations and developmental support.
+      <div class="pearl"><b>Pearl:</b> Opsoclonus persists during sleep — that is the discriminator from other eye-movement abnormalities. Any toddler with new ataxia and abnormal eye movements needs catecholamines and imaging for neuroblastoma until proven otherwise.</div>
+      <div class="chapter-ref">Cross-references: Ch 67 (Autoimmune Encephalopathies), Ch 60 (Imaging), Ch 61 (Neurosurgical CC).</div>
+    `
+  },
+  {
+    id: "RR22",
+    tags: ["Malignant cord compression", "Oncologic emergency", "Ch 62"],
+    stem: "A 13-year-old with known metastatic Ewing sarcoma develops 3 days of mid-back pain followed by bilateral lower-limb weakness over 24 hours. On examination: paraparesis with hyperreflexia, a sensory level at T6, and new urinary retention. MRI shows a T5–T7 epidural soft-tissue mass with cord compression and high T2 signal within the cord.",
+    prompt: "(a) State the syndrome and the most important determinant of neurologic recovery. (b) Outline the first hour management with specific drug, dose, and goal. (c) State the definitive treatment options and the single most critical factor in choosing between them.",
+    answer: ` <h4>Model answer</h4>
+      <div class="reasoning"><b>Layer 1 — Recognize malignant spinal cord compression</b>: an oncologic emergency. Time-to-treatment is the strongest predictor of ambulatory function at 1 month; once paraplegia is fully established, recovery is rare beyond 24–48 hours.</div>
+      <div class="reasoning"><b>Layer 2 — Steroids buy time</b> while definitive therapy (surgery or radiation) is organised. Without prompt steroid + decompression, deficit becomes irreversible.</div>
+      <strong>(a)</strong> Acute malignant spinal cord compression (epidural metastasis). Most important determinant of recovery: <strong>neurologic status at the time treatment is initiated</strong> (i.e., how quickly therapy is started; ambulatory pre-treatment patients have the best post-treatment outcomes).<br><br>
+      <strong>(b) First-hour management:</strong> <strong>dexamethasone 1–2 mg/kg IV bolus (max 10 mg) followed by 0.25–0.5 mg/kg q6h</strong> — reduces vasogenic oedema and improves cord perfusion; pain control with parenteral opioid; baseline serum glucose, electrolytes; urgent MRI of the entire spine to define extent; immediate radiation-oncology and neurosurgery consultation; bladder catheter for urinary retention; thromboprophylaxis decision (often delayed pre-surgery).<br><br>
+      <strong>(c) Definitive options:</strong> emergent <strong>decompressive surgery + post-operative radiotherapy</strong> OR <strong>emergent radiation alone</strong> (depending on tumour radio-sensitivity, spine stability, and patient performance). <strong>Single most critical factor:</strong> spinal stability and the presence of a clear surgical target. Patchett et al. (adult RCT) showed surgery + RT superior to RT alone in patients with a single area of compression, paraplegia ≤ 48 h, and life expectancy > 3 months. For radiosensitive tumours (lymphoma, multiple myeloma) without instability, RT alone is often appropriate.
+      <div class="pearl"><b>Pearl:</b> In any cancer patient with new back pain, MRI the WHOLE spine immediately — multiple-level disease changes surgical planning, and the dose of dexamethasone given before imaging will not change diagnostic yield.</div>
+      <div class="chapter-ref">Cross-references: Ch 62 (Spinal Cord), Ch 61 (Neurosurgical CC).</div>
+    `
+  },
+  {
+    id: "RR23",
+    tags: ["Perinatal arterial ischemic stroke", "Ch 65"],
+    stem: "A term infant born at 39 + 5 weeks by uncomplicated vaginal delivery (Apgars 8/9) presents on day-of-life 2 with focal clonic seizures involving the right arm and face. Between seizures she is alert and feeds reasonably. Glucose 4.2, calcium 2.4, magnesium 0.9, ammonia 38, lactate 1.4. Sepsis evaluation negative. Cranial ultrasound is unremarkable. Continuous EEG confirms left central electrographic seizures every 5–10 minutes.",
+    prompt: "(a) Name the most likely diagnosis and the imaging study of choice with its timing. (b) State two thrombophilia and two maternal factors to investigate. (c) Outline immediate management and the typical motor outcome.",
+    answer: ` <h4>Model answer</h4>
+      <div class="reasoning"><b>Layer 1 — Recognize perinatal arterial ischemic stroke (PAIS):</b> a term neonate with focal seizures in the first 3 days of life, alert between seizures, with a normal sepsis evaluation and normal metabolic screen. PAIS is the most common cause of focal neonatal seizures in this presentation.</div>
+      <div class="reasoning"><b>Layer 2 — Imaging:</b> ultrasound has poor sensitivity for cortical ischaemia; MRI with diffusion is mandatory and best performed within 7 days when DWI changes are most apparent.</div>
+      <strong>(a)</strong> Perinatal (neonatal) arterial ischemic stroke, most often involving the left middle cerebral artery territory.<br>
+      <strong>Imaging:</strong> MRI brain with diffusion-weighted imaging within the first week of life (DWI sensitive for acute infarction); MR angiography for vessel evaluation; MR venography to exclude venous sinus thrombosis if symptoms or imaging suggest.<br><br>
+      <strong>(b) Investigations:</strong>
+      <ul><li><em>Neonatal thrombophilia / haematology:</em> Factor V Leiden, prothrombin G20210A mutation, protein C / protein S / antithrombin (interpret cautiously — neonatal levels physiologically low), antiphospholipid antibodies, lipoprotein(a).</li>
+      <li><em>Maternal factors:</em> antiphospholipid antibody syndrome, chorioamnionitis, prolonged rupture of membranes, pre-eclampsia, maternal cocaine / methamphetamine use, gestational diabetes, primiparity. Placental pathology examination is high-yield (placental thrombosis, vasculopathy).</li>
+      <li><em>Cardiac:</em> echocardiogram to exclude patent foramen ovale-mediated paradoxical embolism, congenital heart disease, endocarditis.</li></ul>
+      <strong>(c) Management:</strong> treat seizures (phenobarbital first-line, levetiracetam in many centres); maintain euglycaemia, normothermia, normal oxygenation, and adequate perfusion. <strong>Anticoagulation is generally NOT used</strong> for routine PAIS (different from cardioembolic stroke, sinus venous thrombosis, or recurrent stroke) — antiplatelet therapy occasionally chosen for select cardioembolic mechanisms.<br>
+      <strong>Outcome:</strong> ~ 60% develop hemiparesis (motor outcome correlates with size and territory — involvement of the posterior limb of the internal capsule is the strongest predictor); ~ 30% develop epilepsy; cognitive and language outcomes depend on hemisphere and timing. Early constraint-induced motor therapy and physiotherapy improve outcomes.
+      <div class="pearl"><b>Pearl:</b> A term newborn with seizures who is well between seizures and has a clean metabolic / infectious work-up has PAIS until imaging proves otherwise. MRI within 7 days is the diagnostic move.</div>
+      <div class="chapter-ref">Cross-references: Ch 65 (Stroke), Ch 66 (HIE — different mechanism), Ch 64 (Neonatal Seizures).</div>
+    `
+  },
+  {
+    id: "RR24",
+    tags: ["VP shunt malfunction", "Ch 61"],
+    stem: "A 6-year-old with congenital aqueductal stenosis and a ventriculoperitoneal (VP) shunt placed at 3 weeks of age presents with 3 days of headache, intermittent vomiting (worst on waking), school refusal, and now a single generalized seizure. Examination: irritable but consolable, GCS 14, pupils 3 mm and reactive, no focal motor deficit, and reduced upgaze. Fontanelle closed. Shunt reservoir is firm and slow to refill on palpation.",
+    prompt: "(a) State the three classic features that suggest shunt malfunction and the most concerning finding on examination. (b) Describe the imaging work-up in the right order. (c) Outline immediate management.",
+    answer: ` <h4>Model answer</h4>
+      <div class="reasoning"><b>Layer 1 — Recognize shunt malfunction:</b> raised intracranial pressure from blockage at the proximal catheter, valve, or distal end, or from infection / disconnection. Time-to-intervention determines outcome.</div>
+      <div class="reasoning"><b>Layer 2 — Setting sun / impaired upgaze indicates tectal pressure / Parinaud-like syndrome, and is a red flag for impending herniation.</b></div>
+      <strong>(a) Three classic features:</strong>
+      <ul><li><em>Headache</em> — especially morning, worsening over days.</li>
+      <li><em>Vomiting</em> — often projectile, worst on waking.</li>
+      <li><em>Altered consciousness or irritability</em>, often with behavioural regression.</li></ul>
+      <strong>Most concerning exam findings:</strong> impaired upgaze / setting sun sign, bradycardia + hypertension (Cushing reflex), papilloedema, depressed GCS, new sixth-nerve palsy, fixed dilated pupil.<br><br>
+      <strong>(b) Imaging order:</strong>
+      <ol><li><strong>Shunt series (X-rays)</strong> — skull, neck, chest, abdomen — to detect catheter disconnection, kinking, or migration.</li>
+      <li><strong>Head CT or rapid sequence (\"shunt MRI\") protocol</strong> — compare ventricular size with baseline (the prior CT is often available in the chart). New ventricular enlargement signals obstruction; unchanged ventricles do not exclude malfunction in slit-ventricle syndrome.</li>
+      <li><strong>Neurosurgical assessment</strong>: shunt-tap to measure opening pressure and obtain CSF for cell count, gluc/protein, and culture if infection suspected.</li></ol>
+      <strong>(c) Immediate management:</strong> head-up positioning, hyperosmolar therapy (3% saline) if signs of impending herniation; intubate if GCS &lt; 9 or worsening; treat seizures (levetiracetam preferred); urgent neurosurgical involvement for shunt revision or external ventricular drainage. Empirical antibiotics (vancomycin + cefepime) if shunt infection suspected (fever, abdominal pain, peritonitis), pending CSF.
+      <div class="pearl"><b>Pearl:</b> A normal CT does not rule out shunt malfunction. Up to 30% of revisions involve a slit-ventricle morphology where ventricles do not dilate during obstruction. Trust the clinical picture; involve neurosurgery early.</div>
+      <div class="chapter-ref">Cross-references: Ch 61 (Neurosurgical CC), Ch 64 (Status — secondary).</div>
+    `
+  },
+  {
+    id: "RR25",
+    tags: ["Hashimoto encephalopathy", "SREAT", "Ch 67"],
+    stem: "A 15-year-old girl presents with a 6-week history of fluctuating cognitive impairment, behavioural regression, intermittent myoclonus, two unprovoked generalized seizures, and stroke-like episodes (transient hemiparesis and aphasia) that resolved over hours. There is no fever. CSF: mildly elevated protein (0.7 g/L), bland cytology, no oligoclonal bands; bacterial and viral PCRs negative. MRI brain: subtle T2 hyperintensities in subcortical white matter without enhancement. EEG: generalized slowing. TSH 1.8, free T4 normal; anti-thyroid peroxidase (anti-TPO) antibodies markedly elevated; anti-thyroglobulin also positive. NMDA-receptor antibody panel pending.",
+    prompt: "(a) Identify the syndrome and explain why thyroid function is often normal. (b) State the first-line treatment and the expected response timeline. (c) Name two diagnoses you must exclude before committing to long-term immunosuppression.",
+    answer: ` <h4>Model answer</h4>
+      <div class="reasoning"><b>Layer 1 — Recognize Hashimoto encephalopathy</b> (also called steroid-responsive encephalopathy associated with autoimmune thyroiditis, SREAT): subacute fluctuating encephalopathy + seizures + stroke-like episodes ± myoclonus + high anti-TPO / anti-thyroglobulin antibodies, with thyroid function often normal or only mildly abnormal. The antibodies are a marker of autoimmunity, not the direct cause of brain disease.</div>
+      <div class="reasoning"><b>Layer 2 — Diagnosis is partly clinical, partly response-to-treatment.</b> Steroid responsiveness is one of the defining features; failure to respond should prompt re-evaluation.</div>
+      <strong>(a)</strong> Hashimoto encephalopathy (SREAT). Thyroid function is often normal because the encephalopathy is an autoimmune phenomenon distinct from thyroid hormone status; only ~ 25% are hypothyroid at presentation, ~ 25% hyperthyroid, ~ 50% euthyroid. The pathogenesis likely involves cerebral autoantibodies (some target alpha-enolase) and a small-vessel autoimmune vasculitis.<br><br>
+      <strong>(b) First-line:</strong> <strong>high-dose IV methylprednisolone 30 mg/kg/day (max 1 g) × 3–5 days, followed by oral prednisone taper over weeks to months</strong>. Most patients improve within days; sustained response usually within 2–4 weeks. IVIG and plasmapheresis are second-line for steroid-refractory cases; rituximab or azathioprine for chronic / relapsing disease.<br><br>
+      <strong>(c) Critical exclusions before committing to long-term immunosuppression:</strong>
+      <ul><li><em>Anti-NMDA receptor encephalitis and other antibody-mediated encephalitides</em> (different mechanism and management; teratoma screening required).</li>
+      <li><em>Creutzfeldt-Jakob disease and other prion / neurodegenerative disorders</em> (steroid-unresponsive; CSF RT-QuIC, 14-3-3 protein, MRI cortical ribboning support).</li>
+      <li><em>Viral encephalitis</em> (especially HSV — full HSV PCR; autoimmune encephalitis often follows HSV).</li>
+      <li><em>Cerebral lupus / primary CNS vasculitis</em> (specific work-up: ANA, dsDNA, ANCA, complements, angiography).</li></ul>
+      <div class="pearl"><b>Pearl:</b> Anti-TPO can be incidentally positive (~ 10% of healthy women). Hashimoto encephalopathy is a clinical syndrome with antibodies as a supportive marker plus steroid responsiveness; do not over-call.</div>
+      <div class="chapter-ref">Cross-references: Ch 67 (Autoimmune Encephalopathy), Ch 61 (CNS Inflammation).</div>
+    `
+  },
+  {
+    id: "RR26",
+    tags: ["Paroxysmal sympathetic hyperactivity", "Severe TBI", "Ch 62"],
+    stem: "A 15-year-old is in week 2 of recovery from severe TBI (diffuse axonal injury). He is intubated, off sedation, with intermittent unresponsiveness. Several times per day he has stereotyped episodes lasting 10–30 minutes: tachycardia 160–180, hypertension to 180/110, fever 39.5 °C without infection, tachypnoea, sweating, dystonic posturing, and pupillary dilation. Between episodes, vitals normalise. Cultures, urinalysis, chest X-ray, and ammonia are unremarkable. EEG during an episode: no seizure activity.",
+    prompt: "(a) Name the syndrome and the diagnostic criteria. (b) Describe a tiered pharmacologic approach with two abortive agents and two preventive agents, including the rationale for each. (c) Name two trigger categories you must control to reduce frequency.",
+    answer: ` <h4>Model answer</h4>
+      <div class="reasoning"><b>Layer 1 — Recognize paroxysmal sympathetic hyperactivity (PSH)</b> after severe TBI (also seen in anoxic injury, hydrocephalus, intoxications): paroxysms of simultaneous tachycardia, hypertension, hyperthermia, tachypnoea, diaphoresis, and dystonic posturing, in the absence of seizure or infection.</div>
+      <div class="reasoning"><b>Layer 2 — Pathophysiology:</b> disconnection of cortical / diencephalic inhibition of brainstem sympathetic output; minor afferent stimuli (turning, suctioning, ambient noise) trigger an exaggerated paroxysm. Mortality is increased; morbidity (heterotopic ossification, dehydration, weight loss) is significant if untreated.</div>
+      <strong>(a)</strong> Paroxysmal sympathetic hyperactivity (PSH). Diagnostic features (PSH Assessment Measure): paroxysms with at least four of the six clinical features (tachycardia, hypertension, tachypnoea, hyperthermia, sweating, dystonic posturing); episodes triggered by minor stimuli; no alternative explanation (sepsis, withdrawal, status, neuroleptic malignant syndrome).<br><br>
+      <strong>(b) Tiered pharmacologic approach:</strong>
+      <ul><li><em>Abortive (during an episode):</em>
+          <ul><li><strong>IV morphine sulfate 0.05–0.10 mg/kg</strong> — central μ-opioid analgesia attenuates sympathetic surge.</li>
+          <li><strong>IV midazolam 0.05 mg/kg</strong> — benzodiazepine sedation cuts paroxysm intensity.</li></ul></li>
+      <li><em>Preventive (background therapy):</em>
+          <ul><li><strong>Gabapentin (or pregabalin)</strong> — α2δ ligand, reduces neuropathic-pain-like afferent triggers; well-tolerated.</li>
+          <li><strong>Non-selective β-blocker (propranolol) ± clonidine</strong> — propranolol blunts cardiovascular sympathetic output; clonidine is an α2 agonist that reduces central sympathetic outflow.</li>
+          <li>Adjuncts: dantrolene (for severe muscle hypertonicity), baclofen (sometimes intrathecal), bromocriptine (dopaminergic).</li></ul></li></ul>
+      <strong>(c) Triggers to control:</strong>
+      <ol><li><em>Nociceptive / tactile triggers:</em> cluster nursing care, gentle handling, environmental quiet, manage constipation, urinary retention, and skin / pressure injury — these subliminal triggers drive paroxysms.</li>
+      <li><em>Internal physiologic stressors:</em> hypoxia, hypercapnia, fever (treat early), urinary retention, GI distress, withdrawal of sedatives — search and treat at every paroxysm.</li></ol>
+      <div class="pearl"><b>Pearl:</b> PSH episodes are frequently mis-labelled as \"sepsis\", \"alcohol withdrawal\", \"seizure\", or \"NMS\". Pattern recognition + cEEG (to exclude seizure) + careful infection screen are the safety nets.</div>
+      <div class="chapter-ref">Cross-references: Ch 62 (Severe TBI), Ch 64 (Seizure mimics), Ch 67 (Autonomic).</div>
+    `
+  },
+  {
+    id: "RR27",
+    tags: ["Transverse myelitis", "LETM", "Ch 62"],
+    stem: "An 11-year-old presents 14 days after a viral respiratory illness with 3 days of progressive interscapular back pain followed by ascending bilateral lower-limb weakness, urinary retention, and a sensory level at T4. Examination: paraparesis (MRC 2/5), absent ankle reflexes early then hyperreflexia by hospital day 2, T4 sensory level to pinprick and temperature, preserved vibration and proprioception. MRI: longitudinally extensive T2 hyperintensity from T2 to T7 with cord swelling and patchy enhancement. CSF: WBC 70 (lymphocytic), protein 0.7 g/L, glucose normal, no oligoclonal bands. AQP4 IgG and MOG IgG sent.",
+    prompt: "(a) Classify the lesion (longitudinal extent) and name the two most important antibody panels that direct prognosis and chronic therapy. (b) State the first-line acute treatment and the indication for escalation. (c) Name two complications to monitor for in the first 72 hours.",
+    answer: ` <h4>Model answer</h4>
+      <div class="reasoning"><b>Layer 1 — Recognize longitudinally extensive transverse myelitis (LETM):</b> contiguous T2 hyperintensity spanning ≥ 3 vertebral segments. LETM, especially with optic neuritis history, mandates testing for aquaporin-4 (AQP4) IgG (NMOSD) and MOG IgG (MOGAD), because both diagnoses change long-term immunotherapy.</div>
+      <div class="reasoning"><b>Layer 2 — Acute treatment is high-dose steroid first; escalate if no response within 5–7 days.</b></div>
+      <strong>(a)</strong> Longitudinally extensive transverse myelitis (LETM) of T2–T7. Mandatory antibodies: <strong>AQP4 IgG</strong> (NMOSD) and <strong>MOG IgG</strong> (MOGAD); both are seropositive in a substantial minority of paediatric LETM cases and require very different long-term therapy from idiopathic transverse myelitis or relapsing-remitting MS.<br><br>
+      <strong>(b) First-line:</strong> <strong>IV methylprednisolone 30 mg/kg/day (max 1 g) for 5 days</strong>, then oral prednisone taper over weeks (variable schedules; e.g., taper from 1 mg/kg over 4–6 weeks). Escalation indications: incomplete or no improvement after 5–7 days, severe deficit (e.g., complete paraplegia), or seropositive NMOSD / MOGAD. Escalate to <strong>plasmapheresis</strong> (5–7 sessions every other day) — second-line with strong evidence for steroid-refractory transverse myelitis. <strong>IVIG</strong> is an alternative, often combined.<br><br>
+      <strong>(c) Complications in first 72 hours (any two):</strong>
+      <ul><li><em>Neurogenic shock and bradycardia</em> — for high cervico-thoracic lesions; monitor BP and HR.</li>
+      <li><em>Respiratory compromise</em> if level rises (above T4) — phrenic involvement at C3–C5 demands ventilatory support.</li>
+      <li><em>Urinary retention with overflow / autonomic dysreflexia</em> — bladder management with intermittent catheterisation.</li>
+      <li><em>Pressure injuries and deep vein thrombosis</em> — start mechanical (and later pharmacologic) prophylaxis.</li>
+      <li><em>Ileus and constipation</em> — bowel programme.</li></ul>
+      <div class="pearl"><b>Pearl:</b> An apparent \"transverse myelitis\" that is partial / short-segment (&lt; 2 vertebral bodies) suggests classical MS rather than NMOSD; LETM with optic neuritis on history is NMOSD until proven otherwise.</div>
+      <div class="chapter-ref">Cross-references: Ch 62 (Spinal Cord), Ch 60 (Imaging), Ch 61 (Inflammatory CNS).</div>
+    `
+  },
+  {
+    id: "RR28",
+    tags: ["NORSE", "FIRES", "Ch 64"],
+    stem: "A previously well 9-year-old presents with a febrile upper-respiratory illness, then 5 days later develops refractory status epilepticus that does not respond to two benzodiazepines, full-load fosphenytoin, full-load levetiracetam, and a 48-hour midazolam infusion at burst-suppression. Pentobarbital is added. MRI is initially unremarkable; weeks later shows bilateral mesial temporal T2 hyperintensity. CSF: mild pleocytosis (15 cells), protein mildly elevated, all viral PCRs negative, autoimmune encephalitis panel pending. Autoantibody panel (NMDA, GAD65, VGKC, LGI1, CASPR2) returns negative.",
+    prompt: "(a) Name the syndrome and the timeline-based subtype. (b) Outline a tiered immunomodulatory escalation when antibody work-up is negative. (c) Name one ketogenic / metabolic option that has paediatric evidence and one critical-care complication to monitor for during prolonged anaesthesia.",
+    answer: ` <h4>Model answer</h4>
+      <div class="reasoning"><b>Layer 1 — Recognize NORSE / FIRES:</b> new-onset refractory status epilepticus (NORSE) in a previously healthy individual without a clear acute structural, toxic, or metabolic cause and without active CNS infection. <strong>FIRES (febrile infection-related epilepsy syndrome)</strong> is the subset of NORSE in school-aged children where the status is preceded by a febrile illness 24 hours to 2 weeks prior.</div>
+      <div class="reasoning"><b>Layer 2 — Cytokine-mediated inflammation</b> with interleukin-1 family activation appears central; some patients respond to anti-IL-1 (anakinra) and anti-IL-6 (tocilizumab) therapy.</div>
+      <strong>(a)</strong> NORSE — FIRES subtype (febrile infection-related epilepsy syndrome).<br><br>
+      <strong>(b) Tiered immunomodulation</strong> (when antibody work-up is negative, treat empirically because delay worsens outcome):
+      <ol><li>High-dose IV methylprednisolone 30 mg/kg/day × 5 days, AND IVIG 2 g/kg over 2–5 days, started as early as 24–72 h into refractory status.</li>
+      <li>Plasmapheresis (5–7 sessions every other day) if no response after first-line.</li>
+      <li>Anakinra (anti-IL-1 receptor antagonist) 2–4 mg/kg/day, OR tocilizumab (anti-IL-6 receptor) if anakinra fails or unavailable; both have growing paediatric evidence in FIRES.</li>
+      <li>Rituximab considered in suspected B-cell-driven processes.</li>
+      <li>Continued anaesthetic seizure control (midazolam, ketamine, pentobarbital, isoflurane); EEG-guided burst-suppression.</li></ol>
+      <strong>(c) Ketogenic option:</strong> <strong>ketogenic diet (often started via NG / TPN modification in PICU)</strong> has paediatric case-series evidence in FIRES; mechanism may include both anticonvulsant and anti-inflammatory effects. Aim for ketosis within 5–7 days; check serum ketones, lipid profile, and metabolic screen.<br><br>
+      <strong>Critical-care complications to monitor:</strong>
+      <ul><li>Hospital-acquired infections (line, urinary, ventilator-associated pneumonia).</li>
+      <li>Propofol-infusion syndrome (if propofol used; surveil lactate, CK, triglycerides, ECG).</li>
+      <li>Drug interactions and tachyphylaxis to anaesthetic infusions.</li>
+      <li>Critical-illness myopathy and prolonged neuromuscular blockade.</li>
+      <li>Heterotopic ossification, pressure injury, contractures from prolonged sedation/paralysis.</li></ul>
+      <div class="pearl"><b>Pearl:</b> Start immunotherapy in suspected FIRES even before antibody panels return — early intervention (within 72 h) carries the best chance of seizure freedom and improved long-term outcome.</div>
+      <div class="chapter-ref">Cross-references: Ch 64 (Status Epilepticus), Ch 67 (Autoimmune Encephalitis), Ch 59 (cEEG).</div>
+    `
+  },
+  {
+    id: "RR29",
+    tags: ["Neurocysticercosis", "Ch 61"],
+    stem: "A 10-year-old who recently arrived from Latin America presents with a first-ever generalized tonic-clonic seizure followed by 24 hours of post-ictal confusion. He has no fever. MRI brain shows multiple cystic lesions in various stages: vesicular (thin-walled cysts with a visible scolex), colloidal (oedema and contrast enhancement), and calcified granular nodules. CSF shows mild pleocytosis with eosinophils, mildly elevated protein, normal glucose; cysticercus serology IgG positive.",
+    prompt: "(a) Name the disease, the causative organism, and the four imaging stages with their treatment implication. (b) State the indications for antiparasitic therapy and the standard regimen, including the critical adjunctive agent. (c) Name two clinical scenarios where antiparasitics are contraindicated or must be deferred.",
+    answer: ` <h4>Model answer</h4>
+      <div class="reasoning"><b>Layer 1 — Recognize neurocysticercosis</b> from the imaging pattern of multiple cysts in different stages, in a child from an endemic region. Causative organism: <em>Taenia solium</em> (pork tapeworm) larval form (cysticercus).</div>
+      <div class="reasoning"><b>Layer 2 — Treatment depends on cyst stage</b>: only viable (vesicular) and degenerating (colloidal, granular-nodular) cysts respond to anti-helminthics. Calcified cysts are dead and do not need treatment; calcified disease may still cause seizures (focal).</div>
+      <strong>(a) Four imaging stages:</strong>
+      <ol><li><em>Vesicular</em> — viable cyst, thin wall, visible scolex, minimal oedema. Responds to anti-helminthics.</li>
+      <li><em>Colloidal</em> — degenerating cyst with surrounding oedema and contrast enhancement (immune attack on the dying parasite). Responds to anti-helminthics + steroids.</li>
+      <li><em>Granular nodular</em> — small, partially calcified, surrounding minimal oedema.</li>
+      <li><em>Calcified</em> — inactive scar; not treated with anti-helminthics.</li></ol>
+      <strong>(b) Standard regimen for viable parenchymal cysts:</strong>
+      <ul><li><strong>Albendazole 15 mg/kg/day (max 1200 mg) divided in two doses × 10–14 days</strong>, OR praziquantel 50–100 mg/kg/day × 14 days (combination often used for multiple cysts).</li>
+      <li><strong>Concomitant corticosteroids</strong> (dexamethasone 0.15 mg/kg/day or prednisone 1 mg/kg/day, starting 1–2 days before and continued throughout antiparasitic course) — the critical adjunct, because parasite death precipitates inflammation, oedema, and worsening of seizures or raised ICP.</li>
+      <li>Antiepileptic therapy continues throughout treatment and for ≥ 6–12 months after seizure freedom.</li></ul>
+      <strong>(c) Contraindications / deferral of anti-helminthics:</strong>
+      <ol><li><em>Calcified-only disease</em> — no benefit; treat seizures only.</li>
+      <li><em>Untreated obstructive hydrocephalus from intraventricular cysts</em> — relieve obstruction first (endoscopic resection or shunt) before pharmacotherapy, because dying parasites can worsen oedema.</li>
+      <li><em>Ocular or spinal cysticercosis</em> — anti-helminthics can cause irreversible inflammatory damage; surgical management preferred.</li>
+      <li><em>Cysticercotic encephalitis</em> (massive intracranial cyst burden with diffuse oedema) — anti-helminthics initially contraindicated; treat with steroids and ICP control until oedema subsides.</li></ol>
+      <div class="pearl"><b>Pearl:</b> Multiple cysts in different stages within one brain reflects multiple infection events over time. Counsel family on hand hygiene, water and food safety, and screen close household contacts (stool for ova and proglottids) — the tapeworm carrier is often a household member.</div>
+      <div class="chapter-ref">Cross-references: Ch 61 (CNS Infection), Ch 64 (Seizures), Ch 60 (Imaging).</div>
+    `
+  },
+  {
+    id: "RR30",
+    tags: ["Primary angiitis of CNS", "PACNS", "Ch 65"],
+    stem: "A 12-year-old presents over 6 weeks with progressive recurrent strokes (left hemiparesis, then right visual-field loss, then ataxia), severe persistent headaches, cognitive decline, and one tonic-clonic seizure. MRI shows multifocal infarcts and microhaemorrhages in different vascular territories; MRA is normal. CSF: lymphocytic pleocytosis (35 cells), elevated protein (0.9 g/L), normal glucose, oligoclonal bands not specified. Standard stroke work-up (cardiac, thrombophilia, infectious panel, autoimmune serologies including ANA, ANCA, antiphospholipid, and dsDNA) is negative.",
+    prompt: "(a) Name the syndrome and the imaging modality that most often clinches the diagnosis. (b) State the first-line induction immunotherapy and the typical maintenance regimen with duration. (c) Name two important differential diagnoses to exclude before committing to long-term cyclophosphamide.",
+    answer: ` <h4>Model answer</h4>
+      <div class="reasoning"><b>Layer 1 — Recognize primary angiitis of the CNS (PACNS):</b> recurrent multifocal infarcts/haemorrhages, headache, cognitive decline, and inflammatory CSF without systemic markers of vasculitis. Two paediatric subtypes: large/medium-vessel disease (visible on MRA / conventional angiography) and small-vessel disease (normal angiography; requires brain/leptomeningeal biopsy).</div>
+      <div class="reasoning"><b>Layer 2 — Imaging clue:</b> MRA can be normal in small-vessel PACNS — diagnosis often requires <strong>conventional digital subtraction angiography</strong> (DSA) showing beading / narrowing of medium-vessel intracranial arteries OR <strong>brain + leptomeningeal biopsy</strong> showing transmural inflammation.</div>
+      <strong>(a)</strong> Primary angiitis of the central nervous system (PACNS), small-vessel variant suspected (normal MRA). Modality of choice for diagnosis: <strong>conventional digital subtraction angiography</strong> for medium-vessel disease; <strong>brain plus leptomeningeal biopsy</strong> for small-vessel disease. Vessel-wall MRI (high-resolution 3T) is increasingly used and demonstrates concentric vessel-wall enhancement (helpful adjunct).<br><br>
+      <strong>(b) Induction:</strong>
+      <ul><li><strong>IV methylprednisolone 30 mg/kg/day (max 1 g) × 3–5 days</strong>, then oral prednisone 1–2 mg/kg/day tapered over months.</li>
+      <li><strong>Cyclophosphamide (IV pulse 500–750 mg/m² monthly) × 6 months</strong> for induction in severe / progressive disease.</li>
+      <li>Alternatives: rituximab (anti-CD20) increasingly used for B-cell-driven disease and as steroid-sparing.</li></ul>
+      <strong>Maintenance (after induction):</strong> mycophenolate mofetil 600 mg/m² BID OR azathioprine 1–3 mg/kg/day OR methotrexate 0.5–1 mg/kg weekly, for ≥ 18–24 months. Continue antiplatelet therapy as adjunct for thrombotic risk; manage seizures.<br><br>
+      <strong>(c) Differential to exclude before committing to cyclophosphamide:</strong>
+      <ul><li><em>Infectious vasculopathy</em> — VZV, HIV, syphilis, tuberculosis, fungal — empiric antibiotics / antivirals while work-up returns; missing an infection is catastrophic with immunosuppression.</li>
+      <li><em>Reversible cerebral vasoconstriction syndrome (RCVS)</em> — thunderclap headaches, transient angiographic vasospasm that resolves within 3 months; immunosuppression is harmful, treat with calcium-channel blockers.</li>
+      <li><em>Moyamoya disease</em> — bilateral distal ICA stenosis with collaterals; treated surgically, not with immunosuppression.</li>
+      <li><em>Genetic vasculopathies</em> (CADASIL, COL4A1 mutations) — different management.</li>
+      <li><em>Drug-induced vasculitis</em> (sympathomimetics, cocaine).</li></ul>
+      <div class="pearl"><b>Pearl:</b> Recurrent strokes in different vascular territories in a previously well child should prompt CNS vasculitis work-up. Biopsy yield is highest from radiographically abnormal leptomeninges; consult neurosurgery for targeted approach.</div>
+      <div class="chapter-ref">Cross-references: Ch 65 (Stroke), Ch 60 (Imaging), Ch 61 (Inflammatory CNS).</div>
+    `
+  },
+  {
+    id: "RR31",
+    tags: ["Pediatric AVM rupture", "Spontaneous ICH", "Ch 65"],
+    stem: "A 14-year-old previously well presents with a sudden severe headache, vomiting, and right-arm weakness, followed within 30 minutes by depressed consciousness (GCS 9). BP 145/90, HR 88. CT brain shows a left frontal intraparenchymal haematoma 28 mL with mild perilesional oedema, no intraventricular extension, and no midline shift. CT angiography demonstrates a 2.5-cm parenchymal arteriovenous malformation in the left frontal lobe with feeders from the left MCA and drainage into the superior sagittal sinus (Spetzler–Martin grade III).",
+    prompt: "(a) State the immediate (first 60 minutes) management priorities. (b) Outline the staged definitive treatment options and the most important factor in choosing the timing of definitive obliteration. (c) Name two complications to anticipate in the first 7 days.",
+    answer: ` <h4>Model answer</h4>
+      <div class="reasoning"><b>Layer 1 — Spontaneous lobar ICH in a previously well adolescent</b> is most often from a vascular malformation (AVM, cavernoma, dural fistula, aneurysm). AVMs account for the majority of pediatric spontaneous ICH not attributable to coagulopathy or hypertension.</div>
+      <div class="reasoning"><b>Layer 2 — Acute care = stop the bleed, treat the brain, define the lesion.</b> Definitive obliteration is usually deferred until the brain has recovered unless the AVM is bleeding actively or there is a focal aneurysm with high re-rupture risk.</div>
+      <strong>(a) First 60 minutes:</strong>
+      <ol><li>Airway protection: intubate for GCS &lt; 9 or deteriorating; protect from aspiration; rapid sequence with rocuronium and a cerebro-protective induction.</li>
+      <li>BP control: target systolic ~ 140 mmHg (or per local protocol — INTERACT/ATACH data extrapolated from adults) — avoid extreme drops that compromise perfusion.</li>
+      <li>Reverse any coagulopathy: vitamin K and FFP / 4-factor PCC if INR elevated, platelets if &lt; 100, tranexamic acid not routinely indicated in spontaneous ICH (no clear benefit; TICH-2 trial).</li>
+      <li>Manage raised ICP: head-up 30°, sedation, hyperosmolar therapy (3% NaCl 5 mL/kg) if signs of herniation.</li>
+      <li>Treat seizures (levetiracetam 60 mg/kg loading dose; pediatric ICH carries significant seizure risk).</li>
+      <li>Immediate neurosurgery consultation: consider surgical evacuation for haematomas &gt; 30 mL, GCS &lt; 9, or progressive deterioration (ICH score adapted to pediatrics is helpful).</li></ol>
+      <strong>(b) Definitive options (staged):</strong>
+      <ul><li><em>Microsurgical resection</em> — preferred for accessible lobar AVMs, Spetzler-Martin grade I–II; lower grade III with favourable anatomy. Cures in one operation.</li>
+      <li><em>Endovascular embolisation</em> — for deep AVMs, large feeders, or as adjunct to surgery or radiosurgery; useful for staging high-grade AVMs.</li>
+      <li><em>Stereotactic radiosurgery</em> (Gamma Knife / linear accelerator) — small AVMs (&lt; 3 cm), eloquent or deep locations; takes 2–3 years to obliterate, leaving residual bleed risk in the interim.</li></ul>
+      <strong>Most important factor in timing:</strong> brain stability and oedema resolution. Definitive treatment usually waits 4–6 weeks after acute bleed (\"cooling-off\" period) unless there is an associated flow-related aneurysm with high re-rupture risk or persistent active bleeding — then earlier intervention is appropriate.<br><br>
+      <strong>(c) Anticipated complications in first 7 days:</strong>
+      <ul><li><em>Re-bleeding</em> — peak risk in the first 24 hours, lower over the first month; tight BP control reduces risk.</li>
+      <li><em>Seizures and status epilepticus</em> — common with lobar bleeds; continuous EEG if depressed consciousness or recurrent seizures.</li>
+      <li><em>Raised ICP from perilesional oedema</em> — peaks at day 3–5.</li>
+      <li><em>Hydrocephalus</em> from intraventricular extension or blood within CSF pathways.</li>
+      <li><em>SIADH / cerebral salt wasting</em> — monitor sodium and volume status closely.</li>
+      <li><em>VTE</em> in immobile patients — mechanical prophylaxis first, pharmacologic prophylaxis later after stabilisation.</li></ul>
+      <div class="pearl"><b>Pearl:</b> Cerebral angiography (catheter DSA) is still the gold standard for AVM characterisation when planning surgical or endovascular treatment; CTA is the rapid first-line. MRI/MRA assesses brain parenchyma and screens for associated aneurysm.</div>
+      <div class="chapter-ref">Cross-references: Ch 65 (Stroke), Ch 60 (Imaging), Ch 61 (Neurosurgical CC).</div>
+    `
+  },
+  {
+    id: "RR32",
+    tags: ["Acute neuromuscular weakness", "Differential synthesis", "Ch 54"],
+    stem: "A 6-year-old presents with 2 days of progressive weakness, now unable to walk. Examination findings to distinguish: pattern (ascending vs descending vs proximal), reflexes (areflexia vs preserved vs fatigable), eye involvement, autonomic features, sensory level, fever and CSF if available.",
+    prompt: "Construct a side-by-side bedside framework that distinguishes the five major causes of acute paediatric ICU-relevant neuromuscular weakness: (i) Guillain-Barré syndrome (AIDP and Miller-Fisher variants), (ii) acute transverse myelitis, (iii) myasthenic crisis (MG), (iv) infant or wound botulism, (v) tick paralysis. For each, give the distinguishing exam feature, the bedside investigation that confirms the diagnosis, and the single definitive treatment.",
+    answer: ` <h4>Model answer — bedside differential</h4>
+      <strong>(i) Guillain-Barré syndrome (AIDP):</strong>
+      <ul><li><em>Distinguishing feature:</em> <strong>ascending symmetric flaccid weakness with areflexia</strong>, autonomic instability (BP and HR swings); cranial neuropathies in advanced disease.</li>
+      <li><em>Confirmatory bedside investigation:</em> CSF showing <strong>albumino-cytologic dissociation</strong> (raised protein, normal cell count) at &gt; 1 week; nerve conduction studies show demyelination. MRI spine post-gadolinium often shows nerve-root enhancement.</li>
+      <li><em>Definitive treatment:</em> <strong>IVIG 2 g/kg over 2–5 days</strong> OR plasma exchange; airway protection (the 20/30/40 rule applies).</li></ul>
+      <strong>(ii) Acute transverse myelitis:</strong>
+      <ul><li><em>Distinguishing feature:</em> <strong>sharp sensory level + bilateral motor + bowel/bladder dysfunction</strong>; reflexes are absent acutely (spinal shock) then hyperreflexic.</li>
+      <li><em>Confirmatory bedside investigation:</em> MRI spine showing T2 hyperintensity with cord swelling, often longitudinally extensive (LETM ≥ 3 segments); CSF lymphocytic pleocytosis; send AQP4 / MOG antibodies.</li>
+      <li><em>Definitive treatment:</em> <strong>IV methylprednisolone 30 mg/kg/day × 5 days</strong>, followed by oral taper; plasma exchange for steroid-refractory.</li></ul>
+      <strong>(iii) Myasthenic crisis (MG):</strong>
+      <ul><li><em>Distinguishing feature:</em> <strong>fatigable weakness with ptosis and diplopia</strong>, fluctuating during day, often with bulbar and respiratory weakness; preserved reflexes.</li>
+      <li><em>Confirmatory bedside investigation:</em> ice-pack test improves ptosis; nerve conduction with repetitive stimulation shows decremental response; AChR / MuSK antibodies. Edrophonium testing rarely used now.</li>
+      <li><em>Definitive treatment:</em> <strong>IVIG 2 g/kg OR plasma exchange</strong>; hold anticholinesterases if cholinergic features overlap; pyridostigmine maintenance; consider thymectomy for AChR-positive disease.</li></ul>
+      <strong>(iv) Infant or wound botulism:</strong>
+      <ul><li><em>Distinguishing feature:</em> <strong>descending paralysis</strong> starting with bulbar weakness (ptosis, weak suck/cry, dysphagia), then limb hypotonia; <strong>preserved reflexes initially</strong> that fatigue with repeated elicitation; constipation; mydriasis; autonomic features.</li>
+      <li><em>Confirmatory bedside investigation:</em> stool / serum botulinum toxin assay (delayed); EMG with repetitive stimulation may show incremental response at high frequency.</li>
+      <li><em>Definitive treatment:</em> <strong>BabyBIG (human botulism immune globulin) 50 mg/kg IV single dose</strong> for infant botulism; equine antitoxin for older children / wound botulism; supportive ventilation and feeding.</li></ul>
+      <strong>(v) Tick paralysis:</strong>
+      <ul><li><em>Distinguishing feature:</em> rapid (24–72 h) ascending flaccid paralysis with areflexia mimicking GBS, but with <strong>a tick attached, often in the scalp or behind the ear</strong>; resolves within hours after tick removal; normal CSF.</li>
+      <li><em>Confirmatory bedside investigation:</em> <strong>thorough skin search for an attached tick</strong> (especially scalp, behind ears, axillae, groin); reversal of weakness after tick removal confirms diagnosis retrospectively. Nerve conduction studies show reduced compound muscle action potentials early.</li>
+      <li><em>Definitive treatment:</em> <strong>find and remove the tick</strong> intact (gentle steady pull with tweezers near the mouth-parts). Resolution typically within 24 hours.</li></ul>
+      <div class="pearl"><b>Pearl:</b> A child with rapidly progressive weakness without a clear infectious / post-infectious story warrants a full body skin search — tick paralysis is curable in minutes if recognised. Never miss the tick.</div>
+      <div class="chapter-ref">Cross-references: Ch 54 (Acute Neuromuscular), Ch 62 (Spinal Cord), Ch 53 (Electrodiagnostic).</div>
+    `
+  }];
+
+function render(){
+  const c = document.getElementById('questions');
+  RECALLS.forEach((q, i) => {
+    const div = document.createElement('div');
+    div.className = 'qcard';
+    div.innerHTML =
+      '<div><span class="q-num">'+q.id+'</span>'+
+      q.tags.map(t => '<span class="q-tag">'+t+'</span>').join('')+'</div>'+
+      '<div class="q-stem">'+q.stem+'</div>'+
+      '<div class="q-prompt">'+q.prompt+'</div>'+
+      '<button class="reveal-btn" onclick="toggle(\''+q.id+'\', this)">Show model answer</button>'+
+      '<div class="answer-block" id="ans-'+q.id+'">'+q.answer+'</div>';
+    c.appendChild(div);
+  });
+  document.getElementById('totalQ').textContent = RECALLS.length;
+}
+
+function toggle(id, btn){
+  const el = document.getElementById('ans-'+id);
+  el.classList.toggle('shown');
+  btn.textContent = el.classList.contains('shown') ? 'Hide model answer' : 'Show model answer';
+  document.getElementById('seenQ').textContent = document.querySelectorAll('.answer-block.shown').length;
+}
+
+function revealAll(){
+  RECALLS.forEach(q => { document.getElementById('ans-'+q.id).classList.add('shown'); });
+  document.querySelectorAll('.reveal-btn').forEach(b => b.textContent = 'Hide model answer');
+  document.getElementById('seenQ').textContent = RECALLS.length;
+}
+
+function hideAll(){
+  document.querySelectorAll('.answer-block').forEach(el => el.classList.remove('shown'));
+  document.querySelectorAll('.reveal-btn').forEach(b => b.textContent = 'Show model answer');
+  document.getElementById('seenQ').textContent = 0;
+}
+
+render();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PICU BoardIQ — Safe Mode</title>
+<style>
+  :root{
+    --bg:#f5f8ff; --panel:#ffffff; --ink:#0a1530; --muted:#5a6b89;
+    --accent:#1e6fdf; --accent2:#0fb5b1; --warn:#d97706; --line:#dbe4f2;
+    --shadow:0 6px 22px rgba(20,40,90,0.08);
+  }
+  *{box-sizing:border-box;}
+  body{font-family:system-ui,-apple-system,Segoe UI,Inter,Arial;background:var(--bg);color:var(--ink);margin:0;padding:0;line-height:1.55;}
+  .wrap{max-width:1200px;margin:0 auto;padding:24px 28px 60px;}
+  header{background:linear-gradient(135deg,#0a1530 0%,#1e3a8a 60%,#0fb5b1 120%);color:#fff;padding:26px 28px;border-radius:14px;margin-bottom:24px;box-shadow:var(--shadow);}
+  header h1{margin:0 0 4px;font-size:1.7em;letter-spacing:-0.01em;}
+  header p{margin:4px 0 0;opacity:0.92;}
+  .banner{background:#fff7ed;border:1px solid #fcd9b6;color:#7c4a08;padding:14px 18px;border-radius:10px;margin-bottom:20px;font-size:0.95em;}
+  .banner strong{color:#9a4d00;}
+  h2{font-size:1.15em;color:var(--accent);margin:28px 0 12px;border-bottom:2px solid var(--line);padding-bottom:6px;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;box-shadow:var(--shadow);transition:transform .15s, box-shadow .15s;}
+  .card:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(20,40,90,0.12);}
+  .card .num{display:inline-block;background:var(--accent);color:#fff;font-weight:700;padding:2px 10px;border-radius:12px;font-size:0.82em;margin-right:8px;}
+  .card .title{font-weight:600;color:var(--ink);font-size:1em;margin:6px 0;}
+  .card .links{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+  .card a{flex:1;text-align:center;padding:8px 10px;border-radius:6px;text-decoration:none;font-weight:600;font-size:0.88em;border:1px solid var(--line);transition:background .15s;}
+  .card a.study{background:#eef4ff;color:var(--accent);}
+  .card a.study:hover{background:var(--accent);color:#fff;}
+  .card a.exam{background:#e6f7f6;color:var(--accent2);}
+  .card a.exam:hover{background:var(--accent2);color:#fff;}
+  .tools .card{display:flex;flex-direction:column;}
+  .tools .card a{display:block;background:var(--accent);color:#fff;border-color:var(--accent);}
+  .tools .card a:hover{background:#0e57b5;}
+  .tag{display:inline-block;background:var(--line);color:var(--muted);font-size:0.75em;padding:2px 8px;border-radius:10px;margin-left:6px;}
+  footer{margin-top:40px;padding:18px;background:var(--panel);border:1px solid var(--line);border-radius:10px;color:var(--muted);font-size:0.9em;text-align:center;}
+  footer a{color:var(--accent);font-weight:600;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+<h1>PICU BoardIQ — Safe Mode</h1>
+<p>Direct-access fallback. No login required. All 16 Rogers neurology chapters and every BoardIQ tool linked below.</p>
+</header>
+
+<div class="banner">
+<strong>What this page is:</strong> A minimal launcher that bypasses the main app. Use it whenever the full PICU BoardIQ app won't open. Every link below points directly at the file, so if a link gives "page not found", that means OneDrive hasn't finished syncing that file to your device yet — wait 1–2 minutes, then refresh.
+</div>
+
+<h2>Rogers Neurology — 16 Chapters</h2>
+<div class="grid" id="chapters"></div>
+
+<h2>BoardIQ Tools</h2>
+<div class="grid tools">
+  <div class="card"><span class="num">v2</span><div class="title">Main PICU BoardIQ App</div><a href="PICU_BoardIQ_v2.html">Open main app</a></div>
+  <div class="card"><span class="num">HY</span><div class="title">Ultra High-Yield Pearls</div><a href="../02_ULTRA_HIGH_YIELD_PEARLS/BIQ_UltraHighYield_Pearls_v1.html">Open 242 pearls</a></div>
+  <div class="card"><span class="num">MCQ</span><div class="title">SEAP-Style MCQ Master</div><a href="../03_SEAP_STYLE_QBANK/BIQ_NEURO_MCQ_Master_v1.html">252 MCQs</a></div>
+  <div class="card"><span class="num">SAQ</span><div class="title">Multi-Prompt SAQ Master</div><a href="../03_SEAP_STYLE_QBANK/BIQ_NEURO_SAQ_Master_v1.html">300 SAQs</a></div>
+  <div class="card"><span class="num">EX</span><div class="title">Interactive Exam App</div><a href="../03_SEAP_STYLE_QBANK/BIQ_NEURO_Interactive_Exam_App_v1.html">Mixed timed exam</a></div>
+  <div class="card"><span class="num">CASE</span><div class="title">Critical Case Simulations</div><a href="../04_CRITICAL_CASE_SIMULATIONS/BIQ_NEURO_Cases_Master_v1.html">300 cases</a></div>
+  <div class="card"><span class="num">RC</span><div class="title">Recall Originals (UWorld style)</div><a href="../12_RECALL_FUSION/BIQ_Recall_Originals_UWORLD_Style_v1.html">150 recall cards</a></div>
+  <div class="card"><span class="num">MEM</span><div class="title">Ultra-Short Memorization Tables</div><a href="../15_ULTRA_SHORT_MEMORIZATION/BIQ_Memorization_Tables_v1.html">213 rows</a></div>
+  <div class="card"><span class="num">SRCH</span><div class="title">Global Search Hub</div><a href="BIQ_Global_Search_Hub_v1.html">Cross-content search</a></div>
+  <div class="card"><span class="num">BRAND</span><div class="title">Brand Identity reference</div><a href="PICU_BoardIQ_Brand_Identity.html">Style guide</a></div>
+  <div class="card"><span class="num">DIAG</span><div class="title">Diagnostic console</div><a href="_DIAGNOSTIC.html">Run tests</a></div>
+</div>
+
+<footer>
+PICU BoardIQ Safe Mode · Built when the main app won't open. Once your main app works again, use it instead — it has the full dashboard with analytics, streak tracking, spaced repetition, and timed mock exams.
+<br><br><a href="PICU_BoardIQ_v2.html">→ Try main app</a> &nbsp; · &nbsp; <a href="_DIAGNOSTIC.html">→ Run diagnostic</a>
+</footer>
+
+</div>
+
+<script>
+const CHAPTERS = [
+  ['53', 'Electrodiagnostic Techniques (Neuromuscular)', 'Electrodiagnostic_Techniques_Neuromuscular'],
+  ['54', 'Acute Neuromuscular Disease', 'Acute_Neuromuscular_Disease'],
+  ['55', 'Chronic Neuromuscular Disease', 'Chronic_Neuromuscular_Disease'],
+  ['56', 'Developmental Neurobiology / Neurophysiology', 'Developmental_Neurobiology_Neurophysiology'],
+  ['57', 'Molecular Biology of Brain Injury', 'Molecular_Biology_of_Brain_Injury'],
+  ['58', 'Evaluation of the Comatose Child', 'Evaluation_of_the_Comatose_Child'],
+  ['59', 'Neurologic Monitoring', 'Neurologic_Monitoring'],
+  ['60', 'Neurologic Imaging', 'Neurologic_Imaging'],
+  ['61', 'Neurosurgical & Neuroradiologic Critical Care', 'Neurosurgical_and_Neuroradiologic_Critical_Care'],
+  ['62', 'Head & Spinal Cord Trauma', 'Head_and_Spinal_Cord_Trauma'],
+  ['63', 'Abusive Head Trauma', 'Abusive_Head_Trauma'],
+  ['64', 'Status Epilepticus', 'Status_Epilepticus'],
+  ['65', 'Cerebrovascular Disease & Stroke', 'Cerebrovascular_Disease_and_Stroke'],
+  ['66', 'Hypoxic-Ischemic Encephalopathy', 'Hypoxic_Ischemic_Encephalopathy'],
+  ['67', 'Metabolic Encephalopathies', 'Metabolic_Encephalopathies'],
+  ['68', 'Determination of Brain Death', 'Determination_of_Brain_Death'],
+];
+
+const grid = document.getElementById('chapters');
+CHAPTERS.forEach(c => {
+  const num = c[0], title = c[1], slug = c[2];
+  const base = '../../01_NEUROLOGY/Chapter_' + num + '_' + slug;
+  const study = base + '/NEURO_Ch' + num + '_StudyMode_v1.html';
+  const exam  = base + '/NEURO_Ch' + num + '_ExamMode_v1.html';
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML =
+    '<span class="num">Ch ' + num + '</span>' +
+    '<div class="title">' + title + '</div>' +
+    '<div class="links">' +
+      '<a class="study" href="' + study + '">Study Mode</a>' +
+      '<a class="exam" href="' + exam + '">Exam Mode</a>' +
+    '</div>';
+  grid.appendChild(card);
+});
+</script>
+
+</body>
+</html>

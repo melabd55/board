@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ultra-High-Yield Board Pearls — PICU BoardIQ</title>
+<style>
+:root {
+  --navy-deepest: #060d1f;
+  --navy:         #122047;
+  --electric:     #2dd4ff;
+  --gold:         #f2c244;
+  --green:        #5be584;
+  --text:         #e7ecf5;
+  --text-dim:     #9aa6c0;
+  --border:       #243463;
+  --surface:      #0e1838;
+  --surface-2:    #15224a;
+}
+* { box-sizing: border-box; }
+body {
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  background: var(--navy-deepest);
+  color: var(--text);
+  margin: 0; line-height: 1.5;
+}
+.header {
+  background: linear-gradient(180deg, var(--navy) 0%, var(--navy-deepest) 100%);
+  padding: 28px 24px;
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+}
+.header h1 { margin: 0 0 6px 0; font-size: 1.8em; font-weight: 800; }
+.header h1 .accent { color: var(--electric); }
+.header .sub { color: var(--text-dim); font-size: 0.95em; }
+.header .tagline { color: var(--gold); margin-top: 8px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; font-size: 0.85em; }
+.controls {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--navy-deepest); padding: 12px 24px;
+  border-bottom: 1px solid var(--border); display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+}
+.btn {
+  background: var(--surface-2); border: 1px solid var(--border); color: var(--text);
+  padding: 7px 14px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.88em;
+  transition: all 0.15s;
+}
+.btn:hover { background: var(--electric); color: var(--navy-deepest); border-color: var(--electric); }
+.btn.gold { background: var(--gold); color: var(--navy-deepest); border-color: var(--gold); }
+.btn.gold:hover { background: #ffd566; }
+input.search {
+  flex-grow: 1; min-width: 200px; padding: 7px 12px; background: var(--surface-2); color: var(--text);
+  border: 1px solid var(--border); border-radius: 6px; outline: none; font-size: 0.95em;
+}
+input.search:focus { border-color: var(--electric); }
+.container { max-width: 1100px; margin: 0 auto; padding: 24px; }
+.topic {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  margin: 16px 0; overflow: hidden;
+}
+.topic-header {
+  padding: 14px 18px; background: var(--surface-2); cursor: pointer;
+  display: flex; justify-content: space-between; align-items: center;
+  border-bottom: 1px solid var(--border);
+}
+.topic-header h2 { margin: 0; font-size: 1.05em; font-weight: 700; }
+.topic-header .count { color: var(--gold); font-size: 0.85em; font-weight: 600; }
+.topic-body { padding: 0; }
+.topic.collapsed .topic-body { display: none; }
+.pearl-row {
+  display: grid; grid-template-columns: minmax(180px, 1fr) minmax(200px, 2fr);
+  gap: 14px; padding: 10px 18px; border-bottom: 1px solid var(--border);
+  align-items: baseline;
+}
+.pearl-row:last-child { border-bottom: none; }
+.pearl-row:hover { background: rgba(45,212,255,0.04); }
+.pearl-row.hidden-row { display: none; }
+.pearl-q {
+  font-weight: 600; color: var(--text-dim); font-size: 0.92em;
+  cursor: pointer;
+}
+.pearl-a {
+  color: var(--green); font-weight: 600; font-size: 0.95em;
+  transition: opacity 0.2s;
+}
+.pearl-row.hidden-answer .pearl-a { opacity: 0; }
+.pearl-row.hidden-answer .pearl-a:hover { opacity: 1; }
+mark { background: var(--gold); color: var(--navy-deepest); padding: 0 2px; border-radius: 2px; font-weight: 600; }
+.footer { text-align: center; color: var(--text-dim); padding: 20px; font-size: 0.85em; border-top: 1px solid var(--border); }
+
+@media print {
+  body { background: white; color: black; font-size: 10pt; line-height: 1.3; }
+  .controls, .header { display: none; }
+  .container { max-width: 100%; padding: 8px; }
+  .topic { background: white; border: 1px solid #ccc; border-radius: 0; page-break-inside: avoid; margin: 6px 0; }
+  .topic-header { background: #eee; }
+  .topic-body { display: block !important; }
+  .pearl-row { border-bottom: 1px solid #ddd; padding: 4px 10px; }
+  .pearl-q { color: #000; }
+  .pearl-a { color: #000; font-weight: bold; }
+  .topic-header h2 { color: #000; }
+  .topic-header .count { color: #666; }
+  mark { background: #ffeb3b; color: black; }
+  .footer { display: none; }
+}
+
+@media (max-width: 600px) {
+  .pearl-row { grid-template-columns: 1fr; gap: 4px; padding: 10px 14px; }
+  .pearl-q { font-size: 0.95em; }
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <h1>💎 Ultra-High-Yield <span class="accent">Board Pearls</span></h1>
+  <div class="sub">Distilled one-liners covering the highest-impact RCPSC PICU board essentials</div>
+  <div class="tagline">242 pearls · 17 topics</div>
+</header>
+
+<div class="controls">
+  <input type="text" class="search" id="searchInput" placeholder="Search pearls — type a topic, drug, criterion..." />
+  <button class="btn" onclick="toggleAll(true)">Expand all</button>
+  <button class="btn" onclick="toggleAll(false)">Collapse all</button>
+  <button class="btn" onclick="toggleAnswers()" id="hideAnsBtn">Hide answers</button>
+  <button class="btn gold" onclick="window.print()">🖨️ Print</button>
+</div>
+
+<div class="container">
+<div class="topic" data-topic="🧠 tbi · icp · cpp">
+  <div class="topic-header" onclick="this.parentElement.classList.toggle('collapsed')">
+    <h2>🧠 TBI · ICP · CPP</h2><span class="count">23 pearls</span>
+  </div>
+  <div class="topic-body">
+    <div class="pearl-row" data-search="cpp formula map − icp">
+      <div class="pearl-q">CPP formula</div>
+      <div class="pearl-a">MAP − ICP</div>
+    </div>
+    <div class="pearl-row" data-search="cpp target — infant < 2 y ≥ 40 mm hg">
+      <div class="pearl-q">CPP target — infant < 2 y</div>
+      <div class="pearl-a">≥ 40 mm Hg</div>
+    </div>
+    <div class="pearl-row" data-search="cpp target — child 2–6 y ≥ 40–50 mm hg">
+      <div class="pearl-q">CPP target — child 2–6 y</div>
+      <div class="pearl-a">≥ 40–50 mm Hg</div>
+    </div>
+    <div class="pearl-row" data-search="cpp target — school-age 6–12 y ≥ 50 mm hg">
+      <div class="pearl-q">CPP target — school-age 6–12 y</div>
+      <div class="pearl-a">≥ 50 mm Hg</div>
+    </div>
+    <div class="pearl-row" data-search="cpp target — adolescent 13–17 y ≥ 50–60 mm hg">
+      <div class="pearl-q">CPP target — adolescent 13–17 y</div>
+      <div class="pearl-a">≥ 50–60 mm Hg</div>
+    </div>
+    <div class="pearl-row" data-search="tier-1 hyperosmolar — 3% saline bolus 3–10 ml/kg over 10–20 min">
+      <div class="pearl-q">Tier-1 hyperosmolar — 3% saline bolus</div>
+      <div class="pearl-a">3–10 mL/kg over 10–20 min</div>
+    </div>
+    <div class="pearl-row" data-search="tier-1 hyperosmolar — mannitol 0.25–1 g/kg iv over 15–30 min; hold if osmol gap > 10">
+      <div class="pearl-q">Tier-1 hyperosmolar — mannitol</div>
+      <div class="pearl-a">0.25–1 g/kg IV over 15–30 min; hold if osmol gap > 10</div>
+    </div>
+    <div class="pearl-row" data-search="sodium target tier-1 145–155 mmol/l">
+      <div class="pearl-q">Sodium target Tier-1</div>
+      <div class="pearl-a">145–155 mmol/L</div>
+    </div>
+    <div class="pearl-row" data-search="sodium target tier-2 up to 160 mmol/l">
+      <div class="pearl-q">Sodium target Tier-2</div>
+      <div class="pearl-a">up to 160 mmol/L</div>
+    </div>
+    <div class="pearl-row" data-search="paco₂ target severe tbi 35–40 mm hg (normocapnia); avoid prophylactic hyperventilation">
+      <div class="pearl-q">PaCO₂ target severe TBI</div>
+      <div class="pearl-a">35–40 mm Hg (normocapnia); avoid prophylactic hyperventilation</div>
+    </div>
+    <div class="pearl-row" data-search="prx < 0 means intact autoregulation">
+      <div class="pearl-q">PRx < 0 means</div>
+      <div class="pearl-a">Intact autoregulation</div>
+    </div>
+    <div class="pearl-row" data-search="prx > 0.2–0.3 means impaired autoregulation (pressure-passive flow)">
+      <div class="pearl-q">PRx > 0.2–0.3 means</div>
+      <div class="pearl-a">Impaired autoregulation (pressure-passive flow)</div>
+    </div>
+    <div class="pearl-row" data-search="cppopt =  cpp value at which prx is most negative; individualised target">
+      <div class="pearl-q">CPPopt = </div>
+      <div class="pearl-a">CPP value at which PRx is most negative; individualised target</div>
+    </div>
+    <div class="pearl-row" data-search="p2 > p1 on icp waveform reduced brain compliance; impending decompensation">
+      <div class="pearl-q">P2 > P1 on ICP waveform</div>
+      <div class="pearl-a">Reduced brain compliance; impending decompensation</div>
+    </div>
+    <div class="pearl-row" data-search="lundberg a waves plateau 50–100 mm hg × 5–20 min — herald herniation">
+      <div class="pearl-q">Lundberg A waves</div>
+      <div class="pearl-a">Plateau 50–100 mm Hg × 5–20 min — herald herniation</div>
+    </div>
+    <div class="pearl-row" data-search="normal pbto₂ 23–35 mm hg; < 15 hypoxia; < 10 critical">
+      <div class="pearl-q">Normal PbtO₂</div>
+      <div class="pearl-a">23–35 mm Hg; < 15 hypoxia; < 10 critical</div>
+    </div>
+    <div class="pearl-row" data-search="microdialysis l/p ratio for ischaemia > 40">
+      <div class="pearl-q">Microdialysis L/P ratio for ischaemia</div>
+      <div class="pearl-a">> 40</div>
+    </div>
+    <div class="pearl-row" data-search="marshall iii ct diffuse swelling, effaced cisterns, shift 0–5 mm">
+      <div class="pearl-q">Marshall III CT</div>
+      <div class="pearl-a">Diffuse swelling, effaced cisterns, shift 0–5 mm</div>
+    </div>
+    <div class="pearl-row" data-search="cool kids trial result prophylactic hypothermia not recommended in pediatric tbi">
+      <div class="pearl-q">Cool Kids trial result</div>
+      <div class="pearl-a">Prophylactic hypothermia NOT recommended in pediatric TBI</div>
+    </div>
+    <div class="pearl-row" data-search="therapeutic hypothermia rewarming rate ≤ 0.5 °c/hour">
+      <div class="pearl-q">Therapeutic hypothermia rewarming rate</div>
+      <div class="pearl-a">≤ 0.5 °C/hour</div>
+    </div>
+    <div class="pearl-row" data-search="decompressive craniectomy bone flap size 12–15 cm minimum diameter">
+      <div class="pearl-q">Decompressive craniectomy bone flap size</div>
+      <div class="pearl-a">12–15 cm minimum diameter</div>
+    </div>
+    <div class="pearl-row" data-search="cushing triad hypertension + bradycardia + irregular respirations = herniation">
+      <div class="pearl-q">Cushing triad</div>
+      <div class="pearl-a">Hypertension + bradycardia + irregular respirations = herniation</div>
+    </div>
+    <div class="pearl-row" data-search="second impact syndrome population adolescents in contact sports during post-concussion window">
+      <div class="pearl-q">Second impact syndrome population</div>
+      <div class="pearl-a">Adolescents in contact sports during post-concussion window</div>
+    </div>
+  </div>
+</div>
+<div class="topic" data-topic="⚡ status epilepticus">
+  <div class="topic-header" onclick="this.parentElement.classList.toggle('collapsed')">
+    <h2>⚡ Status Epilepticus</h2><span class="count">12 pearls</span>
+  </div>
+  <div class="topic-body">
+    <div class="pearl-row" data-search="ilae t1 for convulsive se 5 minutes — trigger emergency treatment">
+      <div class="pearl-q">ILAE T1 for convulsive SE</div>
+      <div class="pearl-a">5 minutes — trigger emergency treatment</div>
+    </div>
+    <div class="pearl-row" data-search="ilae t2 for convulsive se 30 minutes — long-term consequences">
+      <div class="pearl-q">ILAE T2 for convulsive SE</div>
+      <div class="pearl-a">30 minutes — long-term consequences</div>
+    </div>
+    <div class="pearl-row" data-search="first-line se benzodiazepine — lorazepam 0.1 mg/kg iv or im midazolam">
+      <div class="pearl-q">First-line SE</div>
+      <div class="pearl-a">Benzodiazepine — lorazepam 0.1 mg/kg IV or IM midazolam</div>
+    </div>
+    <div class="pearl-row" data-search="esett trial finding fosphenytoin, levetiracetam, valproate equally effective second-line">
+      <div class="pearl-q">ESETT trial finding</div>
+      <div class="pearl-a">Fosphenytoin, levetiracetam, valproate equally effective second-line</div>
+    </div>
+    <div class="pearl-row" data-search="fosphenytoin loading 20 mg pe/kg iv">
+      <div class="pearl-q">Fosphenytoin loading</div>
+      <div class="pearl-a">20 mg PE/kg IV</div>
+    </div>
+    <div class="pearl-row" data-search="levetiracetam loading for se 60 mg/kg iv">
+      <div class="pearl-q">Levetiracetam loading for SE</div>
+      <div class="pearl-a">60 mg/kg IV</div>
+    </div>
+    <div class="pearl-row" data-search="valproate loading for se 40 mg/kg iv">
+      <div class="pearl-q">Valproate loading for SE</div>
+      <div class="pearl-a">40 mg/kg IV</div>
+    </div>
+    <div class="pearl-row" data-search="midazolam infusion 0.2 mg/kg load; 0.05–2 mg/kg/h maintenance">
+      <div class="pearl-q">Midazolam infusion</div>
+      <div class="pearl-a">0.2 mg/kg load; 0.05–2 mg/kg/h maintenance</div>
+    </div>
+    <div class="pearl-row" data-search="pentobarbital target eeg burst-suppression — 10–20 sec interburst">
+      <div class="pearl-q">Pentobarbital target EEG</div>
+      <div class="pearl-a">Burst-suppression — 10–20 sec interburst</div>
+    </div>
+    <div class="pearl-row" data-search="ketamine in srse mechanism nmda antagonism — addresses receptor trafficking">
+      <div class="pearl-q">Ketamine in SRSE mechanism</div>
+      <div class="pearl-a">NMDA antagonism — addresses receptor trafficking</div>
+    </div>
+    <div class="pearl-row" data-search="fires adjuncts anakinra (il-1) + tocilizumab (il-6) + ketogenic diet + immunotherapy">
+      <div class="pearl-q">FIRES adjuncts</div>
+      <div class="pearl-a">Anakinra (IL-1) + tocilizumab (IL-6) + ketogenic diet + immunotherapy</div>
+    </div>
+    <div class="pearl-row" data-search="neonatal first-line aed phenobarbital 20 mg/kg iv">
+      <div class="pearl-q">Neonatal first-line AED</div>
+      <div class="pearl-a">Phenobarbital 20 mg/kg IV</div>
+    </div>
+  </div>
+</div>
+<div class="topic" data-topic="👶 neonatal hie · ttm">
+  <div class="topic-header" onclick="this.parentElement.classList.toggle('collapsed')">
+    <h2>👶 Neonatal HIE · TTM</h2><span class="count">10 pearls</span>
+  </div>
+  <div class="topic-body">
+    <div class="pearl-row" data-search="cooling temperature 33–34 °c">
+      <div class="pearl-q">Cooling temperature</div>
+      <div class="pearl-a">33–34 °C</div>
+    </div>
+    <div class="pearl-row" data-search="cooling duration 72 hours">
+      <div class="pearl-q">Cooling duration</div>
+      <div class="pearl-a">72 hours</div>
+    </div>
+    <div class="pearl-row" data-search="cooling window from birth < 6 hours">
+      <div class="pearl-q">Cooling window from birth</div>
+      <div class="pearl-a">< 6 hours</div>
+    </div>
+    <div class="pearl-row" data-search="sarnat stage 2 eligibility moderate hie — eligible for cooling">
+      <div class="pearl-q">Sarnat stage 2 eligibility</div>
+      <div class="pearl-a">Moderate HIE — eligible for cooling</div>
+    </div>
+    <div class="pearl-row" data-search="apgar criterion for hie ≤ 5 at 10 minutes">
+      <div class="pearl-q">Apgar criterion for HIE</div>
+      <div class="pearl-a">≤ 5 at 10 minutes</div>
+    </div>
+    <div class="pearl-row" data-search="cord ph criterion < 7.0 or be ≤ –12">
+      <div class="pearl-q">Cord pH criterion</div>
+      <div class="pearl-a">< 7.0 or BE ≤ –12</div>
+    </div>
+    <div class="pearl-row" data-search="thapca — 33 °c vs 36.8 °c no significant difference in good-outcome survival">
+      <div class="pearl-q">THAPCA — 33 °C vs 36.8 °C</div>
+      <div class="pearl-a">No significant difference in good-outcome survival</div>
+    </div>
+    <div class="pearl-row" data-search="post-arrest ttm duration 48 h, then strict normothermia × 5 days">
+      <div class="pearl-q">Post-arrest TTM duration</div>
+      <div class="pearl-a">48 h, then strict normothermia × 5 days</div>
+    </div>
+    <div class="pearl-row" data-search="avoid temperature > 37.5 °c — fever worsens outcome">
+      <div class="pearl-q">Avoid temperature</div>
+      <div class="pearl-a">> 37.5 °C — fever worsens outcome</div>
+    </div>
+    <div class="pearl-row" data-search="neonatal seizure first-line phenobarbital 20 mg/kg (neolev2)">
+      <div class="pearl-q">Neonatal seizure first-line</div>
+      <div class="pearl-a">Phenobarbital 20 mg/kg (NEOLEV2)</div>
+    </div>
+  </div>
+</div>
+<div class="topic" data-topic="🩸 pediatric stroke">
+  <div class="topic-header" onclick="this.parentElement.classList.toggle('collapsed')">
+    <h2>🩸 Pediatric Stroke</h2><span class="count">11 pearls</span>
+  </div>
+  <div class="topic-body">
+    <div class="pearl-row" data-search="stop trial threshold tcd tamv ≥ 200 cm/s → start chronic transfusion (hbs < 30%)">
+      <div class="pearl-q">STOP trial threshold</div>
+      <div class="pearl-a">TCD TAMV ≥ 200 cm/s → start chronic transfusion (HbS < 30%)</div>
+    </div>
+    <div class="pearl-row" data-search="acute scd stroke exchange transfusion to hbs < 30%; no tpa">
+      <div class="pearl-q">Acute SCD stroke</div>
+      <div class="pearl-a">Exchange transfusion to HbS < 30%; NO tPA</div>
+    </div>
+    <div class="pearl-row" data-search="fca defining feature unilateral monophasic arteriopathy stabilising < 6 months">
+      <div class="pearl-q">FCA defining feature</div>
+      <div class="pearl-a">Unilateral monophasic arteriopathy stabilising < 6 months</div>
+    </div>
+    <div class="pearl-row" data-search="moyamoya surgical option edas or sta-mca bypass">
+      <div class="pearl-q">Moyamoya surgical option</div>
+      <div class="pearl-a">EDAS or STA-MCA bypass</div>
+    </div>
+    <div class="pearl-row" data-search="carotid dissection therapy antiplatelet or anticoagulation × 3–6 months">
+      <div class="pearl-q">Carotid dissection therapy</div>
+      <div class="pearl-a">Antiplatelet OR anticoagulation × 3–6 months</div>
+    </div>
+    <div class="pearl-row" data-search="csvt therapy lmwh even with mild haemorrhagic transformation">
+      <div class="pearl-q">CSVT therapy</div>
+      <div class="pearl-a">LMWH even with mild haemorrhagic transformation</div>
+    </div>
+    <div class="pearl-row" data-search="melas acute episode iv l-arginine 0.5 g/kg bolus then 0.5 g/kg/day × 3–5 d">
+      <div class="pearl-q">MELAS acute episode</div>
+      <div class="pearl-a">IV L-arginine 0.5 g/kg bolus then 0.5 g/kg/day × 3–5 d</div>
+    </div>
+    <div class="pearl-row" data-search="pediatric lvo mechanical thrombectomy increasingly performed in adolescents; case-by-case">
+      <div class="pearl-q">Pediatric LVO mechanical thrombectomy</div>
+      <div class="pearl-a">Increasingly performed in adolescents; case-by-case</div>
+    </div>
+    <div class="pearl-row" data-search="neonatal stroke commonest site left mca (~ 75%)">
+      <div class="pearl-q">Neonatal stroke commonest site</div>
+      <div class="pearl-a">Left MCA (~ 75%)</div>
+    </div>
+    <div class="pearl-row" data-search="vasospasm peak post-sah days 4–14">
+      <div class="pearl-q">Vasospasm peak post-SAH</div>
+      <div class="pearl-a">Days 4–14</div>
+    </div>
+    <div class="pearl-row" data-search="nimodipine sah dose 60 mg po q4h × 21 days">
+      <div class="pearl-q">Nimodipine SAH dose</div>
+      <div class="pearl-a">60 mg PO q4h × 21 days</div>
+    </div>
+  </div>
+</div>
+<div class="topic" data-topic="🛡️ autoimmune encephalitis">
+  <div class="topic-header" onclick="this.parentElement.classList.toggle('collapsed')">
+    <h2>🛡️ Autoimmune Encephalitis</h2><span class="count">13 pearls</span>
+  </div>
+  <div class="topic-body">
+    <div class="pearl-row" data-search="anti-nmdar target glun1 subunit of nmda receptor (igg)">
+      <div class="pearl-q">Anti-NMDAR target</div>
+      <div class="pearl-a">GluN1 subunit of NMDA receptor (IgG)</div>
+    </div>
+    <div class="pearl-row" data-search="anti-nmdar first-line steroids + ivig and/or plex">
+      <div class="pearl-q">Anti-NMDAR first-line</div>
+      <div class="pearl-a">Steroids + IVIG and/or PLEX</div>
+    </div>
+    <div class="pearl-row" data-search="anti-nmdar tumour screen ovarian teratoma (females); testicular us (males)">
+      <div class="pearl-q">Anti-NMDAR tumour screen</div>
+      <div class="pearl-a">Ovarian teratoma (females); testicular US (males)</div>
+    </div>
+    <div class="pearl-row" data-search="anti-nmdar second-line rituximab + cyclophosphamide">
+      <div class="pearl-q">Anti-NMDAR second-line</div>
+      <div class="pearl-a">Rituximab + cyclophosphamide</div>
+    </div>
+    <div class="pearl-row" data-search="anti-lgi1 hallmark faciobrachial dystonic seizures + limbic + hyponatraemia">
+      <div class="pearl-q">Anti-LGI1 hallmark</div>
+      <div class="pearl-a">Faciobrachial dystonic seizures + limbic + hyponatraemia</div>
+    </div>
+    <div class="pearl-row" data-search="anti-mog titer cutoff cell-based assay ≥ 1:160">
+      <div class="pearl-q">Anti-MOG titer cutoff</div>
+      <div class="pearl-a">Cell-based assay ≥ 1:160</div>
+    </div>
+    <div class="pearl-row" data-search="mogad steroid taper prolonged (≥ 3 months) — abrupt taper triggers relapse">
+      <div class="pearl-q">MOGAD steroid taper</div>
+      <div class="pearl-a">Prolonged (≥ 3 months) — abrupt taper triggers relapse</div>
+    </div>
+    <div class="pearl-row" data-search="nmosd antibody aqp4-igg (anti-aquaporin-4)">
+      <div class="pearl-q">NMOSD antibody</div>
+      <div class="pearl-a">AQP4-IgG (anti-aquaporin-4)</div>
+    </div>
+    <div class="pearl-row" data-search="letm =  longitudinally extensive transverse myelitis ≥ 3 vertebral segments">
+      <div class="pearl-q">LETM = </div>
+      <div class="pearl-a">Longitudinally extensive transverse myelitis ≥ 3 vertebral segments</div>
+    </div>
+    <div class="pearl-row" data-search="nmosd long-term rituximab / eculizumab / satralizumab / inebilizumab">
+      <div class="pearl-q">NMOSD long-term</div>
+      <div class="pearl-a">Rituximab / eculizumab / satralizumab / inebilizumab</div>
+    </div>
+    <div class="pearl-row" data-search="avoid in nmosd interferon-β, natalizumab (worsen disease)">
+      <div class="pearl-q">AVOID in NMOSD</div>
+      <div class="pearl-a">Interferon-β, natalizumab (worsen disease)</div>
+    </div>
+    <div class="pearl-row" data-search="post-hsv anti-nmdar timing weeks–months after hsv encephalitis">
+      <div class="pearl-q">Post-HSV anti-NMDAR timing</div>
+      <div class="pearl-a">Weeks–months after HSV encephalitis</div>
+    </div>
+    <div class="pearl-row" data-search="adem ipmssg essential encephalopathy (required for diagnosis)">
+      <div class="pearl-q">ADEM IPMSSG essential</div>
+      <div class="pearl-a">Encephalopathy (required for diagnosis)</div>
+    </div>
+  </div>
+</div>
+<div class="topic" data-topic="⏹ brain death">
+  <div class="topic-header" onclick="this.parentElement.classList.toggle('collapsed')">
+    <h2>⏹ Brain Death</h2><span class="count">8 pearls</span>
+  </div>
+  <div class="topic-body">
+    <div class="pearl-row" data-search="pediatric observation > 30 d – 18 y 12 hours">
+      <div class="pearl-q">Pediatric observation > 30 d – 18 y</div>
+      <div class="pearl-a">12 hours</div>
+    </div>
+    <div class="pearl-row" data-search="pediatric observation newborn – 30 d 24 hours">
+      <div class="pearl-q">Pediatric observation newborn – 30 d</div>
+      <div class="pearl-a">24 hours</div>
+    </div>
+    <div class="pearl-row" data-search="apnoea test positive paco₂ ≥ 60 and ≥ 20 above baseline; no respiratory effort">
+      <div class="pearl-q">Apnoea test positive</div>
+      <div class="pearl-a">PaCO₂ ≥ 60 AND ≥ 20 above baseline; no respiratory effort</div>
+    </div>
+    <div class="pearl-row" data-search="apnoea test pre-test pao₂ > 200 on fio₂ 1.0 × 10 min">
+      <div class="pearl-q">Apnoea test pre-test PaO₂</div>
+      <div class="pearl-a">> 200 on FiO₂ 1.0 × 10 min</div>
+    </div>
+    <div class="pearl-row" data-search="best ancillary test (pediatric) radionuclide cerebral perfusion (hmpao 'hollow skull')">
+      <div class="pearl-q">Best ancillary test (pediatric)</div>
+      <div class="pearl-a">Radionuclide cerebral perfusion (HMPAO 'hollow skull')</div>
+    </div>
+    <div class="pearl-row" data-search="eeg as sole ancillary not recommended (false confirmation in barbiturate coma)">
+      <div class="pearl-q">EEG as sole ancillary</div>
+      <div class="pearl-a">Not recommended (false confirmation in barbiturate coma)</div>
+    </div>
+    <div class="pearl-row" data-search="brain death prerequisite — core temperature ≥ 35 °c (preferably 36)">
+      <div class="pearl-q">Brain death prerequisite — core temperature</div>
+      <div class="pearl-a">≥ 35 °C (preferably 36)</div>
+    </div>
+    <div class="pearl-row" data-search="confounders to exclude hypothermia, hypotension, drugs, nmb, metabolic">
+      <div class="pearl-q">Confounders to exclude</div>
+      <div class="pearl-a">Hypothermia, hypotension, drugs, NMB, metabolic</div>
+    </div>
+  </div>
+</div>
+<div class="topic" data-topic="🧪 metabolic">
+  <div class="topic-header" onclick="this.parentElement.classList.toggle('collapsed')">
+    <h2>🧪 Metabolic</h2><span class="count">26 pearls</span>
+  </div>
+  <div class="topic-body">
+    <div class="pearl-row" data-search="hyperammonaemia hd threshold nh3 > 250 µmol/l or rising despite scavengers">
+      <div class="pearl-q">Hyperammonaemia HD threshold</div>
+      <div class="pearl-a">NH3 > 250 µmol/L or rising despite scavengers</div>
+    </div>
+    <div class="pearl-row" data-search="ammonul composition sodium phenylacetate + sodium benzoate">
+      <div class="pearl-q">Ammonul composition</div>
+      <div class="pearl-a">Sodium phenylacetate + sodium benzoate</div>
+    </div>
+    <div class="pearl-row" data-search="otc distinguishing feature elevated urinary orotic acid; low citrulline">
+      <div class="pearl-q">OTC distinguishing feature</div>
+      <div class="pearl-a">Elevated urinary orotic acid; low citrulline</div>
+    </div>
+    <div class="pearl-row" data-search="otc inheritance x-linked partial dominance">
+      <div class="pearl-q">OTC inheritance</div>
+      <div class="pearl-a">X-linked partial dominance</div>
+    </div>
+    <div class="pearl-row" data-search="ucd acid-base pattern respiratory alkalosis (ammonia stimulates breathing centre)">
+      <div class="pearl-q">UCD acid-base pattern</div>
+      <div class="pearl-a">Respiratory ALKALOSIS (ammonia stimulates breathing centre)</div>
+    </div>
+    <div class="pearl-row" data-search="mcad biochemical clue hypoketotic hypoglycaemia + elevated c8 acylcarnitine">
+      <div class="pearl-q">MCAD biochemical clue</div>
+      <div class="pearl-a">Hypoketotic hypoglycaemia + elevated C8 acylcarnitine</div>
+    </div>
+    <div class="pearl-row" data-search="avoid in polg mutation valproate (fulminant hepatic failure)">
+      <div class="pearl-q">AVOID in POLG mutation</div>
+      <div class="pearl-a">Valproate (fulminant hepatic failure)</div>
+    </div>
+    <div class="pearl-row" data-search="leigh syndrome mri bilateral symmetric basal ganglia + brainstem t2">
+      <div class="pearl-q">Leigh syndrome MRI</div>
+      <div class="pearl-a">Bilateral symmetric basal ganglia + brainstem T2</div>
+    </div>
+    <div class="pearl-row" data-search="msud pathognomonic finding alloisoleucine + maple-syrup urine odour">
+      <div class="pearl-q">MSUD pathognomonic finding</div>
+      <div class="pearl-a">Alloisoleucine + maple-syrup urine odour</div>
+    </div>
+    <div class="pearl-row" data-search="msud hd trigger leucine > 1500 or encephalopathy">
+      <div class="pearl-q">MSUD HD trigger</div>
+      <div class="pearl-a">Leucine > 1500 or encephalopathy</div>
+    </div>
+    <div class="pearl-row" data-search="nkh ratio cutoff csf:plasma glycine > 0.08">
+      <div class="pearl-q">NKH ratio cutoff</div>
+      <div class="pearl-a">CSF:plasma glycine > 0.08</div>
+    </div>
+    <div class="pearl-row" data-search="glut1 deficiency csf clue csf:plasma glucose < 0.45">
+      <div class="pearl-q">GLUT1 deficiency CSF clue</div>
+      <div class="pearl-a">CSF:plasma glucose < 0.45</div>
+    </div>
+    <div class="pearl-row" data-search="glut1 treatment ketogenic diet">
+      <div class="pearl-q">GLUT1 treatment</div>
+      <div class="pearl-a">Ketogenic diet</div>
+    </div>
+    <div class="pearl-row" data-search="pyridoxine-dependent epilepsy gene aldh7a1 (antiquitin) — elevated α-aasa, pipecolic acid">
+      <div class="pearl-q">Pyridoxine-dependent epilepsy gene</div>
+      <div class="pearl-a">ALDH7A1 (antiquitin) — elevated α-AASA, pipecolic acid</div>
+    </div>
+    <div class="pearl-row" data-search="pyridoxine trial dose iv 100 mg with eeg + crash cart (apnoea risk)">
+      <div class="pearl-q">Pyridoxine trial dose</div>
+      <div class="pearl-a">IV 100 mg with EEG + crash cart (apnoea risk)</div>
+    </div>
+    <div class="pearl-row" data-search="pnpo deficiency treatment pyridoxal-5'-phosphate (pyridoxine alone fails)">
+      <div class="pearl-q">PNPO deficiency treatment</div>
+      <div class="pearl-a">Pyridoxal-5'-phosphate (pyridoxine alone fails)</div>
+    </div>
+    <div class="pearl-row" data-search="wilson — neurologic chelator trientine (lower paradoxical worsening risk than penicillamine)">
+      <div class="pearl-q">Wilson — neurologic chelator</div>
+      <div class="pearl-a">Trientine (lower paradoxical worsening risk than penicillamine)</div>
+    </div>
+    <div class="pearl-row" data-search="pkan mri sign eye-of-the-tiger (globus pallidus t2)">
+      <div class="pearl-q">PKAN MRI sign</div>
+      <div class="pearl-a">Eye-of-the-tiger (globus pallidus T2)</div>
+    </div>
+    <div class="pearl-row" data-search="x-ald mri pattern posterior parieto-occipital white matter + garland enhancement">
+      <div class="pearl-q">X-ALD MRI pattern</div>
+      <div class="pearl-a">Posterior parieto-occipital white matter + garland enhancement</div>
+    </div>
+    <div class="pearl-row" data-search="x-ald curative hsct if loes ≤ 9 and minimally symptomatic; gene therapy (elivaldogene)">
+      <div class="pearl-q">X-ALD curative</div>
+      <div class="pearl-a">HSCT if Loes ≤ 9 and minimally symptomatic; gene therapy (elivaldogene)</div>
+    </div>
+    <div class="pearl-row" data-search="friedreich ataxia dmt (2023) omaveloxolone (nrf2 activator)">
+      <div class="pearl-q">Friedreich ataxia DMT (2023)</div>
+      <div class="pearl-a">Omaveloxolone (Nrf2 activator)</div>
+    </div>
+    <div class="pearl-row" data-search="dopa-responsive dystonia gene gch1 — diurnal fluctuation, dramatic l-dopa response">
+      <div class="pearl-q">Dopa-responsive dystonia gene</div>
+      <div class="pearl-a">GCH1 — diurnal fluctuation, dramatic L-DOPA response</div>
+    </div>
+    <div class="pearl-row" data-search="aadc deficiency not effective l-dopa (aadc is missing enzyme)">
+      <div class="pearl-q">AADC deficiency NOT effective</div>
+      <div class="pearl-a">L-DOPA (AADC is missing enzyme)</div>
+    </div>
+    <div class="pearl-row" data-search="aadc gene therapy eladocagene exuparvovec (upstaza)">
+      <div class="pearl-q">AADC gene therapy</div>
+      <div class="pearl-a">Eladocagene exuparvovec (Upstaza)</div>
+    </div>
+    <div class="pearl-row" data-search="glutaric aciduria type 1 mri bat-wing temporal atrophy + subdural collections (aht mimic)">
+      <div class="pearl-q">Glutaric aciduria type 1 MRI</div>
+      <div class="pearl-a">Bat-wing temporal atrophy + subdural collections (AHT mimic)</div>
+    </div>
+    <div class="pearl-row" data-search="acute intermittent porphyria attack hemin iv + high-dose dextrose; givosiran for prevention">
+      <div class="pearl-q">Acute intermittent porphyria attack</div>
+      <div class="pearl-a">Hemin IV + high-dose dextrose; givosiran for prevention</div>
+    </div>
+  </div>
+</div>
+<div class="topic" data-topic="💪 neuromuscular">
+  <div class="topic-header" onclick="this.parentElement.classList.toggle('collapsed')">
+    <h2>💪 Neuromuscular</h2><span class="count">18 pearls</span>
+  </div>
+  <div class="topic-body">
+    <div class="pearl-row" data-search="sma genetics homozygous smn1 deletion; severity modified by smn2 copies">
+      <div class="pearl-q">SMA genetics</div>
+      <div class="pearl-a">Homozygous SMN1 deletion; severity modified by SMN2 copies</div>
+    </div>
+    <div class="pearl-row" data-search="sma disease-modifying therapies nusinersen, onasemnogene (zolgensma), risdiplam">
+      <div class="pearl-q">SMA disease-modifying therapies</div>
+      <div class="pearl-a">Nusinersen, onasemnogene (Zolgensma), risdiplam</div>
+    </div>
+    <div class="pearl-row" data-search="dmd gene therapy (2023) delandistrogene moxeparvovec (elevidys)">
+      <div class="pearl-q">DMD gene therapy (2023)</div>
+      <div class="pearl-a">Delandistrogene moxeparvovec (Elevidys)</div>
+    </div>
+    <div class="pearl-row" data-search="gbs first-line ivig 2 g/kg or plasma exchange (equivalent)">
+      <div class="pearl-q">GBS first-line</div>
+      <div class="pearl-a">IVIG 2 g/kg OR plasma exchange (equivalent)</div>
+    </div>
+    <div class="pearl-row" data-search="gbs icu indications fvc < 20 ml/kg, nif less negative than –30, bulbar, autonomic">
+      <div class="pearl-q">GBS ICU indications</div>
+      <div class="pearl-a">FVC < 20 mL/kg, NIF less negative than –30, bulbar, autonomic</div>
+    </div>
+    <div class="pearl-row" data-search="egris score predicts mechanical ventilation need in gbs first week">
+      <div class="pearl-q">EGRIS score</div>
+      <div class="pearl-a">Predicts mechanical ventilation need in GBS first week</div>
+    </div>
+    <div class="pearl-row" data-search="mg anti-musk feature bulbar/respiratory predominance; rituximab particularly effective">
+      <div class="pearl-q">MG anti-MuSK feature</div>
+      <div class="pearl-a">Bulbar/respiratory predominance; rituximab particularly effective</div>
+    </div>
+    <div class="pearl-row" data-search="lems antibody anti-p/q vgcc; weakness improves with effort">
+      <div class="pearl-q">LEMS antibody</div>
+      <div class="pearl-a">Anti-P/Q VGCC; weakness IMPROVES with effort</div>
+    </div>
+    <div class="pearl-row" data-search="lems treatment 3,4-diaminopyridine (amifampridine)">
+      <div class="pearl-q">LEMS treatment</div>
+      <div class="pearl-a">3,4-diaminopyridine (amifampridine)</div>
+    </div>
+    <div class="pearl-row" data-search="infant botulism antitoxin babybig (human-derived); not equine">
+      <div class="pearl-q">Infant botulism antitoxin</div>
+      <div class="pearl-a">BabyBIG (human-derived); NOT equine</div>
+    </div>
+    <div class="pearl-row" data-search="tetanus toxin mechanism cleaves synaptobrevin → blocks gaba/glycine inhibition">
+      <div class="pearl-q">Tetanus toxin mechanism</div>
+      <div class="pearl-a">Cleaves synaptobrevin → blocks GABA/glycine inhibition</div>
+    </div>
+    <div class="pearl-row" data-search="tetanus antitoxin htig (human tetanus immune globulin) 3000–6000 iu im">
+      <div class="pearl-q">Tetanus antitoxin</div>
+      <div class="pearl-a">HTIG (human tetanus immune globulin) 3000–6000 IU IM</div>
+    </div>
+    <div class="pearl-row" data-search="hyperekplexia treatment clonazepam (gaba-a boost counters glycine deficit)">
+      <div class="pearl-q">Hyperekplexia treatment</div>
+      <div class="pearl-a">Clonazepam (GABA-A boost counters glycine deficit)</div>
+    </div>
+    <div class="pearl-row" data-search="tick paralysis recovery within 24 h of complete tick removal">
+      <div class="pearl-q">Tick paralysis recovery</div>
+      <div class="pearl-a">Within 24 h of complete tick removal</div>
+    </div>
+    <div class="pearl-row" data-search="bickerstaff brainstem encephalitis antibody anti-gq1b">
+      <div class="pearl-q">Bickerstaff brainstem encephalitis antibody</div>
+      <div class="pearl-a">Anti-GQ1b</div>
+    </div>
+    <div class="pearl-row" data-search="miller fisher triad ophthalmoplegia + ataxia + areflexia">
+      <div class="pearl-q">Miller Fisher triad</div>
+      <div class="pearl-a">Ophthalmoplegia + ataxia + areflexia</div>
+    </div>
+    <div class="pearl-row" data-search="pompe ert alglucosidase alfa or avalglucosidase alfa (iv q2 weeks)">
+      <div class="pearl-q">Pompe ERT</div>
+      <div class="pearl-a">Alglucosidase alfa or avalglucosidase alfa (IV q2 weeks)</div>
+    </div>
+    <div class="pearl-row" data-search="pompe crim-negative implication need immune tolerance induction (rituximab/mtx) before ert">
+      <div class="pearl-q">Pompe CRIM-negative implication</div>
+      <div class="pearl-a">Need immune tolerance induction (rituximab/MTX) before ERT</div>
+    </div>
+  </div>
+</div>
+<div class="topic" data-topic="🦠 cns infection">
+  <div class="topic-header" onclick="this.parentElement.classList.toggle('collapsed')">
+    <h2>🦠 CNS Infection</h2><span class="count">16 pearls</span>
+  </div>
+  <div class="topic-body">
+    <div class="pearl-row" data-search="hsv encephalitis dose < 12 y acyclovir 15 mg/kg q8h × 14–21 d">
+      <div class="pearl-q">HSV encephalitis dose < 12 y</div>
+      <div class="pearl-a">Acyclovir 15 mg/kg q8h × 14–21 d</div>
+    </div>
+    <div class="pearl-row" data-search="pediatric meningitis steroid evidence strongest for hib (reduces snhl)">
+      <div class="pearl-q">Pediatric meningitis steroid evidence</div>
+      <div class="pearl-a">Strongest for Hib (reduces SNHL)</div>
+    </div>
+    <div class="pearl-row" data-search="steroid timing in meningitis with or just before first antibiotic dose">
+      <div class="pearl-q">Steroid timing in meningitis</div>
+      <div class="pearl-a">With or just before first antibiotic dose</div>
+    </div>
+    <div class="pearl-row" data-search="tbm regimen ripe + dexamethasone (thwaites 2004 mortality benefit)">
+      <div class="pearl-q">TBM regimen</div>
+      <div class="pearl-a">RIPE + dexamethasone (Thwaites 2004 mortality benefit)</div>
+    </div>
+    <div class="pearl-row" data-search="tbm steroid dose 0.4 mg/kg/day × 6–8 weeks tapered">
+      <div class="pearl-q">TBM steroid dose</div>
+      <div class="pearl-a">0.4 mg/kg/day × 6–8 weeks tapered</div>
+    </div>
+    <div class="pearl-row" data-search="cryptococcal induction liposomal amphotericin b + flucytosine ≥ 2 weeks">
+      <div class="pearl-q">Cryptococcal induction</div>
+      <div class="pearl-a">Liposomal amphotericin B + flucytosine ≥ 2 weeks</div>
+    </div>
+    <div class="pearl-row" data-search="cryptococcal icp target serial therapeutic lps to < 20 cmh₂o">
+      <div class="pearl-q">Cryptococcal ICP target</div>
+      <div class="pearl-a">Serial therapeutic LPs to < 20 cmH₂O</div>
+    </div>
+    <div class="pearl-row" data-search="cerebral toxoplasmosis pyrimethamine + sulfadiazine + leucovorin">
+      <div class="pearl-q">Cerebral toxoplasmosis</div>
+      <div class="pearl-a">Pyrimethamine + sulfadiazine + leucovorin</div>
+    </div>
+    <div class="pearl-row" data-search="cerebral aspergillosis first-line voriconazole iv">
+      <div class="pearl-q">Cerebral aspergillosis first-line</div>
+      <div class="pearl-a">Voriconazole IV</div>
+    </div>
+    <div class="pearl-row" data-search="lyme neuroborreliosis iv ceftriaxone 50–75 mg/kg/d × 14–21 d">
+      <div class="pearl-q">Lyme neuroborreliosis IV</div>
+      <div class="pearl-a">Ceftriaxone 50–75 mg/kg/d × 14–21 d</div>
+    </div>
+    <div class="pearl-row" data-search="cerebral malaria first-line iv artesunate (seaquamat, aquamat)">
+      <div class="pearl-q">Cerebral malaria first-line</div>
+      <div class="pearl-a">IV artesunate (SEAQUAMAT, AQUAMAT)</div>
+    </div>
+    <div class="pearl-row" data-search="naegleria fowleri rx amphotericin b + miltefosine + rifampin + azithro">
+      <div class="pearl-q">Naegleria fowleri Rx</div>
+      <div class="pearl-a">Amphotericin B + miltefosine + rifampin + azithro</div>
+    </div>
+    <div class="pearl-row" data-search="mucormycosis antifungal liposomal amphotericin b 5–10 mg/kg/day + surgical debridement">
+      <div class="pearl-q">Mucormycosis antifungal</div>
+      <div class="pearl-a">Liposomal amphotericin B 5–10 mg/kg/day + surgical debridement</div>
+    </div>
+    <div class="pearl-row" data-search="subdural empyema neurosurgical drainage + iv antibiotics × 4–6 weeks">
+      <div class="pearl-q">Subdural empyema</div>
+      <div class="pearl-a">Neurosurgical drainage + IV antibiotics × 4–6 weeks</div>
+    </div>
+    <div class="pearl-row" data-search="sspe eeg radermecker complexes (periodic high-amplitude slow waves)">
+      <div class="pearl-q">SSPE EEG</div>
+      <div class="pearl-a">Radermecker complexes (periodic high-amplitude slow waves)</div>
+    </div>
+    <div class="pearl-row" data-search="pml pathogen jc virus reactivation in immunocompromised">
+      <div class="pearl-q">PML pathogen</div>
+      <div class="pearl-a">JC virus reactivation in immunocompromised</div>
+    </div>
+  </div>
+</div>
+<div class="topic" data-topic="☠️ toxicology">
+  <div class="topic-header" onclick="this.parentElement.classList.toggle('collapsed')">
+    <h2>☠️ Toxicology</h2><span class="count">22 pearls</span>
+  </div>
+  <div class="topic-body">
+    <div class="pearl-row" data-search="salicylate alkalinisation target serum ph ≥ 7.45; urine ph ≥ 7.5">
+      <div class="pearl-q">Salicylate alkalinisation target</div>
+      <div class="pearl-a">Serum pH ≥ 7.45; urine pH ≥ 7.5</div>
+    </div>
+    <div class="pearl-row" data-search="salicylate hd (acute) level > 100 mg/dl, severe acidosis, ams, oedema">
+      <div class="pearl-q">Salicylate HD (acute)</div>
+      <div class="pearl-a">Level > 100 mg/dL, severe acidosis, AMS, oedema</div>
+    </div>
+    <div class="pearl-row" data-search="tca overdose sodium bicarbonate for qrs > 100 ms; avoid phenytoin">
+      <div class="pearl-q">TCA overdose</div>
+      <div class="pearl-a">Sodium bicarbonate for QRS > 100 ms; AVOID phenytoin</div>
+    </div>
+    <div class="pearl-row" data-search="co poisoning hbo indication loc, severe deficit, seizure, cardiac, cohb > 25%, pregnancy > 15%">
+      <div class="pearl-q">CO poisoning HBO indication</div>
+      <div class="pearl-a">LOC, severe deficit, seizure, cardiac, COHb > 25%, pregnancy > 15%</div>
+    </div>
+    <div class="pearl-row" data-search="cyanide antidote (fire victim) hydroxocobalamin 70 mg/kg iv">
+      <div class="pearl-q">Cyanide antidote (fire victim)</div>
+      <div class="pearl-a">Hydroxocobalamin 70 mg/kg IV</div>
+    </div>
+    <div class="pearl-row" data-search="avoid nitrites in fire-cyanide compounds methb + co carriage failure">
+      <div class="pearl-q">Avoid nitrites in fire-cyanide</div>
+      <div class="pearl-a">Compounds metHb + CO carriage failure</div>
+    </div>
+    <div class="pearl-row" data-search="lead chelation severe bal im → cana₂edta iv 4 h later">
+      <div class="pearl-q">Lead chelation severe</div>
+      <div class="pearl-a">BAL IM → CaNa₂EDTA IV 4 h later</div>
+    </div>
+    <div class="pearl-row" data-search="lead — 4-hour rule starting edta first redistributes lead into brain">
+      <div class="pearl-q">Lead — 4-hour rule</div>
+      <div class="pearl-a">Starting EDTA first redistributes lead INTO brain</div>
+    </div>
+    <div class="pearl-row" data-search="methanol antidote fomepizole 15 mg/kg load, 10 mg/kg q12h">
+      <div class="pearl-q">Methanol antidote</div>
+      <div class="pearl-a">Fomepizole 15 mg/kg load, 10 mg/kg q12h</div>
+    </div>
+    <div class="pearl-row" data-search="methaemoglobin antidote methylene blue 1–2 mg/kg iv">
+      <div class="pearl-q">Methaemoglobin antidote</div>
+      <div class="pearl-a">Methylene blue 1–2 mg/kg IV</div>
+    </div>
+    <div class="pearl-row" data-search="methylene blue contraindication g6pd deficiency">
+      <div class="pearl-q">Methylene blue contraindication</div>
+      <div class="pearl-a">G6PD deficiency</div>
+    </div>
+    <div class="pearl-row" data-search="organophosphate antidotes atropine (high-dose, repeated) + pralidoxime">
+      <div class="pearl-q">Organophosphate antidotes</div>
+      <div class="pearl-a">Atropine (high-dose, repeated) + pralidoxime</div>
+    </div>
+    <div class="pearl-row" data-search="lithium hd threshold > 4 meq/l or 2.5–4 with severe symptoms">
+      <div class="pearl-q">Lithium HD threshold</div>
+      <div class="pearl-a">> 4 mEq/L or 2.5–4 with severe symptoms</div>
+    </div>
+    <div class="pearl-row" data-search="nms treatment stop neuroleptic + dantrolene + bromocriptine + cooling">
+      <div class="pearl-q">NMS treatment</div>
+      <div class="pearl-a">Stop neuroleptic + dantrolene + bromocriptine + cooling</div>
+    </div>
+    <div class="pearl-row" data-search="serotonin syndrome treatment cyproheptadine + benzodiazepines">
+      <div class="pearl-q">Serotonin syndrome treatment</div>
+      <div class="pearl-a">Cyproheptadine + benzodiazepines</div>
+    </div>
+    <div class="pearl-row" data-search="acute dystonic reaction benztropine 1–2 mg iv/im or diphenhydramine 1 mg/kg">
+      <div class="pearl-q">Acute dystonic reaction</div>
+      <div class="pearl-a">Benztropine 1–2 mg IV/IM or diphenhydramine 1 mg/kg</div>
+    </div>
+    <div class="pearl-row" data-search="beta-blocker overdose glucagon + high-dose insulin euglycaemia + lipid emulsion">
+      <div class="pearl-q">Beta-blocker overdose</div>
+      <div class="pearl-a">Glucagon + high-dose insulin euglycaemia + lipid emulsion</div>
+    </div>
+    <div class="pearl-row" data-search="carbamazepine od multi-dose activated charcoal + nahco₃ for qrs widening">
+      <div class="pearl-q">Carbamazepine OD</div>
+      <div class="pearl-a">Multi-dose activated charcoal + NaHCO₃ for QRS widening</div>
+    </div>
+    <div class="pearl-row" data-search="aip attack treatment hemin iv + high-dose dextrose; avoid cyp-inducing drugs">
+      <div class="pearl-q">AIP attack treatment</div>
+      <div class="pearl-a">Hemin IV + high-dose dextrose; AVOID CYP-inducing drugs</div>
+    </div>
+    <div class="pearl-row" data-search="heat stroke gold-standard cooling cold water immersion (target 38.5–39 °c in 30 min)">
+      <div class="pearl-q">Heat stroke gold-standard cooling</div>
+      <div class="pearl-a">Cold water immersion (target 38.5–39 °C in 30 min)</div>
+    </div>
+    <div class="pearl-row" data-search="black widow envenomation opioids + benzodiazepines; antivenom for severe only">
+      <div class="pearl-q">Black widow envenomation</div>
+      <div class="pearl-a">Opioids + benzodiazepines; antivenom for severe only</div>
+    </div>
+    <div class="pearl-row" data-search="amanita phalloides silibinin + nac + supportive; high mortality">
+      <div class="pearl-q">Amanita phalloides</div>
+      <div class="pearl-a">Silibinin + NAC + supportive; high mortality</div>
+    </div>
+  </div>
+</div>
+<div class="topic" data-topic="🤸 movement disorders">
+  <div class="topic-header" onclick="this.parentElement.classList.toggle('collapsed')">
+    <h2>🤸 Movement Disorders</h2><span class="count">9 pearls</span>
+  </div>
+  <div class="topic-body">
+    <div class="pearl-row" data-search="status dystonicus tier-4 bilateral gpi-dbs">
+      <div class="pearl-q">Status dystonicus tier-4</div>
+      <div class="pearl-a">Bilateral GPi-DBS</div>
+    </div>
+    <div class="pearl-row" data-search="wilson genetic basis atp7b mutations">
+      <div class="pearl-q">Wilson genetic basis</div>
+      <div class="pearl-a">ATP7B mutations</div>
+    </div>
+    <div class="pearl-row" data-search="wilson copper studies low ceruloplasmin + elevated 24-h urinary copper">
+      <div class="pearl-q">Wilson copper studies</div>
+      <div class="pearl-a">Low ceruloplasmin + elevated 24-h urinary copper</div>
+    </div>
+    <div class="pearl-row" data-search="sydenham chorea prophylaxis benzathine penicillin g monthly until at least age 21">
+      <div class="pearl-q">Sydenham chorea prophylaxis</div>
+      <div class="pearl-a">Benzathine penicillin G monthly until at least age 21</div>
+    </div>
+    <div class="pearl-row" data-search="omas workup mandatory search for neuroblastoma (vma/hva, mibg, body imaging)">
+      <div class="pearl-q">OMAS workup mandatory</div>
+      <div class="pearl-a">Search for neuroblastoma (VMA/HVA, MIBG, body imaging)</div>
+    </div>
+    <div class="pearl-row" data-search="omas paraneoplastic rate ~ 50%">
+      <div class="pearl-q">OMAS paraneoplastic rate</div>
+      <div class="pearl-a">~ 50%</div>
+    </div>
+    <div class="pearl-row" data-search="juvenile hd inheritance ad with anticipation (worse with paternal transmission)">
+      <div class="pearl-q">Juvenile HD inheritance</div>
+      <div class="pearl-a">AD with anticipation (worse with paternal transmission)</div>
+    </div>
+    <div class="pearl-row" data-search="rett syndrome gene mecp2 (x-linked; females mostly affected)">
+      <div class="pearl-q">Rett syndrome gene</div>
+      <div class="pearl-a">MECP2 (X-linked; females mostly affected)</div>
+    </div>
+    <div class="pearl-row" data-search="rett dmt (2023) trofinetide (fda-approved)">
+      <div class="pearl-q">Rett DMT (2023)</div>
+      <div class="pearl-a">Trofinetide (FDA-approved)</div>
+    </div>
+  </div>
+</div>
+<div class="topic" data-topic="🌀 epilepsy syndromes">
+  <div class="topic-header" onclick="this.parentElement.classList.toggle('collapsed')">
+    <h2>🌀 Epilepsy Syndromes</h2><span class="count">11 pearls</span>
+  </div>
+  <div class="topic-body">
+    <div class="pearl-row" data-search="west syndrome triad infantile spasms + hypsarrhythmia + arrest/regression">
+      <div class="pearl-q">West syndrome triad</div>
+      <div class="pearl-a">Infantile spasms + hypsarrhythmia + arrest/regression</div>
+    </div>
+    <div class="pearl-row" data-search="tsc spasms first-line vigabatrin 100–150 mg/kg/d">
+      <div class="pearl-q">TSC spasms first-line</div>
+      <div class="pearl-a">Vigabatrin 100–150 mg/kg/d</div>
+    </div>
+    <div class="pearl-row" data-search="lgs triad multiple seizure types + 1.5–2.5 hz slow spike-wave + cognitive">
+      <div class="pearl-q">LGS triad</div>
+      <div class="pearl-a">Multiple seizure types + 1.5–2.5 Hz slow spike-wave + cognitive</div>
+    </div>
+    <div class="pearl-row" data-search="lgs approved aeds rufinamide, clobazam, cannabidiol, fenfluramine">
+      <div class="pearl-q">LGS approved AEDs</div>
+      <div class="pearl-a">Rufinamide, clobazam, cannabidiol, fenfluramine</div>
+    </div>
+    <div class="pearl-row" data-search="dravet avoid sodium channel blockers (cbz, oxc, pht, ltg)">
+      <div class="pearl-q">Dravet AVOID</div>
+      <div class="pearl-a">Sodium channel blockers (CBZ, OXC, PHT, LTG)</div>
+    </div>
+    <div class="pearl-row" data-search="dravet approved cannabidiol, fenfluramine, stiripentol (+ vpa, clobazam)">
+      <div class="pearl-q">Dravet approved</div>
+      <div class="pearl-a">Cannabidiol, fenfluramine, stiripentol (+ VPA, clobazam)</div>
+    </div>
+    <div class="pearl-row" data-search="sturge-weber gene gnaq somatic mosaic r183q">
+      <div class="pearl-q">Sturge-Weber gene</div>
+      <div class="pearl-a">GNAQ somatic mosaic R183Q</div>
+    </div>
+    <div class="pearl-row" data-search="sturge-weber prophylaxis low-dose aspirin 3–5 mg/kg/d">
+      <div class="pearl-q">Sturge-Weber prophylaxis</div>
+      <div class="pearl-a">Low-dose aspirin 3–5 mg/kg/d</div>
+    </div>
+    <div class="pearl-row" data-search="prrt2 disorders rx low-dose carbamazepine (dramatic response)">
+      <div class="pearl-q">PRRT2 disorders Rx</div>
+      <div class="pearl-a">Low-dose carbamazepine (dramatic response)</div>
+    </div>
+    <div class="pearl-row" data-search="csws/eses treatment high-dose corticosteroids">
+      <div class="pearl-q">CSWS/ESES treatment</div>
+      <div class="pearl-a">High-dose corticosteroids</div>
+    </div>
+    <div class="pearl-row" data-search="benign rolandic epilepsy selects — usually no treatment needed">
+      <div class="pearl-q">Benign rolandic epilepsy</div>
+      <div class="pearl-a">SeLECTS — usually no treatment needed</div>
+    </div>
+  </div>
+</div>
+<div class="topic" data-topic="🦴 spinal cord">
+  <div class="topic-header" onclick="this.parentElement.classList.toggle('collapsed')">
+    <h2>🦴 Spinal Cord</h2><span class="count">5 pearls</span>
+  </div>
+  <div class="topic-body">
+    <div class="pearl-row" data-search="sci map target ≥ 85–90 mm hg × 7 days post-injury">
+      <div class="pearl-q">SCI MAP target</div>
+      <div class="pearl-a">≥ 85–90 mm Hg × 7 days post-injury</div>
+    </div>
+    <div class="pearl-row" data-search="methylprednisolone in traumatic sci not routinely recommended">
+      <div class="pearl-q">Methylprednisolone in traumatic SCI</div>
+      <div class="pearl-a">NOT routinely recommended</div>
+    </div>
+    <div class="pearl-row" data-search="autonomic dysreflexia first action sit upright + remove inciting stimulus (bladder #1)">
+      <div class="pearl-q">Autonomic dysreflexia first action</div>
+      <div class="pearl-a">Sit upright + remove inciting stimulus (bladder #1)</div>
+    </div>
+    <div class="pearl-row" data-search="sciwora definition cord injury without plain-film/ct abnormality; mri shows changes">
+      <div class="pearl-q">SCIWORA definition</div>
+      <div class="pearl-a">Cord injury without plain-film/CT abnormality; MRI shows changes</div>
+    </div>
+    <div class="pearl-row" data-search="anterior cord syndrome bilateral motor loss + pain/temp loss; proprioception preserved">
+      <div class="pearl-q">Anterior cord syndrome</div>
+      <div class="pearl-a">Bilateral motor loss + pain/temp loss; proprioception preserved</div>
+    </div>
+  </div>
+</div>
+<div class="topic" data-topic="🔪 neurosurgical / hydrocephalus">
+  <div class="topic-header" onclick="this.parentElement.classList.toggle('collapsed')">
+    <h2>🔪 Neurosurgical / Hydrocephalus</h2><span class="count">13 pearls</span>
+  </div>
+  <div class="topic-body">
+    <div class="pearl-row" data-search="etv preferred for obstructive hydrocephalus in children > 1 year">
+      <div class="pearl-q">ETV preferred for</div>
+      <div class="pearl-a">Obstructive hydrocephalus in children > 1 year</div>
+    </div>
+    <div class="pearl-row" data-search="etv/cpc indication infants < 1 year (warf protocol)">
+      <div class="pearl-q">ETV/CPC indication</div>
+      <div class="pearl-a">Infants < 1 year (Warf protocol)</div>
+    </div>
+    <div class="pearl-row" data-search="sun-setting eyes mechanism pressure on dorsal midbrain → impaired upgaze">
+      <div class="pearl-q">Sun-setting eyes mechanism</div>
+      <div class="pearl-a">Pressure on dorsal midbrain → impaired upgaze</div>
+    </div>
+    <div class="pearl-row" data-search="parinaud tetrad upgaze palsy + convergence-retraction + light-near dissociation + collier sign">
+      <div class="pearl-q">Parinaud tetrad</div>
+      <div class="pearl-a">Upgaze palsy + convergence-retraction + light-near dissociation + Collier sign</div>
+    </div>
+    <div class="pearl-row" data-search="vein of galen treatment staged endovascular embolisation (defer to 4–6 months)">
+      <div class="pearl-q">Vein of Galen treatment</div>
+      <div class="pearl-a">Staged endovascular embolisation (defer to 4–6 months)</div>
+    </div>
+    <div class="pearl-row" data-search="chiari ii association myelomeningocele; hydrocephalus in > 90%">
+      <div class="pearl-q">Chiari II association</div>
+      <div class="pearl-a">Myelomeningocele; hydrocephalus in > 90%</div>
+    </div>
+    <div class="pearl-row" data-search="dipg defining mutation h3 k27m (diffuse midline glioma)">
+      <div class="pearl-q">DIPG defining mutation</div>
+      <div class="pearl-a">H3 K27M (diffuse midline glioma)</div>
+    </div>
+    <div class="pearl-row" data-search="medulloblastoma worst subgroup group 3">
+      <div class="pearl-q">Medulloblastoma worst subgroup</div>
+      <div class="pearl-a">Group 3</div>
+    </div>
+    <div class="pearl-row" data-search="medulloblastoma best subgroup wnt">
+      <div class="pearl-q">Medulloblastoma best subgroup</div>
+      <div class="pearl-a">WNT</div>
+    </div>
+    <div class="pearl-row" data-search="cerebellar mutism timing 24–48 h post posterior fossa surgery">
+      <div class="pearl-q">Cerebellar mutism timing</div>
+      <div class="pearl-a">24–48 h post posterior fossa surgery</div>
+    </div>
+    <div class="pearl-row" data-search="avm grading spetzler-martin: size + eloquence + venous drainage">
+      <div class="pearl-q">AVM grading</div>
+      <div class="pearl-a">Spetzler-Martin: size + eloquence + venous drainage</div>
+    </div>
+    <div class="pearl-row" data-search="craniopharyngioma imaging cyst + solid + calcifications (adamantinomatous)">
+      <div class="pearl-q">Craniopharyngioma imaging</div>
+      <div class="pearl-a">Cyst + solid + calcifications (adamantinomatous)</div>
+    </div>
+    <div class="pearl-row" data-search="vp shunt infection rate 5–10%; highest first year post-insertion">
+      <div class="pearl-q">VP shunt infection rate</div>
+      <div class="pearl-a">5–10%; highest first year post-insertion</div>
+    </div>
+  </div>
+</div>
+<div class="topic" data-topic="💊 icu pharmacology">
+  <div class="topic-header" onclick="this.parentElement.classList.toggle('collapsed')">
+    <h2>💊 ICU Pharmacology</h2><span class="count">22 pearls</span>
+  </div>
+  <div class="topic-body">
+    <div class="pearl-row" data-search="pris trigger propofol > 4 mg/kg/h × > 48 h in young children">
+      <div class="pearl-q">PRIS trigger</div>
+      <div class="pearl-a">Propofol > 4 mg/kg/h × > 48 h in young children</div>
+    </div>
+    <div class="pearl-row" data-search="pris constellation acidosis + rhabdomyolysis + lipidaemia + cardiac + aki">
+      <div class="pearl-q">PRIS constellation</div>
+      <div class="pearl-a">Acidosis + rhabdomyolysis + lipidaemia + cardiac + AKI</div>
+    </div>
+    <div class="pearl-row" data-search="refeeding hallmark electrolyte hypophosphataemia">
+      <div class="pearl-q">Refeeding hallmark electrolyte</div>
+      <div class="pearl-a">Hypophosphataemia</div>
+    </div>
+    <div class="pearl-row" data-search="wernicke triad encephalopathy + ophthalmoplegia + ataxia">
+      <div class="pearl-q">Wernicke triad</div>
+      <div class="pearl-a">Encephalopathy + ophthalmoplegia + ataxia</div>
+    </div>
+    <div class="pearl-row" data-search="wernicke treatment iv thiamine 500 mg tid × 3 d before glucose">
+      <div class="pearl-q">Wernicke treatment</div>
+      <div class="pearl-a">IV thiamine 500 mg TID × 3 d BEFORE glucose</div>
+    </div>
+    <div class="pearl-row" data-search="ods prevention limit na correction < 8–10 mmol/l per 24 h">
+      <div class="pearl-q">ODS prevention</div>
+      <div class="pearl-a">Limit Na correction < 8–10 mmol/L per 24 h</div>
+    </div>
+    <div class="pearl-row" data-search="capd cutoff for delirium ≥ 9">
+      <div class="pearl-q">CAPD cutoff for delirium</div>
+      <div class="pearl-a">≥ 9</div>
+    </div>
+    <div class="pearl-row" data-search="pres treatment hold offending agent + gradual bp reduction">
+      <div class="pearl-q">PRES treatment</div>
+      <div class="pearl-a">Hold offending agent + gradual BP reduction</div>
+    </div>
+    <div class="pearl-row" data-search="mtx neurotoxicity hold mtx + leucovorin rescue + supportive">
+      <div class="pearl-q">MTX neurotoxicity</div>
+      <div class="pearl-a">Hold MTX + leucovorin rescue + supportive</div>
+    </div>
+    <div class="pearl-row" data-search="ifosfamide encephalopathy antidote methylene blue 1–2 mg/kg iv">
+      <div class="pearl-q">Ifosfamide encephalopathy antidote</div>
+      <div class="pearl-a">Methylene blue 1–2 mg/kg IV</div>
+    </div>
+    <div class="pearl-row" data-search="icans grade 2 steroid dexamethasone iv">
+      <div class="pearl-q">ICANS grade 2 steroid</div>
+      <div class="pearl-a">Dexamethasone IV</div>
+    </div>
+    <div class="pearl-row" data-search="icans grade 4 steroid methylprednisolone 1 g/day × 3 days">
+      <div class="pearl-q">ICANS grade 4 steroid</div>
+      <div class="pearl-a">Methylprednisolone 1 g/day × 3 days</div>
+    </div>
+    <div class="pearl-row" data-search="reye syndrome biochemistry ast/alt ↑ + normal bilirubin + hyperammonaemia">
+      <div class="pearl-q">Reye syndrome biochemistry</div>
+      <div class="pearl-a">AST/ALT ↑ + normal bilirubin + hyperammonaemia</div>
+    </div>
+    <div class="pearl-row" data-search="reye trigger aspirin in viral illness (varicella, influenza)">
+      <div class="pearl-q">Reye trigger</div>
+      <div class="pearl-a">Aspirin in viral illness (varicella, influenza)</div>
+    </div>
+    <div class="pearl-row" data-search="sevoflurane mh trigger features masseter rigidity → generalised + hypercarbia + acidosis">
+      <div class="pearl-q">Sevoflurane MH trigger features</div>
+      <div class="pearl-a">Masseter rigidity → generalised + hypercarbia + acidosis</div>
+    </div>
+    <div class="pearl-row" data-search="mh antidote dantrolene 2.5 mg/kg q5–10 min; cooling + bicarb + insulin">
+      <div class="pearl-q">MH antidote</div>
+      <div class="pearl-a">Dantrolene 2.5 mg/kg q5–10 min; cooling + bicarb + insulin</div>
+    </div>
+    <div class="pearl-row" data-search="alf king's college ph criterion arterial ph < 7.30 after resuscitation (paracetamol)">
+      <div class="pearl-q">ALF King's College pH criterion</div>
+      <div class="pearl-a">Arterial pH < 7.30 after resuscitation (paracetamol)</div>
+    </div>
+    <div class="pearl-row" data-search="hypothalamic obesity rx glp-1 agonist, setmelanotide (mc4r agonist)">
+      <div class="pearl-q">Hypothalamic obesity Rx</div>
+      <div class="pearl-a">GLP-1 agonist, setmelanotide (MC4R agonist)</div>
+    </div>
+    <div class="pearl-row" data-search="atypical hus treatment eculizumab (c5 inhibitor); vaccinate against meningococcus">
+      <div class="pearl-q">Atypical HUS treatment</div>
+      <div class="pearl-a">Eculizumab (C5 inhibitor); vaccinate against meningococcus</div>
+    </div>
+    <div class="pearl-row" data-search="aicardi-goutières emerging rx jak inhibitors (baricitinib)">
+      <div class="pearl-q">Aicardi-Goutières emerging Rx</div>
+      <div class="pearl-a">JAK inhibitors (baricitinib)</div>
+    </div>
+    <div class="pearl-row" data-search="niemann-pick c rx miglustat (substrate reduction)">
+      <div class="pearl-q">Niemann-Pick C Rx</div>
+      <div class="pearl-a">Miglustat (substrate reduction)</div>
+    </div>
+    <div class="pearl-row" data-search="palicc-2 oi mild range oi 4–8 (mod 8–16; severe ≥ 16)">
+      <div class="pearl-q">PALICC-2 OI mild range</div>
+      <div class="pearl-a">OI 4–8 (Mod 8–16; Severe ≥ 16)</div>
+    </div>
+  </div>
+</div>
+<div class="topic" data-topic="📡 monitoring & imaging">
+  <div class="topic-header" onclick="this.parentElement.classList.toggle('collapsed')">
+    <h2>📡 Monitoring & Imaging</h2><span class="count">13 pearls</span>
+  </div>
+  <div class="topic-body">
+    <div class="pearl-row" data-search="prx formula concept moving correlation between slow waves of abp and icp">
+      <div class="pearl-q">PRx formula concept</div>
+      <div class="pearl-a">Moving correlation between slow waves of ABP and ICP</div>
+    </div>
+    <div class="pearl-row" data-search="cppopt definition cpp at which prx is most negative for that patient">
+      <div class="pearl-q">CPPopt definition</div>
+      <div class="pearl-a">CPP at which PRx is most negative for that patient</div>
+    </div>
+    <div class="pearl-row" data-search="microdialysis l/p + low glucose + ↑ glutamate ischaemic energy crisis">
+      <div class="pearl-q">Microdialysis L/P + low glucose + ↑ glutamate</div>
+      <div class="pearl-a">Ischaemic energy crisis</div>
+    </div>
+    <div class="pearl-row" data-search="microdialysis l/p high + normal glucose mitochondrial dysfunction">
+      <div class="pearl-q">Microdialysis L/P high + normal glucose</div>
+      <div class="pearl-a">Mitochondrial dysfunction</div>
+    </div>
+    <div class="pearl-row" data-search="pbto₂ probe region 1–2 cm³ around catheter tip; subcortical white matter">
+      <div class="pearl-q">PbtO₂ probe region</div>
+      <div class="pearl-a">1–2 cm³ around catheter tip; subcortical white matter</div>
+    </div>
+    <div class="pearl-row" data-search="boost-ii adult finding pbto₂-guided reduced hypoxia; mortality unchanged">
+      <div class="pearl-q">BOOST-II adult finding</div>
+      <div class="pearl-a">PbtO₂-guided reduced hypoxia; mortality unchanged</div>
+    </div>
+    <div class="pearl-row" data-search="nirs critical drop > 20% from baseline">
+      <div class="pearl-q">NIRS critical drop</div>
+      <div class="pearl-a">> 20% from baseline</div>
+    </div>
+    <div class="pearl-row" data-search="tcd vasospasm threshold > 120 cm/s mild; > 200 severe; lindegaard ratio > 3">
+      <div class="pearl-q">TCD vasospasm threshold</div>
+      <div class="pearl-a">> 120 cm/s mild; > 200 severe; Lindegaard ratio > 3</div>
+    </div>
+    <div class="pearl-row" data-search="hie mri severe pattern bilateral putamen, ventrolateral thalamus, hippocampus">
+      <div class="pearl-q">HIE MRI severe pattern</div>
+      <div class="pearl-a">Bilateral putamen, ventrolateral thalamus, hippocampus</div>
+    </div>
+    <div class="pearl-row" data-search="melas mri pattern cortical lesions not respecting vascular territories">
+      <div class="pearl-q">MELAS MRI pattern</div>
+      <div class="pearl-a">Cortical lesions NOT respecting vascular territories</div>
+    </div>
+    <div class="pearl-row" data-search="eye of the tiger pkan (pank2) — globus pallidus t2">
+      <div class="pearl-q">Eye of the tiger</div>
+      <div class="pearl-a">PKAN (PANK2) — globus pallidus T2</div>
+    </div>
+    <div class="pearl-row" data-search="bat-wing temporal atrophy glutaric aciduria type 1">
+      <div class="pearl-q">Bat-wing temporal atrophy</div>
+      <div class="pearl-a">Glutaric aciduria type 1</div>
+    </div>
+    <div class="pearl-row" data-search="tigroid white matter metachromatic leukodystrophy">
+      <div class="pearl-q">Tigroid white matter</div>
+      <div class="pearl-a">Metachromatic leukodystrophy</div>
+    </div>
+  </div>
+</div>
+<div class="topic" data-topic="🌬️ ards · palicc-2">
+  <div class="topic-header" onclick="this.parentElement.classList.toggle('collapsed')">
+    <h2>🌬️ ARDS · PALICC-2</h2><span class="count">10 pearls</span>
+  </div>
+  <div class="topic-body">
+    <div class="pearl-row" data-search="palicc-2 mild oi 4–8 (invasive vent)">
+      <div class="pearl-q">PALICC-2 mild OI</div>
+      <div class="pearl-a">4–8 (invasive vent)</div>
+    </div>
+    <div class="pearl-row" data-search="palicc-2 moderate oi 8–16">
+      <div class="pearl-q">PALICC-2 moderate OI</div>
+      <div class="pearl-a">8–16</div>
+    </div>
+    <div class="pearl-row" data-search="palicc-2 severe oi ≥ 16">
+      <div class="pearl-q">PALICC-2 severe OI</div>
+      <div class="pearl-a">≥ 16</div>
+    </div>
+    <div class="pearl-row" data-search="palicc niv criterion spo₂/fio₂ ≤ 264 or pao₂/fio₂ ≤ 300 on cpap/bipap ≥ 5">
+      <div class="pearl-q">PALICC NIV criterion</div>
+      <div class="pearl-a">SpO₂/FiO₂ ≤ 264 OR PaO₂/FiO₂ ≤ 300 on CPAP/BiPAP ≥ 5</div>
+    </div>
+    <div class="pearl-row" data-search="lung-protective vt 5–8 ml/kg ideal body weight (3–6 in severe)">
+      <div class="pearl-q">Lung-protective Vt</div>
+      <div class="pearl-a">5–8 mL/kg ideal body weight (3–6 in severe)</div>
+    </div>
+    <div class="pearl-row" data-search="plateau pressure target < 28 cmh₂o">
+      <div class="pearl-q">Plateau pressure target</div>
+      <div class="pearl-a">< 28 cmH₂O</div>
+    </div>
+    <div class="pearl-row" data-search="driving pressure target ≤ 15 cmh₂o">
+      <div class="pearl-q">Driving pressure target</div>
+      <div class="pearl-a">≤ 15 cmH₂O</div>
+    </div>
+    <div class="pearl-row" data-search="prone positioning moderate-severe ards (proseva adult evidence)">
+      <div class="pearl-q">Prone positioning</div>
+      <div class="pearl-a">Moderate-severe ARDS (PROSEVA adult evidence)</div>
+    </div>
+    <div class="pearl-row" data-search="permissive hypercapnia ph > 7.20 acceptable">
+      <div class="pearl-q">Permissive hypercapnia pH</div>
+      <div class="pearl-a">> 7.20 acceptable</div>
+    </div>
+    <div class="pearl-row" data-search="permissive hypoxaemia spo₂ 88–92% acceptable in severe disease">
+      <div class="pearl-q">Permissive hypoxaemia SpO₂</div>
+      <div class="pearl-a">88–92% acceptable in severe disease</div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<footer class="footer">
+  PICU BoardIQ · Ultra-HY Pearls · 2026-05-15 · For RCPSC SEAP preparation
+</footer>
+
+<script>
+function toggleAll(expand) {
+  document.querySelectorAll('.topic').forEach(t => t.classList.toggle('collapsed', !expand));
+}
+function toggleAnswers() {
+  const rows = document.querySelectorAll('.pearl-row');
+  const btn = document.getElementById('hideAnsBtn');
+  const isHidden = rows[0].classList.contains('hidden-answer');
+  rows.forEach(r => r.classList.toggle('hidden-answer', !isHidden));
+  btn.textContent = isHidden ? 'Hide answers' : 'Show answers';
+}
+const sInput = document.getElementById('searchInput');
+let debounce;
+sInput.addEventListener('input', () => {
+  clearTimeout(debounce);
+  debounce = setTimeout(runSearch, 150);
+});
+function runSearch() {
+  const term = sInput.value.toLowerCase().trim();
+  document.querySelectorAll('.pearl-row').forEach(r => {
+    const hay = r.dataset.search || '';
+    const match = !term || hay.includes(term);
+    r.classList.toggle('hidden-row', !match);
+    if (match && term.length >= 2) {
+      const re = new RegExp(term.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'gi');
+      r.querySelector('.pearl-q').innerHTML = r.querySelector('.pearl-q').textContent.replace(re, m => `<mark>${m}</mark>`);
+      r.querySelector('.pearl-a').innerHTML = r.querySelector('.pearl-a').textContent.replace(re, m => `<mark>${m}</mark>`);
+    } else {
+      r.querySelector('.pearl-q').innerHTML = r.querySelector('.pearl-q').textContent;
+      r.querySelector('.pearl-a').innerHTML = r.querySelector('.pearl-a').textContent;
+    }
+  });
+  // Hide topics with no visible rows
+  document.querySelectorAll('.topic').forEach(t => {
+    const anyVisible = !!t.querySelector('.pearl-row:not(.hidden-row)');
+    t.style.display = anyVisible ? '' : 'none';
+  });
+}
+</script>
+</body>
+</html>

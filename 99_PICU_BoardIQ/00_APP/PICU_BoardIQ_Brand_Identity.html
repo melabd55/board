@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PICU BoardIQ — Brand Identity</title>
+<style>
+:root {
+  --navy:    #0A2540;
+  --blue:    #1B6CB6;
+  --teal:    #14B8A6;
+  --green:   #22C55E;
+  --amber:   #F59E0B;
+  --coral:   #EF4444;
+  --white:   #FFFFFF;
+  --bg:      #F8FAFC;
+  --border:  #E2E8F0;
+  --muted:   #64748B;
+  --dark:    #0F172A;
+  --card:    #1E293B;
+}
+* { box-sizing: border-box; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  background: var(--bg); color: var(--navy);
+  margin: 0; line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+.brand-hero {
+  background: linear-gradient(180deg, #fff 0%, #f8fafc 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 56px 40px 48px;
+  text-align: center;
+}
+.logo-large {
+  display: inline-flex; align-items: center; gap: 16px;
+  margin-bottom: 14px;
+}
+.logo-large .mark { width: 64px; height: 64px; }
+.logo-large .wordmark {
+  font-size: 2.4em; font-weight: 800; letter-spacing: -0.02em; color: var(--navy);
+}
+.logo-large .wordmark .picu { font-weight: 400; opacity: 0.55; }
+.logo-large .wordmark .iq { color: var(--blue); }
+.tagline {
+  color: var(--muted); font-size: 1.05em; letter-spacing: 0.04em; max-width: 600px; margin: 4px auto 0;
+}
+.tagline-uppercase {
+  display: inline-block; margin-top: 14px;
+  color: var(--teal); font-weight: 600; font-size: 0.78em;
+  text-transform: uppercase; letter-spacing: 0.18em;
+}
+
+.container { max-width: 1200px; margin: 0 auto; padding: 36px 24px; }
+.section-title {
+  font-size: 0.78em; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em;
+  font-weight: 700; margin: 36px 0 16px 0; padding-bottom: 8px; border-bottom: 1px solid var(--border);
+}
+h2.heading { font-size: 1.5em; margin: 0 0 4px 0; font-weight: 700; }
+.sub { color: var(--muted); margin-top: 0; font-size: 1em; }
+
+/* Logo variants showcase */
+.logo-showcase {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;
+}
+.logo-card {
+  background: white; border: 1px solid var(--border); border-radius: 12px;
+  padding: 28px; display: flex; flex-direction: column; align-items: center; gap: 16px;
+  min-height: 200px; justify-content: center;
+}
+.logo-card.dark { background: var(--navy); color: white; }
+.logo-card.dark .wordmark { color: white; }
+.logo-card.dark .wordmark .picu { color: rgba(255,255,255,0.55); }
+.logo-card.dark .wordmark .iq { color: var(--teal); }
+.logo-card .caption {
+  font-size: 0.78em; color: var(--muted); text-transform: uppercase;
+  letter-spacing: 0.1em; font-weight: 600;
+}
+.logo-card.dark .caption { color: rgba(255,255,255,0.55); }
+.logo-card .wordmark { font-weight: 800; letter-spacing: -0.02em; }
+.logo-card .wordmark.size-xl { font-size: 2em; }
+.logo-card .wordmark.size-lg { font-size: 1.5em; }
+.logo-card .wordmark.size-md { font-size: 1.2em; }
+.logo-card .wordmark .iq { color: var(--blue); }
+.logo-card .wordmark .picu { font-weight: 400; opacity: 0.55; }
+.logo-row { display: flex; align-items: center; gap: 12px; }
+
+/* Color palette */
+.palette-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px;
+}
+.swatch {
+  border-radius: 10px; padding: 16px; min-height: 110px;
+  display: flex; flex-direction: column; justify-content: space-between;
+  border: 1px solid var(--border);
+}
+.swatch .name { font-weight: 700; font-size: 0.92em; }
+.swatch .hex { font-family: 'SF Mono', Menlo, monospace; font-size: 0.85em; opacity: 0.85; }
+.swatch.dark { color: white; }
+
+/* Icon grid */
+.icons-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 12px;
+}
+.icon-card {
+  background: white; border: 1px solid var(--border); border-radius: 10px;
+  padding: 18px 12px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px;
+  transition: all 0.15s;
+}
+.icon-card:hover { border-color: var(--blue); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(10,37,64,0.06); }
+.icon-card svg { width: 28px; height: 28px; color: var(--blue); stroke: currentColor; fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+.icon-card .icon-name {
+  font-size: 0.78em; color: var(--muted); font-weight: 600;
+}
+
+/* Dashboard preview */
+.dashboard-preview {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 16px; overflow: hidden;
+  margin-top: 16px;
+}
+.dp-header {
+  background: white; padding: 14px 24px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.dp-header .nav-pills { display: flex; gap: 6px; }
+.dp-nav-btn {
+  background: white; border: 1px solid var(--border); color: var(--muted);
+  padding: 6px 12px; border-radius: 8px; font-size: 0.85em; font-weight: 500;
+  display: flex; align-items: center; gap: 6px; cursor: pointer;
+}
+.dp-nav-btn svg { width: 14px; height: 14px; }
+.dp-nav-btn:hover { color: var(--blue); border-color: var(--blue); }
+.dp-body { padding: 32px 24px; }
+.dp-h1 { font-size: 1.6em; font-weight: 800; margin: 0 0 4px 0; letter-spacing: -0.02em; }
+.dp-sub { color: var(--muted); margin-bottom: 24px; }
+.dp-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 24px; }
+.dp-stat { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; }
+.dp-stat .label { font-size: 0.72em; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; }
+.dp-stat .value { font-size: 1.6em; font-weight: 800; color: var(--navy); margin-top: 2px; }
+.dp-stat .sub { font-size: 0.78em; color: var(--muted); margin-top: 2px; }
+
+.dp-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+.dp-tile {
+  background: white; border: 1px solid var(--border); border-radius: 12px; padding: 20px;
+  display: flex; flex-direction: column; gap: 8px;
+  transition: all 0.15s; cursor: pointer; min-height: 130px;
+}
+.dp-tile:hover { border-color: var(--blue); box-shadow: 0 6px 18px rgba(10,37,64,0.06); transform: translateY(-2px); }
+.dp-tile .tile-icon-wrap {
+  width: 38px; height: 38px; border-radius: 9px;
+  background: rgba(27,108,182,0.08); display: flex; align-items: center; justify-content: center;
+}
+.dp-tile .tile-icon-wrap.teal { background: rgba(20,184,166,0.10); }
+.dp-tile .tile-icon-wrap.amber { background: rgba(245,158,11,0.10); }
+.dp-tile .tile-icon-wrap.green { background: rgba(34,197,94,0.10); }
+.dp-tile .tile-icon-wrap.coral { background: rgba(239,68,68,0.10); }
+.dp-tile svg { width: 22px; height: 22px; color: var(--blue); stroke: currentColor; fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+.dp-tile .tile-icon-wrap.teal svg { color: var(--teal); }
+.dp-tile .tile-icon-wrap.amber svg { color: var(--amber); }
+.dp-tile .tile-icon-wrap.green svg { color: var(--green); }
+.dp-tile .tile-icon-wrap.coral svg { color: var(--coral); }
+.dp-tile .tile-title { font-weight: 700; font-size: 1em; color: var(--navy); }
+.dp-tile .tile-desc { font-size: 0.85em; color: var(--muted); }
+.dp-tile .tile-meta { font-size: 0.78em; color: var(--blue); margin-top: auto; font-weight: 600; }
+
+.footer { text-align: center; color: var(--muted); padding: 28px 20px; font-size: 0.85em; border-top: 1px solid var(--border); margin-top: 40px; background: white; }
+</style>
+</head>
+<body>
+
+<header class="brand-hero">
+  <div class="logo-large">
+    <svg class="mark" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-label="PICU BoardIQ logo mark">
+      <!-- Brain silhouette merging into ECG pulse -->
+      <defs>
+        <linearGradient id="markGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#0A2540"/>
+          <stop offset="100%" stop-color="#1B6CB6"/>
+        </linearGradient>
+      </defs>
+      <!-- Outer cell wall / brain rounded square -->
+      <rect x="4" y="4" width="56" height="56" rx="14" fill="url(#markGrad)"/>
+      <!-- Brain hemisphere outline (left) -->
+      <path d="M 19 22 C 17 18, 21 14, 25 16 C 25 13, 29 11, 32 14 C 35 11, 39 13, 39 16 C 43 14, 47 18, 45 22 C 48 23, 49 28, 46 30"
+            stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- Brain hemisphere outline continuing down -->
+      <path d="M 46 30 C 48 33, 47 38, 44 39 L 38 39"
+            stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- ECG pulse line emerging from brain -->
+      <path d="M 38 39 L 32 39 L 30 36 L 28 43 L 26 35 L 24 39 L 18 39"
+            stroke="#14B8A6" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- Pulse dot terminator -->
+      <circle cx="18" cy="39" r="1.6" fill="#14B8A6"/>
+    </svg>
+    <div class="wordmark"><span class="picu">PICU</span> Board<span class="iq">IQ</span></div>
+  </div>
+  <div class="tagline">A pediatric critical care board examination platform · RCPSC / SEAP preparation</div>
+  <div class="tagline-uppercase">Forge · Reason · Master</div>
+</header>
+
+<div class="container">
+
+<div class="section-title">1 — Logo System</div>
+<h2 class="heading">Three lockups, one identity</h2>
+<p class="sub">Full lockup for headers and splash. Stacked mark for square contexts. Just the mark for favicons, app icons, and watermarks.</p>
+
+<div class="logo-showcase">
+  <div class="logo-card">
+    <div class="logo-row">
+      <svg width="44" height="44" viewBox="0 0 64 64"><defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0A2540"/><stop offset="1" stop-color="#1B6CB6"/></linearGradient></defs><rect x="4" y="4" width="56" height="56" rx="14" fill="url(#g1)"/><path d="M 19 22 C 17 18, 21 14, 25 16 C 25 13, 29 11, 32 14 C 35 11, 39 13, 39 16 C 43 14, 47 18, 45 22 C 48 23, 49 28, 46 30" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M 46 30 C 48 33, 47 38, 44 39 L 38 39" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M 38 39 L 32 39 L 30 36 L 28 43 L 26 35 L 24 39 L 18 39" stroke="#14B8A6" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="39" r="1.6" fill="#14B8A6"/></svg>
+      <div class="wordmark size-xl"><span class="picu">PICU</span> Board<span class="iq">IQ</span></div>
+    </div>
+    <div class="caption">Horizontal Lockup (Primary)</div>
+  </div>
+
+  <div class="logo-card">
+    <svg width="64" height="64" viewBox="0 0 64 64"><defs><linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0A2540"/><stop offset="1" stop-color="#1B6CB6"/></linearGradient></defs><rect x="4" y="4" width="56" height="56" rx="14" fill="url(#g2)"/><path d="M 19 22 C 17 18, 21 14, 25 16 C 25 13, 29 11, 32 14 C 35 11, 39 13, 39 16 C 43 14, 47 18, 45 22 C 48 23, 49 28, 46 30" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M 46 30 C 48 33, 47 38, 44 39 L 38 39" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M 38 39 L 32 39 L 30 36 L 28 43 L 26 35 L 24 39 L 18 39" stroke="#14B8A6" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="39" r="1.6" fill="#14B8A6"/></svg>
+    <div class="wordmark size-md"><span class="picu">PICU</span> Board<span class="iq">IQ</span></div>
+    <div class="caption">Stacked Lockup (App icon, splash)</div>
+  </div>
+
+  <div class="logo-card dark">
+    <div class="logo-row">
+      <svg width="44" height="44" viewBox="0 0 64 64"><rect x="4" y="4" width="56" height="56" rx="14" fill="#ffffff" fill-opacity="0.06" stroke="#ffffff" stroke-opacity="0.15"/><path d="M 19 22 C 17 18, 21 14, 25 16 C 25 13, 29 11, 32 14 C 35 11, 39 13, 39 16 C 43 14, 47 18, 45 22 C 48 23, 49 28, 46 30" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M 46 30 C 48 33, 47 38, 44 39 L 38 39" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M 38 39 L 32 39 L 30 36 L 28 43 L 26 35 L 24 39 L 18 39" stroke="#14B8A6" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="39" r="1.6" fill="#14B8A6"/></svg>
+      <div class="wordmark size-xl"><span class="picu">PICU</span> Board<span class="iq">IQ</span></div>
+    </div>
+    <div class="caption">Dark Mode Variant</div>
+  </div>
+</div>
+
+<div class="section-title">2 — Color Palette</div>
+<h2 class="heading">Clinical and calm</h2>
+<p class="sub">Medical navy as the brand backbone. Teal accent for ICU / monitoring states. Soft semantic colours (green / amber / coral) for outcomes — no neon.</p>
+
+<div class="palette-grid" style="margin-top: 14px;">
+  <div class="swatch dark" style="background:#0A2540;"><div><div class="name">Primary Navy</div><div class="hex">#0A2540</div></div></div>
+  <div class="swatch dark" style="background:#1B6CB6;"><div><div class="name">Medical Blue</div><div class="hex">#1B6CB6</div></div></div>
+  <div class="swatch dark" style="background:#14B8A6;"><div><div class="name">Teal Accent</div><div class="hex">#14B8A6</div></div></div>
+  <div class="swatch dark" style="background:#22C55E;"><div><div class="name">Soft Green</div><div class="hex">#22C55E</div></div></div>
+  <div class="swatch dark" style="background:#F59E0B;"><div><div class="name">Amber</div><div class="hex">#F59E0B</div></div></div>
+  <div class="swatch dark" style="background:#EF4444;"><div><div class="name">Coral</div><div class="hex">#EF4444</div></div></div>
+  <div class="swatch" style="background:#FFFFFF;"><div><div class="name">Surface White</div><div class="hex">#FFFFFF</div></div></div>
+  <div class="swatch" style="background:#F8FAFC;"><div><div class="name">Surface Gray</div><div class="hex">#F8FAFC</div></div></div>
+  <div class="swatch" style="background:#E2E8F0;"><div><div class="name">Border Gray</div><div class="hex">#E2E8F0</div></div></div>
+  <div class="swatch" style="background:#64748B;color:white;"><div><div class="name">Text Muted</div><div class="hex">#64748B</div></div></div>
+  <div class="swatch dark" style="background:#0F172A;"><div><div class="name">Dark Surface</div><div class="hex">#0F172A</div></div></div>
+  <div class="swatch dark" style="background:#1E293B;"><div><div class="name">Dark Card</div><div class="hex">#1E293B</div></div></div>
+</div>
+
+<div class="section-title">3 — Icon System</div>
+<h2 class="heading">One stroke, one family</h2>
+<p class="sub">All icons share the same construction grid (24×24 viewBox), stroke weight (1.75pt), and rounded line caps. They inherit theme colour via <code>currentColor</code>. No emoji — anywhere.</p>
+
+<div class="icons-grid" style="margin-top: 14px;">
+  <div class="icon-card"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 4a3 3 0 0 0-3 3v.5a3 3 0 0 0-1 5.83V14a3 3 0 0 0 3 3h1.5"/><path d="M9.5 4v17"/><path d="M14.5 4a3 3 0 0 1 3 3v.5a3 3 0 0 1 1 5.83V14a3 3 0 0 1-3 3h-1.5"/><path d="M14.5 4v17"/></svg><div class="icon-name">Neurology</div></div>
+  <div class="icon-card"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 12h4l2-6 4 12 2-6h6"/></svg><div class="icon-name">Cardiology</div></div>
+  <div class="icon-card"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6.081 20c1.493 0 2.917-.408 4.165-1.165A8.998 8.998 0 0 0 12 4a8.998 8.998 0 0 0 1.754 14.835A7.96 7.96 0 0 0 17.919 20"/><path d="M12 4v16"/></svg><div class="icon-name">Respiratory</div></div>
+  <div class="icon-card"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 6c-2 2-2 6 0 9s5 4 5 8M16 6c2 2 2 6 0 9s-5 4-5 8"/><path d="M8 6c2-1 4-2 4-3M16 6c-2-1-4-2-4-3"/></svg><div class="icon-name">Nephrology</div></div>
+  <div class="icon-card"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="4"/><path d="M12 8V5M12 19v-3M8 12H5M19 12h-3M15 9l2-2M7 17l2-2M15 15l2 2M7 7l2 2"/></svg><div class="icon-name">Infectious Disease</div></div>
+  <div class="icon-card"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 3c4 5 7 9 7 13a7 7 0 0 1-14 0c0-4 3-8 7-13z"/></svg><div class="icon-name">Hematology</div></div>
+  <div class="icon-card"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="12" cy="18" r="2.5"/><path d="M7 8l4 7M17 8l-4 7"/></svg><div class="icon-name">Endocrine</div></div>
+  <div class="icon-card"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 18l5-5-2-2 8-8 2 2-2 2 3 3-2 2-3-3-5 5L4 18z"/></svg><div class="icon-name">Trauma</div></div>
+  <div class="icon-card"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="9" width="18" height="6" rx="3"/><path d="M12 9v6"/></svg><div class="icon-name">Toxicology</div></div>
+  <div class="icon-card"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="7"/><path d="M12 5v4M12 15v4M5 12h4M15 12h4"/></svg><div class="icon-name">ECMO</div></div>
+  <div class="icon-card"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 4l6 6M16 6l-2 2M8 10l6 6-2 4-8-8 4-2zM3 21l3-3"/></svg><div class="icon-name">Sedation/Pharm</div></div>
+  <div class="icon-card"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 4v16M5 8h14M5 8l-2 6h4l-2-6zM19 8l-2 6h4l-2-6z"/></svg><div class="icon-name">Ethics</div></div>
+  <div class="icon-card"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M5 4v6a4 4 0 0 0 8 0V4"/><path d="M9 14v3a4 4 0 0 0 8 0v-2"/><circle cx="17" cy="13" r="2"/></svg><div class="icon-name">Clinical Vignette</div></div>
+  <div class="icon-card"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.8.4-1 1-1 1.7M12 17h.01"/></svg><div class="icon-name">SAQ / MCQ</div></div>
+  <div class="icon-card"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 4h12a3 3 0 0 1 3 3v13H7a3 3 0 0 1-3-3V4z"/><path d="M19 20H7a3 3 0 0 1-3-3"/><path d="M9 8h6M9 12h6"/></svg><div class="icon-name">Study Mode</div></div>
+  <div class="icon-card"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 3L4 14h7l-1 7 9-11h-7l1-7z"/></svg><div class="icon-name">Recall</div></div>
+  <div class="icon-card"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="13" r="8"/><path d="M12 8v5l3 2M9 3h6"/></svg><div class="icon-name">Exam Mode</div></div>
+  <div class="icon-card"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 20V8M10 20v-6M16 20V4M22 20H2"/></svg><div class="icon-name">Analytics</div></div>
+  <div class="icon-card"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg><div class="icon-name">Weak Topics</div></div>
+  <div class="icon-card"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 4h12v17l-6-4-6 4V4z"/></svg><div class="icon-name">Bookmarks</div></div>
+  <div class="icon-card"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9"/><path d="M8 8l8 8M16 8l-8 8"/></svg><div class="icon-name">Incorrect</div></div>
+  <div class="icon-card"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="7"/><path d="M16 16l5 5"/></svg><div class="icon-name">Search</div></div>
+  <div class="icon-card"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 4h12v4a6 6 0 1 1-12 0V4z"/><path d="M6 6H4a2 2 0 0 0 0 4h2M18 6h2a2 2 0 0 1 0 4h-2M9 18h6M12 14v4M8 21h8"/></svg><div class="icon-name">High-Yield</div></div>
+  <div class="icon-card"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M2 9l10-4 10 4-10 4-10-4z"/><path d="M6 11v5c0 1 3 3 6 3s6-2 6-3v-5M22 9v6"/></svg><div class="icon-name">Mock Exam</div></div>
+  <div class="icon-card"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg><div class="icon-name">Board Certified</div></div>
+  <div class="icon-card"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><div class="icon-name">Settings</div></div>
+
+</div>
+
+<div class="section-title">4 — Dashboard Preview</div>
+<h2 class="heading">How the redesigned home dashboard feels</h2>
+<p class="sub">Compare with the previous version — emojis replaced by line icons inside soft tinted squares; navy/blue replaces the electric cyan; cards use white surfaces with subtle borders.</p>
+
+<div class="dashboard-preview">
+  <div class="dp-header">
+    <div class="logo-row">
+      <svg width="32" height="32" viewBox="0 0 64 64"><defs><linearGradient id="g3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0A2540"/><stop offset="1" stop-color="#1B6CB6"/></linearGradient></defs><rect x="4" y="4" width="56" height="56" rx="14" fill="url(#g3)"/><path d="M 19 22 C 17 18, 21 14, 25 16 C 25 13, 29 11, 32 14 C 35 11, 39 13, 39 16 C 43 14, 47 18, 45 22 C 48 23, 49 28, 46 30" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M 46 30 C 48 33, 47 38, 44 39 L 38 39" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M 38 39 L 32 39 L 30 36 L 28 43 L 26 35 L 24 39 L 18 39" stroke="#14B8A6" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="39" r="1.6" fill="#14B8A6"/></svg>
+      <div style="font-weight: 800; font-size: 1.1em; letter-spacing: -0.01em;"><span style="font-weight: 400; opacity: 0.55;">PICU</span> Board<span style="color: #1B6CB6;">IQ</span></div>
+    </div>
+    <div class="nav-pills">
+      <button class="dp-nav-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="11" cy="11" r="7"/><path d="M16 16l5 5" stroke-linecap="round"/></svg>Search</button>
+      <button class="dp-nav-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M4 20V8M10 20v-6M16 20V4M22 20H2" stroke-linecap="round"/></svg>Analytics</button>
+    </div>
+  </div>
+  <div class="dp-body">
+    <h1 class="dp-h1">RCPSC PICU Board Preparation</h1>
+    <p class="dp-sub">Premium exam platform for pediatric critical care · 300 SAQs · 300 vignettes · 150 recall</p>
+    <div class="dp-stats">
+      <div class="dp-stat"><div class="label">Total Bank</div><div class="value">750</div><div class="sub">questions</div></div>
+      <div class="dp-stat"><div class="label">Attempted</div><div class="value">142</div><div class="sub">19% of bank</div></div>
+      <div class="dp-stat"><div class="label">Accuracy</div><div class="value">68%</div><div class="sub">96 correct / 142 attempts</div></div>
+      <div class="dp-stat"><div class="label">Sessions</div><div class="value">12</div><div class="sub">completed</div></div>
+    </div>
+    <div class="dp-tiles">
+      <div class="dp-tile">
+        <div class="tile-icon-wrap blue"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.8.4-1 1-1 1.7M12 17h.01"/></svg></div>
+        <div class="tile-title">SAQ Mode</div>
+        <div class="tile-desc">RCPSC-style short-answer questions</div>
+        <div class="tile-meta">300 questions →</div>
+      </div>
+      <div class="dp-tile">
+        <div class="tile-icon-wrap teal"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M5 4v6a4 4 0 0 0 8 0V4"/><path d="M9 14v3a4 4 0 0 0 8 0v-2"/><circle cx="17" cy="13" r="2"/></svg></div>
+        <div class="tile-title">Vignette Mode</div>
+        <div class="tile-desc">Complex multi-stage clinical cases</div>
+        <div class="tile-meta">300 cases →</div>
+      </div>
+      <div class="dp-tile">
+        <div class="tile-icon-wrap amber"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 3L4 14h7l-1 7 9-11h-7l1-7z"/></svg></div>
+        <div class="tile-title">Recall Mode</div>
+        <div class="tile-desc">Rapid-fire flashcards and pearls</div>
+        <div class="tile-meta">150 cards →</div>
+      </div>
+      <div class="dp-tile">
+        <div class="tile-icon-wrap blue"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 4h12a3 3 0 0 1 3 3v13H7a3 3 0 0 1-3-3V4z"/><path d="M19 20H7a3 3 0 0 1-3-3"/><path d="M9 8h6M9 12h6"/></svg></div>
+        <div class="tile-title">Study Mode</div>
+        <div class="tile-desc">Mixed pool with instant feedback</div>
+        <div class="tile-meta">Mixed →</div>
+      </div>
+      <div class="dp-tile">
+        <div class="tile-icon-wrap coral"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="13" r="8"/><path d="M12 8v5l3 2M9 3h6"/></svg></div>
+        <div class="tile-title">Exam Mode</div>
+        <div class="tile-desc">Timed simulation · auto-marking</div>
+        <div class="tile-meta">Timed →</div>
+      </div>
+      <div class="dp-tile">
+        <div class="tile-icon-wrap green"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 20V8M10 20v-6M16 20V4M22 20H2"/></svg></div>
+        <div class="tile-title">Analytics</div>
+        <div class="tile-desc">Performance by topic and trend</div>
+        <div class="tile-meta">Open →</div>
+      </div>
+      <div class="dp-tile">
+        <div class="tile-icon-wrap amber"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg></div>
+        <div class="tile-title">Weak Topics</div>
+        <div class="tile-desc">Auto-identified areas to focus</div>
+        <div class="tile-meta">Review →</div>
+      </div>
+      <div class="dp-tile">
+        <div class="tile-icon-wrap teal"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 4h12v17l-6-4-6 4V4z"/></svg></div>
+        <div class="tile-title">Bookmarked</div>
+        <div class="tile-desc">Saved questions for later</div>
+        <div class="tile-meta">12 saved →</div>
+      </div>
+      <div class="dp-tile">
+        <div class="tile-icon-wrap coral"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9"/><path d="M8 8l8 8M16 8l-8 8"/></svg></div>
+        <div class="tile-title">Incorrect</div>
+        <div class="tile-desc">Questions to revisit</div>
+        <div class="tile-meta">46 items →</div>
+      </div>
+      <div class="dp-tile">
+        <div class="tile-icon-wrap blue"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="7"/><path d="M16 16l5 5"/></svg></div>
+        <div class="tile-title">Search</div>
+        <div class="tile-desc">Find by keyword, disease, drug</div>
+        <div class="tile-meta">Open →</div>
+      </div>
+      <div class="dp-tile">
+        <div class="tile-icon-wrap amber"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 4h12v4a6 6 0 1 1-12 0V4z"/><path d="M6 6H4a2 2 0 0 0 0 4h2M18 6h2a2 2 0 0 1 0 4h-2M9 18h6M12 14v4M8 21h8"/></svg></div>
+        <div class="tile-title">High-Yield Review</div>
+        <div class="tile-desc">Curated highest-impact set</div>
+        <div class="tile-meta">20 questions →</div>
+      </div>
+      <div class="dp-tile">
+        <div class="tile-icon-wrap blue"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M2 9l10-4 10 4-10 4-10-4z"/><path d="M6 11v5c0 1 3 3 6 3s6-2 6-3v-5M22 9v6"/></svg></div>
+        <div class="tile-title">Timed Mock Exam</div>
+        <div class="tile-desc">40 questions · 2 h · full simulation</div>
+        <div class="tile-meta">Begin →</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-title">5 — Brand Guidelines (in brief)</div>
+<h2 class="heading">Apply these rules everywhere</h2>
+<ul style="line-height: 1.85; color: #334155;">
+  <li><strong>No emojis in the UI.</strong> Use only icons from this set. Emojis live in user-entered notes if at all — never in chrome.</li>
+  <li><strong>Stroke width 1.75pt.</strong> Never mix stroke weights. Don't fill line icons.</li>
+  <li><strong>Tinted square icon backgrounds.</strong> 38×38 rounded squares, background colour at 8–10% alpha of the icon's tint. This is what differentiates this look from generic Material/Bootstrap.</li>
+  <li><strong>Navy is the brand colour.</strong> Blue is for primary actions only. Teal accents reserved for ICU/monitoring features.</li>
+  <li><strong>Type:</strong> Inter (or system sans). Headings 700–800; body 400–500. Letter-spacing −0.02em on H1/H2.</li>
+  <li><strong>Cards:</strong> 12px radius, 1px border at <code>#E2E8F0</code>, subtle shadow on hover only (<code>0 6px 18px rgba(10,37,64,.06)</code>).</li>
+  <li><strong>Semantic colour:</strong> green = correct, amber = warning/exam timer, coral = error/incorrect. Never use blue or navy for these meanings.</li>
+</ul>
+
+</div>
+
+<footer class="footer">
+  PICU BoardIQ · Brand identity v1.0 · Designed for pediatric critical care fellows preparing for RCPSC SEAP
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,37 @@
+{
+  "name": "PICU BoardIQ — RCPSC Pediatric Critical Care",
+  "short_name": "PICU BoardIQ",
+  "description": "RCPSC SEAP pediatric neurocritical care exam preparation: 16 Rogers chapters, 750-question bank, adaptive learning, timed mocks, spaced repetition.",
+  "lang": "en",
+  "dir": "ltr",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0a2540",
+  "theme_color": "#0a2540",
+  "categories": ["education", "medical", "productivity"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-192-maskable.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ],
+  "shortcuts": [
+    {
+      "name": "Open Main App",
+      "short_name": "BoardIQ",
+      "description": "Open the unified PICU BoardIQ dashboard",
+      "url": "./99_PICU_BoardIQ/00_APP/PICU_BoardIQ_v2.html",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Safe Mode Launcher",
+      "short_name": "Safe Mode",
+      "description": "Direct-access fallback for all chapters and tools",
+      "url": "./99_PICU_BoardIQ/00_APP/_SAFE_MODE.html",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    }
+  ]
+}

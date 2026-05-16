@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PICU Neuro Exam System — Study & Exam Mode</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: Georgia, "Times New Roman", serif; max-width: 1080px; margin: 16px auto; padding: 0 18px; color: #1b2733; line-height: 1.55; background: #f5f0fa; }
+  h1 { color: #4a1f6f; border-bottom: 3px double #4a1f6f; padding-bottom: 8px; margin-bottom: 6px; }
+  .banner { background: linear-gradient(135deg, #4a1f6f 0%, #6b3fa0 60%, #a280cf 100%); color: #fff; padding: 16px 22px; border-radius: 12px; margin-bottom: 18px; }
+  .banner h1 { color: #fff; border: none; margin: 0 0 6px 0; }
+  .banner p { color: #ecddf7; margin: 3px 0; font-size: 0.95em; }
+  .control { background: #fff; border: 2px solid #6b3fa0; border-radius: 10px; padding: 14px 18px; margin-bottom: 16px; display: flex; flex-wrap: wrap; gap: 14px; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+  .control label { font-weight: bold; color: #4a1f6f; margin-right: 6px; }
+  .control select, .control button { font-size: 1em; padding: 8px 14px; border-radius: 6px; border: 1.5px solid #6b3fa0; background: #fff; color: #1b2733; }
+  .control button { background: #6b3fa0; color: #fff; cursor: pointer; font-weight: bold; transition: 0.2s; }
+  .control button:hover { background: #4a1f6f; }
+  .control button.danger { background: #b34a4a; border-color: #b34a4a; }
+  .control button.danger:hover { background: #8a2f2f; }
+  .control button.warn { background: #c95c20; border-color: #c95c20; }
+  .control button.warn:hover { background: #8e3f10; }
+  .control button:disabled { background: #ccc; border-color: #ccc; cursor: not-allowed; }
+  .timer { background: #fff5e6; border: 2px solid #c95c20; padding: 8px 14px; border-radius: 8px; font-family: "Courier New", monospace; font-size: 1.15em; font-weight: bold; color: #c95c20; }
+  .timer.warning { background: #fde4e4; border-color: #b34a4a; color: #b34a4a; animation: blink 1s infinite; }
+  @keyframes blink { 50% { opacity: 0.65; } }
+  .qblock { background: #fff; border-radius: 10px; padding: 16px 20px; margin: 14px 0; box-shadow: 0 2px 6px rgba(0,0,0,.05); border-left: 5px solid #6b3fa0; }
+  .qhead { color: #4a1f6f; font-weight: bold; font-size: 1.05em; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
+  .tag-mod  { background: #fef0a3; color: #6b5505; padding: 2px 10px; border-radius: 10px; font-size: 0.78em; font-weight: bold; }
+  .tag-hard { background: #fbd0d0; color: #7a1f1f; padding: 2px 10px; border-radius: 10px; font-size: 0.78em; font-weight: bold; }
+  .vignette { font-style: italic; color: #2a3f55; padding: 8px 10px; background: #fbf7ff; border-left: 3px solid #b39ad6; margin-bottom: 8px; border-radius: 4px; }
+  .question { font-weight: bold; margin: 8px 0; color: #1b2733; }
+  .options label { display: block; padding: 8px 12px; margin: 4px 0; background: #fafafa; border: 1.5px solid #d8d8d8; border-radius: 6px; cursor: pointer; transition: 0.15s; }
+  .options label:hover { background: #ecddf7; border-color: #6b3fa0; }
+  .options input[type="radio"] { margin-right: 8px; }
+  .options label.selected { background: #ddc8ee; border-color: #6b3fa0; font-weight: bold; }
+  .options label.correct { background: #c8f0d0; border-color: #1f8c2e; }
+  .options label.wrong { background: #fbd0d0; border-color: #b34a4a; }
+  .reveal { display: none; background: #f0e6ff; border-left: 5px solid #6b3fa0; padding: 10px 14px; margin: 8px 0; border-radius: 6px; }
+  .reveal.show { display: block; }
+  .reveal h4 { margin: 4px 0; color: #4a1f6f; }
+  .show-btn { display: inline-block; background: #6b3fa0; color: #fff; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 8px; border: none; }
+  .show-btn:hover { background: #4a1f6f; }
+  .results { background: #fff; padding: 22px; border-radius: 12px; border: 3px solid #6b3fa0; margin-top: 18px; }
+  .scorecard { font-size: 1.5em; font-weight: bold; text-align: center; padding: 14px; border-radius: 10px; margin-bottom: 14px; }
+  .scorecard.pass { background: linear-gradient(135deg, #1f8c2e 0%, #4cb86b 100%); color: #fff; }
+  .scorecard.fail { background: linear-gradient(135deg, #b34a4a 0%, #d77272 100%); color: #fff; }
+  .progress { background: #eee; height: 12px; border-radius: 6px; overflow: hidden; margin: 8px 0 14px 0; }
+  .progress-bar { background: linear-gradient(90deg, #6b3fa0, #b39ad6); height: 100%; width: 0%; transition: width 0.3s; }
+  .hidden { display: none; }
+  .small { font-size: 0.85em; color: #666; }
+  .mode-badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-weight: bold; font-size: 0.85em; }
+  .mode-study { background: #c8f0d0; color: #1f5e22; }
+  .mode-exam { background: #fef0a3; color: #6b5505; }
+  .status-correct { color: #1f8c2e; font-weight: bold; }
+  .status-wrong { color: #b34a4a; font-weight: bold; }
+  .status-skipped { color: #888; font-style: italic; }
+</style>
+</head>
+<body>
+
+<div class="banner">
+<h1>PICU Neuro Adaptive Exam System</h1>
+<p><strong>Study Mode</strong> = answers visible immediately on click | <strong>Exam Mode</strong> = timed test with auto-marking after submit</p>
+<p>Pool of <span id="poolSize">60</span> intermediate/hard SEAP-level Neuro-ICU MCQs · Randomised draw each session</p>
+</div>
+
+<div class="control" id="setup">
+  <label>Mode:</label>
+  <select id="modeSel">
+    <option value="study">Study Mode (instant feedback)</option>
+    <option value="exam">Exam Mode (timed + auto-mark)</option>
+  </select>
+  <label>Questions:</label>
+  <select id="countSel">
+    <option value="10">10 Q (~30 min)</option>
+    <option value="20" selected>20 Q (~60 min)</option>
+    <option value="30">30 Q (~90 min)</option>
+    <option value="40">40 Q (~120 min)</option>
+  </select>
+  <label>Difficulty mix:</label>
+  <select id="diffSel">
+    <option value="all" selected>All (Mod + Hard)</option>
+    <option value="MOD">Moderate only</option>
+    <option value="HARD">Hard only</option>
+  </select>
+  <button id="startBtn">Start</button>
+  <span class="timer hidden" id="timer">--:--</span>
+</div>
+
+<div id="exam" class="hidden"></div>
+
+<div class="control hidden" id="submitBar">
+  <button id="submitBtn">✓ Submit Exam &amp; Get Marks</button>
+  <button id="endBtn" class="warn">⏹ End Test Now (grade what I've done)</button>
+  <button id="abortBtn" class="danger">✕ Abort (discard answers)</button>
+  <span class="small" id="progressLabel"></span>
+</div>
+
+<div class="progress hidden" id="progressWrap"><div class="progress-bar" id="progressBar"></div></div>
+
+<div id="results" class="hidden"></div>
+
+<script>
+const QPOOL = [{"id": 1, "diff": "HARD", "vignette": "A 5-year-old boy is admitted after a fall from a tree, intubated for GCS 6. CT shows diffuse swelling with compressed basal cisterns. EVD reads ICP 22 mm Hg with serial pulse waveform analysis showing P2 > P1. PRx is +0.4. Optimal CPP analysis suggests CPPopt 65 mm Hg; current CPP 58.", "q": "What single intervention best addresses both the waveform abnormality AND the autoregulation status?", "opts": ["Initiate barbiturate coma immediately now", "Raise MAP to CPPopt with norepinephrine titration", "Hyperventilate to PaCO\u2082 25 mm Hg now", "Loop diuretic to drop intravascular volume", "Stop CSF drainage and allow ICP to rise"], "correct": "B", "reasoning": "P2>P1 and PRx +0.4 = impaired autoregulation with reduced compliance. CPPopt-guided MAP titration with norepinephrine simultaneously restores autoregulation and lowers ICP via reduced cerebral blood volume. Barbiturates are tier-3; hyperventilation to 25 risks ischemia; loop diuretics deplete volume.", "source": "BTF 2019; Brady/PRx literature"}, {"id": 2, "diff": "MOD", "vignette": "A 3-year-old (15 kg) post-MVC has severe TBI. ICP 22, MAP 70. The fellow proposes CPP \u2265 60 citing adult data.", "q": "What CPP target best fits current pediatric BTF guidance for a 3-year-old?", "opts": ["\u2265 30 mm Hg minimum target", "\u2265 40 mm Hg minimum target", "\u2265 50 mm Hg age-adjusted target", "\u2265 70 mm Hg minimum target", "\u2265 80 mm Hg minimum target"], "correct": "C", "reasoning": "BTF 2019 pediatric: age-adjusted CPP threshold 40\u201350 mm Hg minimum for infants/toddlers, 50\u201360 mm Hg for older children. Aim higher within tolerable range. Adult \u226560 not directly applicable in young children.", "source": "BTF Pediatric Severe TBI Guidelines 2019"}, {"id": 3, "diff": "HARD", "vignette": "An 8-year-old after MVC. GCS 5, fixed left pupil, HR 140, BP 70/40, SpO\u2082 91%. PIV in place; norepinephrine prepared.", "q": "Best induction agent for RSI?", "opts": ["Propofol 2 mg/kg", "Thiopental 5 mg/kg", "Ketamine 1\u20132 mg/kg", "Midazolam 0.3 mg/kg alone", "Etomidate 0.3 mg/kg"], "correct": "C", "reasoning": "Hemodynamic instability + raised ICP. Ketamine preserves BP/CPP; old concern about ICP rise debunked in TBI literature. Propofol/thiopental drop MAP/CPP. Midazolam alone inadequate; etomidate suppresses adrenal axis in shock.", "source": "Pediatric TBI airway literature"}, {"id": 4, "diff": "MOD", "vignette": "A 9-year-old with severe TBI has refractory ICP 30 despite optimised tier-1 therapy. The team considers hypothermia 32\u201334\u00b0C.", "q": "Which statement best reflects current evidence for hypothermia in pediatric TBI?", "opts": ["Prophylactic hypothermia 32\u00b0C \u00d7 48 h improves long-term", "Hypothermia 33\u00b0C reduces mortality in severe pediatric TBI", "Prophylactic hypothermia is not recommended", "Hypothermia replaces hyperosmolar therapy as first-line", "Rewarming should occur at 2\u00b0C per hour"], "correct": "C", "reasoning": "Cool Kids and Hutchison trials: prophylactic hypothermia did NOT improve outcome; signal of harm with rapid rewarming. Current BTF 2019: prophylactic hypothermia not recommended; targeted hypothermia an option for refractory ICP with slow rewarming (\u2264 0.5\u00b0C/h).", "source": "Cool Kids 2013; BTF 2019"}, {"id": 5, "diff": "HARD", "vignette": "A 12-year-old with severe TBI has CT with effaced basal cisterns and 3 mm midline shift. No surgical mass lesion.", "q": "Using the Marshall CT classification, this is:", "opts": ["Marshall I \u2014 diffuse, no visible pathology", "Marshall II \u2014 diffuse, cisterns intact", "Marshall III \u2014 diffuse with swelling", "Marshall IV \u2014 diffuse with > 5 mm shift", "Marshall V \u2014 evacuated mass lesion"], "correct": "C", "reasoning": "Compressed/absent cisterns with shift 0\u20135 mm = Marshall III (diffuse injury with swelling). Strongly associated with elevated ICP and worse outcome.", "source": "Marshall CT classification"}, {"id": 6, "diff": "MOD", "vignette": "A 7-year-old in active SE has received IM midazolam by EMS and IV lorazepam, still seizing.", "q": "Per ESETT (NEJM 2019), which is true of second-line agents?", "opts": ["Fosphenytoin alone proved effective", "Levetiracetam alone proved effective", "Valproate alone proved effective", "All three (fosphenytoin/LEV/VPA) equivalent", "Continuous midazolam as second-line"], "correct": "D", "reasoning": "ESETT showed fosphenytoin, levetiracetam, and valproate all stopped seizures and improved responsiveness in ~50% with no statistically significant differences. Choose based on patient factors/availability.", "source": "Kapur et al. NEJM 2019 (ESETT)"}, {"id": 7, "diff": "MOD", "vignette": "A 10-year-old in refractory SE intubated on midazolam infusion; clinical seizures stop. Over 24 h she remains comatose without movement.", "q": "Single most important next step?", "opts": ["Wean midazolam", "Order MRI brain", "Continuous EEG monitoring", "Lumbar puncture", "Brain-death exam"], "correct": "C", "reasoning": "Up to 30\u201350% of paediatric refractory SE patients have ongoing non-convulsive seizures masked by sedation. cEEG is essential to detect and titrate therapy. MRI/LP useful adjuncts; brain death premature.", "source": "ACNS critical care EEG guidance"}, {"id": 8, "diff": "HARD", "vignette": "A 6-year-old in super-refractory SE on midazolam, pentobarbital, levetiracetam, fosphenytoin. cEEG shows persistent electrographic seizures. Ketamine proposed.", "q": "Mechanistic rationale for ketamine in SRSE?", "opts": ["Enhances GABA-A receptor sensitivity", "Blocks voltage-gated sodium channels", "Antagonises synaptic NMDA receptors", "Reduces glutamate via calcium channel block", "Raises CSF GABA concentration"], "correct": "C", "reasoning": "During prolonged SE, GABA-A receptors are internalised while NMDA receptors are trafficked to the synapse \u2192 GABAergic agents lose efficacy and excitatory tone increases. Ketamine antagonises NMDA receptors and may restore control.", "source": "Wasterlain receptor-trafficking model"}, {"id": 9, "diff": "MOD", "vignette": "An 8-year-old previously healthy boy with acute right hemiparesis and aphasia. MRI: left MCA infarct. No cardiac source/prothrombotic state. MRA: irregular narrowing of left M1.", "q": "Most likely arteriopathy?", "opts": ["Moyamoya disease", "Focal cerebral arteriopathy (FCA)", "Primary CNS vasculitis", "Arterial dissection", "Atherosclerotic stenosis"], "correct": "B", "reasoning": "FCA / transient cerebral arteriopathy is the commonest non-cardiac cause of arterial ischaemic stroke in previously well children \u2014 unilateral irregular narrowing of distal ICA/proximal MCA. Often post-VZV. Moyamoya is bilateral with collaterals; dissection has flame-shaped tapering; PACNS has multifocal beading.", "source": "IPSS classification"}, {"id": 10, "diff": "MOD", "vignette": "A 9-year-old with SCD HbSS has acute right hemiparesis. CT no haemorrhage. Hb 8, HbS 80%.", "q": "Most urgent therapeutic step?", "opts": ["Aspirin 5 mg/kg", "Simple PRBC transfusion", "Exchange transfusion to HbS < 30%", "Hydroxyurea bolus", "Therapeutic hypothermia"], "correct": "C", "reasoning": "Emergent red cell exchange to HbS < 30% and total Hb ~10 g/dL is the cornerstone of acute SCD stroke. Simple transfusion increases viscosity; tPA contraindicated in paediatric SCD stroke.", "source": "AHA/ASCA SCD stroke guidance"}, {"id": 11, "diff": "MOD", "vignette": "A 4-year-old with mastoiditis: progressive headache, vomiting, seizure. MRI/MRV: right transverse + sigmoid sinus thrombosis with small venous infarct, minimal haemorrhagic transformation.", "q": "Best management of the venous thrombosis?", "opts": ["Observation given haemorrhage", "Antiplatelet only", "Anticoagulation with LMWH", "Mechanical thrombectomy first-line", "IV tPA"], "correct": "C", "reasoning": "Paediatric CSVT guidelines: anticoagulation with LMWH is indicated even with small haemorrhagic conversion \u2014 propagation risk outweighs bleeding risk. Endovascular therapy reserved for deteriorating cases.", "source": "AHA paediatric CSVT 2019"}, {"id": 12, "diff": "HARD", "vignette": "7-year-old post in-hospital arrest (downtime 14 min). On TTM 33\u00b0C; off sedation 18 h; now normothermic. Day 4: pupils 3 mm reactive, motor withdrawal. cEEG day 3 continuous reactive. MRI: cortical DWI in watershed only.", "q": "Most accurate statement on prognostication now?", "opts": ["MRI pattern alone establishes poor prognosis", "Continuous reactive EEG and withdrawal motor are favourable", "Bilateral absent N20 SSEPs would predict GOOD outcome", "NSE > 33 \u00b5g/L at 24 h reliably predicts poor outcome in", "Re-cooling improves prognostic accuracy"], "correct": "B", "reasoning": "Paediatric post-arrest prognostication must be multimodal and avoid single-modality decisions. Reactive EEG + motor response are favourable. Bilateral absent N20 would predict POOR (not good) outcome. NSE not validated in children.", "source": "THAPCA; AAN paediatric neuroprognostication"}, {"id": 13, "diff": "MOD", "vignette": "10-year-old apnea test: pre-test PaCO\u2082 38. After 8 minutes off ventilator: no respiratory effort.", "q": "What PaCO\u2082 change confirms positive apnea test?", "opts": ["\u2265 45 mm Hg", "\u2265 55 mm Hg with rise \u2265 10 from baseline", "\u2265 60 mm Hg AND rise \u2265 20 from baseline", "\u2265 80 mm Hg with pH < 7.20", "Any rise is sufficient if no effort"], "correct": "C", "reasoning": "Paediatric brain-death determination requires PaCO\u2082 \u2265 60 mm Hg AND \u2265 20 mm Hg above baseline with absence of respiratory effort throughout (chronically CO\u2082-retaining patients need higher threshold).", "source": "Nakagawa pediatric brain-death guidelines"}, {"id": 14, "diff": "MOD", "vignette": "14-year-old GBS intubated 24 h. Today: FVC 22 mL/kg, NIF \u201330, MEP 40, alert, secretions cleared, SBT well-tolerated. Vital signs labile with HR 40 episodes and BP swings 90/40 \u2194 170/100.", "q": "Which factor most strongly argues against extubation today?", "opts": ["FVC of 22 mL/kg current value", "NIF of negative 30 cmH\u2082O current", "Autonomic storms with bradycardia", "Intubation only 24 hours so far", "Patient age of fourteen years"], "correct": "C", "reasoning": "Severe dysautonomia in GBS is a major risk for cardiovascular collapse and aspiration during extubation; respiratory mechanics are otherwise acceptable. Autonomic stability is an underrated extubation criterion in GBS.", "source": "GBS PICU literature"}, {"id": 15, "diff": "MOD", "vignette": "14-year-old anti-AChR myasthenic crisis intubated; pyridostigmine held.", "q": "Which has comparable efficacy in randomised trials of myasthenic crisis?", "opts": ["IV methylprednisolone alone", "IVIG and plasma exchange \u2014 equivalent", "Oral azathioprine acutely", "Pyridostigmine infusion at high dose", "Thymectomy within 24 h"], "correct": "B", "reasoning": "Multiple RCTs (Gajdos) and meta-analysis show IVIG and PLEX have comparable efficacy in myasthenic crisis. Steroids may transiently worsen weakness in crisis. Azathioprine has slow onset.", "source": "Cochrane myasthenia"}, {"id": 16, "diff": "MOD", "vignette": "4-year-old with bacterial meningitis from S. pneumoniae.", "q": "Best evidence on adjunctive dexamethasone in paediatric meningitis?", "opts": ["Reduces mortality in paediatric pneumococcal meningitis", "Reduces sensorineural hearing loss in paediatric Hib", "Improves outcomes in all paediatric bacterial meningitis", "Contraindicated in paediatric meningitis", "Replaces antibiotics"], "correct": "B", "reasoning": "Strongest paediatric evidence for dexamethasone is reduction in SNHL in Hib meningitis. Pneumococcal effect smaller and depends on early administration (with or just before first antibiotic dose).", "source": "Cochrane meningitis steroids"}, {"id": 17, "diff": "HARD", "vignette": "12-year-old: subacute personality change, orofacial dyskinesias, autonomic instability, seizures, encephalopathy. MRI unremarkable. CSF mild lymphocytic pleocytosis.", "q": "Most likely diagnosis + first-line immunotherapy?", "opts": ["Paraneoplastic limbic encephalitis", "Anti-NMDA receptor encephalitis", "Herpes simplex encephalitis", "Acute disseminated encephalomyelitis", "Hashimoto encephalopathy"], "correct": "B", "reasoning": "Classic anti-NMDAR encephalitis quartet: psychiatric/dyskinesias + seizures + dysautonomia + encephalopathy. First-line: steroids + IVIG/PLEX + screen for ovarian teratoma. Second-line: rituximab/cyclophosphamide.", "source": "Graus 2016 criteria"}, {"id": 18, "diff": "MOD", "vignette": "6-year-old posterior fossa medulloblastoma resection. POD1: headache, lethargy, vomiting. CT: enlarged lateral + third ventricles, effaced 4th ventricle.", "q": "Most appropriate immediate action?", "opts": ["Mannitol bolus and observation", "LP for CSF analysis", "Emergency EVD placement", "Repeat MRI in 24 h", "High-dose dexamethasone alone"], "correct": "C", "reasoning": "Acute obstructive hydrocephalus after posterior fossa resection \u2014 emergent EVD. LP contraindicated with obstructed CSF pathway (herniation risk).", "source": "Paediatric neuro-oncology guidance"}, {"id": 19, "diff": "HARD", "vignette": "15-year-old complete C5 SCI: HR 45, BP 78/45, warm extremities, anhidrosis below T6.", "q": "Best haemodynamic management of neurogenic shock?", "opts": ["Aggressive fluids to MAP > 85", "Norepinephrine to MAP > 85 \u00d7 7 days", "Phenylephrine alone", "Atropine + dopamine, no monitoring", "Dobutamine for inotropy"], "correct": "B", "reasoning": "AANS/CNS SCI guidance: MAP > 85\u201390 for 7 days to optimise spinal cord perfusion. Norepinephrine offers both alpha and modest beta \u2014 ideal in neurogenic shock with bradycardia. Phenylephrine worsens bradycardia.", "source": "AANS/CNS SCI guidelines"}, {"id": 20, "diff": "HARD", "vignette": "7-year-old POD3 suprasellar tumor: Na 124, sosm 252, uNa 90, uosm 600, +1 kg weight, no edema, UO 1 mL/kg/h, alert with headache.", "q": "Diagnosis and initial management?", "opts": ["Cerebral salt wasting; hypertonic saline + volume", "SIADH; restrict free water; 3% saline if symptomatic", "Central DI; DDAVP", "Adrenal insufficiency; stress-dose hydrocortisone", "Iatrogenic hypotonic fluid; switch to D5NS"], "correct": "B", "reasoning": "Euvolemic hyponatraemia with concentrated urine + adequate UO = SIADH. CSW shows hypovolaemia/weight loss. Fluid restriction first; 3% saline only if symptomatic.", "source": "Endocrine Society"}, {"id": 21, "diff": "MOD", "vignette": "5-month-old: seizures, retinal haemorrhages, bilateral subdural collections of different ages, healing posterior rib fracture. Family report fall from couch.", "q": "Key investigations beyond stabilisation?", "opts": ["EEG monitoring as sole workup", "Skeletal survey + retina + MRI + report", "Metabolic workup only as workup", "Connective tissue genetics workup", "Lumbar puncture for meningitis exclusion"], "correct": "B", "reasoning": "Triad raises strong concern for abusive head trauma. Comprehensive AHT workup includes skeletal survey, ophthalmology, MRI brain + spine, coagulation studies (rule out mimics like factor deficiencies), glutaric aciduria type 1 (mimics AHT), and statutory child-protection notification.", "source": "AAP AHT guideline"}, {"id": 22, "diff": "MOD", "vignette": "Term newborn, abruption, Apgar 1/3/4, cord pH 6.85, BE \u201318. Encephalopathic at 30 minutes; seizure at 90 minutes.", "q": "Strongest evidence-based intervention?", "opts": ["High-dose erythropoietin infusion", "Allopurinol within 2 hours of life", "Therapeutic hypothermia \u00d7 72 h within 6 h", "Magnesium sulfate continuous infusion", "Hyperbaric oxygen treatment course"], "correct": "C", "reasoning": "Therapeutic hypothermia (whole-body or selective head cooling) initiated within 6 h reduces death/disability in moderate-severe HIE (multiple RCTs; CoolCap, NICHD, TOBY, ICE).", "source": "Neonatal HIE RCTs"}, {"id": 23, "diff": "MOD", "vignette": "36-hour-old term newborn with focal clonic right-arm seizures, normal metabolic workup; cEEG confirms electrographic seizures.", "q": "First-line antiseizure agent?", "opts": ["Lorazepam IV", "Phenobarbital 20 mg/kg IV", "Levetiracetam 40 mg/kg IV", "Phenytoin 20 mg/kg IV", "Valproate IV"], "correct": "B", "reasoning": "Phenobarbital remains the WHO/AAP first-line for neonatal seizures despite NEOLEV2 RCT showing greater levetiracetam tolerability \u2014 phenobarbital had higher seizure-cessation rate. Valproate contraindicated (hepatotoxicity in neonates with possible mitochondrial disease).", "source": "NEOLEV2; ILAE neonatal guidance"}, {"id": 24, "diff": "HARD", "vignette": "5-year-old MVC: flaccid quadriplegia, sensory level C7, intact cranial nerves. CT cervical spine normal. MRI 12 h later: C5\u2013C7 cord edema without bony injury.", "q": "Best diagnosis?", "opts": ["Anterior cord syndrome from disc herniation", "Central cord syndrome from hyperextension", "SCIWORA (no radiographic lesion)", "Brown-S\u00e9quard hemicord syndrome", "Cauda equina compression syndrome"], "correct": "C", "reasoning": "SCIWORA = spinal cord injury without radiographic abnormality on plain films or CT, often shown on MRI hours-days later. Common in young children with hyperflexible spine.", "source": "Pang SCIWORA classification"}, {"id": 25, "diff": "HARD", "vignette": "14-year-old with complete T4 SCI (3 months) ED: severe pounding headache, flushing above lesion, sweating above lesion, BP 220/130. Distended bladder.", "q": "First immediate action?", "opts": ["IV labetalol bolus", "Sit upright", "Sublingual nifedipine", "IV magnesium", "Lie flat in Trendelenburg"], "correct": "B", "reasoning": "Autonomic dysreflexia: first action is positional and source-removal (full bladder #1 cause). Pharmacologic BP reduction only if positional + source measures fail. Trendelenburg worsens BP.", "source": "Consortium for SCI"}, {"id": 26, "diff": "HARD", "vignette": "6-year-old: fever, behavioural change, left arm focal seizures, declining LOC \u00d7 48 h. MRI: bilateral asymmetric medial temporal + insular T2/FLAIR. CSF: lymphocytic pleocytosis with RBCs, elevated protein.", "q": "Most appropriate empiric therapy?", "opts": ["Ceftriaxone + vancomycin only", "Acyclovir 15 mg/kg q8h", "Doxycycline alone", "Amphotericin B", "Methylprednisolone alone"], "correct": "B", "reasoning": "Classic HSV encephalitis. Start acyclovir empirically \u2014 delay is the strongest determinant of poor outcome. Continue antibacterials until culture results return.", "source": "IDSA encephalitis"}, {"id": 27, "diff": "MOD", "vignette": "5-year-old endemic area: 3 weeks lethargy, fever, vomiting, now CN VI palsy. CSF WBC 200 lymph, protein 2.5, glucose 1.2. CT: basal cisternal enhancement, hydrocephalus, infarcts. CXR: hilar lymphadenopathy.", "q": "Most appropriate initial management?", "opts": ["Ceftriaxone monotherapy", "Acyclovir alone empirically", "4-drug RIPE anti-TB + dexamethasone", "Antifungal therapy alone", "Defer treatment until biopsy"], "correct": "C", "reasoning": "Subacute basal meningitis with hydrocephalus, infarcts, CN palsies, and pulmonary findings = TBM. Treat empirically with RIPE + adjunctive dexamethasone (Thwaites 2004 mortality benefit).", "source": "WHO TB; Thwaites 2004"}, {"id": 28, "diff": "HARD", "vignette": "7-year-old, 2 weeks post-URI: acute encephalopathy, multifocal deficits, seizures. MRI: multiple bilateral asymmetric subcortical white-matter, deep grey, brainstem T2 lesions. CSF: WBC 50 lymph, mildly elevated protein, no OCBs.", "q": "Best diagnosis + first-line treatment?", "opts": ["First MS attack; interferon-\u03b2", "ADEM; IV methylprednisolone \u00d7 3\u20135 d", "NMOSD; rituximab", "HSV encephalitis; acyclovir", "CNS vasculitis; cyclophosphamide"], "correct": "B", "reasoning": "Post-infectious monophasic ADEM. First-line: high-dose IV methylprednisolone \u00d7 3\u20135 days then oral taper. IVIG/PLEX if refractory. Absence of OCBs argues against MS.", "source": "International Pediatric MS Study Group"}, {"id": 29, "diff": "MOD", "vignette": "10-year-old: acute bilateral vision loss + transverse myelitis (T6 level). MRI: longitudinally extensive myelitis \u2265 3 segments + bilateral optic nerve enhancement. CSF AQP4-IgG positive.", "q": "Diagnosis + first-line acute treatment?", "opts": ["ADEM; high-dose methylprednisolone", "MS first attack; interferon-\u03b2", "NMOSD (AQP4 positive); steroids then PLEX", "Sj\u00f6gren-associated myelitis; methotrexate", "Idiopathic transverse myelitis; observation"], "correct": "C", "reasoning": "AQP4-positive NMOSD with longitudinally extensive transverse myelitis + optic neuritis. Acute: pulse steroids \u2192 PLEX if poor response. Long-term: rituximab/eculizumab/inebilizumab/satralizumab.", "source": "IPND 2015 criteria"}, {"id": 30, "diff": "MOD", "vignette": "5-year-old severe TBI on ICP monitoring. cEEG: recurring plateau elevations 50\u201380 mm Hg lasting 5\u201320 min, 4\u20136/hour, intervening baseline 18.", "q": "Pattern and significance?", "opts": ["Lundberg A waves (plateau)", "Lundberg B \u2014 benign oscillations", "Lundberg C \u2014 respiratory variation", "Cardiac artifact", "EVD malfunction"], "correct": "A", "reasoning": "Plateau (Lundberg A) waves: sustained 50\u2013100 mm Hg elevations for 5\u201320 min = severely reduced compensatory reserve, impending herniation. Need urgent ICP-directed therapy escalation.", "source": "Lundberg classification"}, {"id": 31, "diff": "HARD", "vignette": "12-year-old severe TBI microdialysis (non-injured frontal): lactate 5.5, pyruvate 70, L/P 79, glucose 0.6, glutamate \u2191, glycerol \u2191. ICP 18, CPP 65, PbtO\u2082 18.", "q": "Most accurate interpretation?", "opts": ["Normal metabolism", "Cerebral ischaemia / energy crisis", "Hyperglycolysis without ischaemia", "Mitochondrial dysfunction without ischaemia", "Sampling error"], "correct": "B", "reasoning": "L/P > 40 with low glucose + elevated glutamate + elevated glycerol = ischaemic energy crisis. PbtO\u2082 18 is borderline. Mitochondrial dysfunction has elevated L/P with normal/high glucose.", "source": "Cerebral microdialysis consensus"}, {"id": 32, "diff": "HARD", "vignette": "2-year-old: seizures from 4 weeks of life refractory to phenobarbital, levetiracetam, midazolam. CSF and serum: \u2191 pipecolic acid, low \u03b1-AASA.", "q": "Best empiric trial?", "opts": ["Empiric ketogenic diet trial", "IV magnesium sulfate trial", "IV pyridoxine 100 mg (then PLP)", "Empiric acyclovir trial", "IV methylprednisolone trial"], "correct": "C", "reasoning": "Pyridoxine-dependent epilepsy (ALDH7A1 mutation): elevated pipecolic acid + \u03b1-AASA \u2014 pathognomonic. IV pyridoxine produces dramatic seizure cessation. PLP for PNPO deficiency variants.", "source": "PDE consensus"}, {"id": 33, "diff": "MOD", "vignette": "9-year-old: progressive weakness \u00d7 6 weeks, distal > proximal with sensory loss. CSF protein 1.8, WBC 4 (albuminocytologic dissociation). NCS demyelinating. IVIG 2 weeks ago helped briefly; symptoms recurring.", "q": "Diagnosis + how does management differ from GBS?", "opts": ["GBS; supportive care only", "CIDP; IVIG/PLEX plus steroids (unlike GBS)", "Charcot-Marie-Tooth; supportive only", "Critical-illness polyneuropathy; treat sepsis", "Lambert-Eaton myasthenic syndrome; 3,4-DAP"], "correct": "B", "reasoning": "Chronic / relapsing demyelinating polyneuropathy with response to immunotherapy = CIDP. Unlike GBS, steroids are effective in CIDP; long-term immunotherapy required.", "source": "EFNS/PNS CIDP"}, {"id": 34, "diff": "MOD", "vignette": "4-month-old infant: descending weakness, poor feeding, weak cry, constipation \u00d7 5 days, ptosis, dilated pupils. EMG: incremental response to high-frequency RNS.", "q": "Most appropriate specific therapy?", "opts": ["Equine botulinum antitoxin (heptavalent)", "Human botulism immune globulin (BabyBIG)", "Pyridostigmine continuous infusion", "IV immunoglobulin 2 g/kg over 2 days", "Penicillin G to eradicate organism"], "correct": "B", "reasoning": "Infant botulism (< 1 year, descending paralysis, constipation, incremental RNS) \u2014 treat with BabyBIG (human-derived; equine antitoxin used for foodborne/wound botulism in older children/adults). Antibiotics not indicated (may worsen toxin release).", "source": "BabyBIG FDA indication"}, {"id": 35, "diff": "HARD", "vignette": "6-year-old: rapidly progressive encephalopathy + seizures 2 days post-influenza. MRI: symmetric thalamic lesions with haemorrhage/necrosis + brainstem/cerebellum. Ferritin 5000, IL-6 elevated.", "q": "Diagnosis + key management?", "opts": ["ADEM; methylprednisolone alone", "HSV; acyclovir", "Acute necrotizing encephalopathy (ANE)", "Bilateral thalamic stroke; thrombectomy", "Wernicke; thiamine"], "correct": "C", "reasoning": "Para-/post-infectious ANE: bilateral thalamic + brainstem necrotic lesions + cytokine storm (hyperferritinaemia). Treat with steroids + IVIG; consider PLEX/tocilizumab for severe disease.", "source": "Mizuguchi ANE criteria"}, {"id": 36, "diff": "HARD", "vignette": "3-year-old: vomiting, ataxia, behaviour change, seizure. Blood lead 88 \u00b5g/dL.", "q": "Best initial chelation for severe paediatric lead encephalopathy?", "opts": ["Oral DMSA succimer monotherapy", "IM dimercaprol then IV CaNa\u2082EDTA", "D-penicillamine monotherapy oral", "Deferoxamine continuous infusion", "Activated charcoal and observation"], "correct": "B", "reasoning": "Severe lead encephalopathy (Pb > 70 + encephalopathy): IM BAL then IV CaNa\u2082EDTA combination 4 h later. Starting EDTA before BAL can redistribute lead into brain. PICU admission mandatory.", "source": "CDC/AAP lead toxicity"}, {"id": 37, "diff": "MOD", "vignette": "14-year-old from house fire: soot, hoarse voice, altered LOC. SpO\u2082 99% on RA. ABG PaO\u2082 360 on FiO\u2082 1.0. COHb 32%.", "q": "Most appropriate intervention?", "opts": ["Maintain room air, observe", "100% O\u2082 via NRB until COHb < 5%", "Methylene blue 1 mg/kg IV", "Hydroxocobalamin 70 mg/kg IV", "Dimercaprol (BAL) IM"], "correct": "B", "reasoning": "CO poisoning: pulse oximetry falsely normal. 100% O\u2082 shortens t\u00bd from ~5 h (RA) to ~80 min. HBO further shortens to ~20 min and may reduce delayed neuropsychiatric sequelae in severe cases.", "source": "HBO consensus"}, {"id": 38, "diff": "MOD", "vignette": "16-year-old: confusion, ataxia, ophthalmoplegia, nystagmus. Restrictive eating + prolonged ICU on TPN without thiamine. MRI: symmetric mammillary body + dorsomedial thalamic T2/FLAIR.", "q": "Diagnosis and immediate treatment?", "opts": ["Wernicke encephalopathy", "ADEM; methylprednisolone", "Mitochondrial encephalopathy; L-carnitine", "Anti-NMDA; rituximab", "Methanol; fomepizole"], "correct": "A", "reasoning": "Classic Wernicke triad (confusion, ataxia, ophthalmoplegia) in setting of thiamine-deficient TPN. Give IV thiamine immediately and BEFORE any glucose load (which precipitates worsening). Untreated \u2192 Korsakoff.", "source": "Royal College guidance"}, {"id": 39, "diff": "HARD", "vignette": "6-month-old severe TBI on multimodal monitoring: PRx +0.5, ICP 23, MAP 55, CPP 32. Fellow proposes raising MAP to 65.", "q": "Principal physiologic risk of pursuing MAP 65 here?", "opts": ["Hypoperfusion of immature brain", "Pressure-passive hyperaemia from failed autoreg", "Severe baroreflex-driven bradycardia", "Stress hyperglycaemia from sympathetic surge", "None \u2014 proposal is correct as stated"], "correct": "B", "reasoning": "With PRx +0.5 (severely impaired autoregulation), raising MAP causes pressure-passive flow and hyperaemic oedema. Targeted CPPopt approach individualises MAP to autoregulation status. Infants have lower baseline CPP needs.", "source": "CPPopt/PRx literature"}, {"id": 40, "diff": "MOD", "vignette": "4-year-old post-arrest NIRS: rSO\u2082 38% (baseline 65%). TTM 36\u00b0C, MAP 75, ICP 18, CPP 57, Hb 9.5.", "q": "Best interpretation and action?", "opts": ["NIRS unreliable; ignore", "rSO\u2082 dropped > 20% from baseline", "Target > 70% only", "Reduce sedation", "Cool further to 33\u00b0C"], "correct": "B", "reasoning": "NIRS drop > 20% from baseline is clinically significant. Systematically evaluate determinants of cerebral oxygenation: CPP, Hb, PaCO\u2082/PaO\u2082, and metabolic demand.", "source": "Paediatric NIRS consensus"}, {"id": 41, "diff": "HARD", "vignette": "10-year-old TBI day 7 on barbiturate coma EEG burst-suppression. Exam: fixed dilated pupils, no brainstem reflexes, no movements. Barbiturate level still therapeutic. Family asks about brain death.", "q": "Most appropriate response?", "opts": ["Proceed with brain-death exam now", "Defer exam until barbiturate sub-therapeutic", "Use ancillary EEG only", "Family meeting to proceed with WLST", "Increase barbiturate further"], "correct": "B", "reasoning": "Therapeutic barbiturate is a CNS-depressant confounder \u2014 clinical brain-death determination not valid. Either wait for clearance or use ancillary cerebral-blood-flow imaging (CTA / radionuclide / 4-vessel angiography) which is not affected by pharmacologic confounder.", "source": "Nakagawa pediatric brain-death; AAN ancillary testing"}, {"id": 42, "diff": "MOD", "vignette": "11-year-old: sudden severe neck pain \u2192 right hemiparesis 6 h later. Chiropractic manipulation 24 h ago. MRA: left ICA long-segment tapered narrowing + flame-shaped distal occlusion; T1 fat-sat: crescent intramural haematoma.", "q": "Diagnosis + acute management?", "opts": ["Atherosclerotic stroke; statin", "Carotid artery dissection", "Moyamoya; revascularisation", "Sickle vasculopathy", "AVM embolisation"], "correct": "B", "reasoning": "Cervical arterial dissection with classic intramural haematoma on T1 fat-sat MRI. Antiplatelet vs anticoagulation acceptable per CADISS \u2014 choose based on infarct size and bleeding risk; treat 3\u20136 months.", "source": "CADISS trial; AHA paediatric stroke"}, {"id": 43, "diff": "HARD", "vignette": "13-year-old: subacute encephalopathy + multifocal stroke-like episodes \u00d7 6 wk + seizures. MRI: multifocal lesions of various ages. Angiography: multifocal beading + segmental narrowing distal MCA/ACA bilaterally. CSF lymphocytic pleocytosis. ESR \u2191.", "q": "Diagnosis + treatment?", "opts": ["Moyamoya disease", "Primary angiitis of CNS (PACNS)", "Focal cerebral arteriopathy (FCA)", "AVM with multifocal rupture", "Anti-NMDA receptor encephalitis"], "correct": "B", "reasoning": "Multifocal beading + lymphocytic CSF + elevated ESR + multiterritorial lesions = small/medium vessel PACNS. Treat with induction (steroids + cyclophosphamide or rituximab) then maintenance.", "source": "Twilt paediatric PACNS"}, {"id": 44, "diff": "MOD", "vignette": "12-year-old HbSS on chronic transfusion. Routine MRI: punctate frontal T2 lesions, no acute features. Mild executive dysfunction. TCD 165 cm/s (conditional).", "q": "Best management?", "opts": ["Observation alone", "Chronic transfusion per SIT trial", "Aspirin antiplatelet only", "Hydroxyurea alone (no transfusion)", "Immediate stem-cell transplant"], "correct": "B", "reasoning": "SIT trial: chronic transfusion reduces silent infarct progression. TWiTCH: hydroxyurea acceptable substitute after 12 mo stable on transfusion in patients without prior stroke and with normalised TCD.", "source": "SIT and TWiTCH trials"}, {"id": 45, "diff": "MOD", "vignette": "7-day-old term: seizures. Total Ca 1.6, ionised 0.7. Other labs normal. No maternal hypoparathyroidism.", "q": "Most appropriate management?", "opts": ["Phenobarbital 20 mg/kg IV bolus", "IV calcium gluconate plus aetiology workup", "Levetiracetam 40 mg/kg IV bolus", "Magnesium 50 mg/kg IV slowly", "Empiric pyridoxine trial 100 mg"], "correct": "B", "reasoning": "Late neonatal hypocalcaemic seizures (day 7) require IV calcium and workup for 22q11.2 deletion (DiGeorge), vitamin D deficiency, hypomagnesaemia. AEDs without correcting Ca won't stop seizures.", "source": "Neonatal seizure guidelines"}, {"id": 46, "diff": "HARD", "vignette": "18-month-old intractable epilepsy + regression, hypotonia, lactate 8. MRI: symmetric T2 in basal ganglia + brainstem (substantia nigra, periaqueductal grey). MRS: lactate peak.", "q": "Diagnosis + management principle?", "opts": ["Wilson disease", "Leigh syndrome", "Wernicke", "Glutaric aciduria I", "Methylmalonic acidaemia"], "correct": "B", "reasoning": "Leigh syndrome MRI pattern + lactic acidosis. AVOID valproate (especially in POLG \u2192 fulminant hepatic failure). Use levetiracetam for seizures. Multidisciplinary supportive care.", "source": "Mitochondrial Medicine Society"}, {"id": 47, "diff": "HARD", "vignette": "4-year-old on valproate: status epilepticus, hyperammonaemia 200, AST/ALT > 1000, prolonged INR.", "q": "Diagnosis + immediate management?", "opts": ["Reye syndrome from acetaminophen", "Valproate-unmasked POLG/Alpers disease", "Drug-induced cholestasis", "Autoimmune hepatitis flare", "Viral hepatitis with encephalopathy"], "correct": "B", "reasoning": "Catastrophic valproate-induced hepatic failure in undiagnosed POLG/Alpers disease. Stop valproate immediately; supportive care; consider NAC; CRRT for ammonia; high mortality without transplant.", "source": "POLG/Alpers literature"}, {"id": 48, "diff": "MOD", "vignette": "6-year-old chickenpox 5 d ago: vomiting, lethargy, seizures. Normal bilirubin; AST 800, ALT 600, ammonia 180, INR 1.4. Family used aspirin for fever.", "q": "Most likely diagnosis + management?", "opts": ["Viral encephalitis; treat with acyclovir", "Reye syndrome; supportive ICU and avoid NSAIDs", "Ifosfamide encephalopathy; methylene blue", "Bacterial meningitis; antibiotics", "Mitochondrial encephalopathy; cocktail"], "correct": "B", "reasoning": "Reye syndrome: encephalopathy + hepatopathy without inflammation after viral illness with aspirin. Always rule out FAOD (MCAD) which mimics. Supportive care; avoid aspirin/NSAIDs in viral illness.", "source": "Reye epidemiology"}, {"id": 49, "diff": "HARD", "vignette": "10-year-old ALL on IT methotrexate: acute confusion, expressive aphasia, right weakness 6 h post third dose. MRI: bilateral centrum semiovale DWI restriction.", "q": "Diagnosis + management?", "opts": ["Acute haemorrhagic stroke event", "Methotrexate-induced stroke-like syndrome", "Anti-NMDA receptor encephalitis", "Hyperviscosity syndrome from blasts", "Tumour lysis syndrome with confusion"], "correct": "B", "reasoning": "Acute MTX neurotoxicity (stroke-like) within hours of IT dose with bilateral white-matter DWI restriction. Hold MTX, IV leucovorin; dextromethorphan/aminophylline anecdotal; usually reversible.", "source": "Cole MTX neurotoxicity series"}, {"id": 50, "diff": "MOD", "vignette": "12-year-old transplant on tacrolimus: tremor, confusion, seizures. BP 150/90. MRI: bilateral parieto-occipital T2 hyperintensity without DWI restriction. Tacrolimus supratherapeutic.", "q": "Best initial management?", "opts": ["Stop calcineurin inhibitor entirely", "Hold/substitute tacrolimus", "Continue same dose", "PLEX", "Cyclophosphamide"], "correct": "B", "reasoning": "Tacrolimus-induced PRES. Hold or switch CNI; gradual BP reduction (10\u201325% MAP over hours); seizure control. Most cases reversible.", "source": "PRES literature"}, {"id": 51, "diff": "HARD", "vignette": "9-year-old severe hyponatraemia (Na 105) from polydipsia treated with 3% saline. First 24 h: Na 105\u2192130 (\u039425). Day 5: progressive quadriparesis, dysphagia, dysarthria. MRI: symmetric central pontine T2 with restricted diffusion.", "q": "Diagnosis and lesson?", "opts": ["Brainstem ischaemic stroke", "Osmotic demyelination syndrome (CPM)", "Anti-NMDA encephalitis", "Wernicke encephalopathy", "Posterior circulation infarct"], "correct": "B", "reasoning": "Overcorrection of chronic hyponatraemia \u2192 CPM. Often irreversible. The lesson is prevention with controlled correction < 8\u201310 mmol/L per 24 h.", "source": "Adrogue/Madias hyponatraemia"}, {"id": 52, "diff": "HARD", "vignette": "15-year-old SAH from ruptured A-com aneurysm. Day 7: new right weakness + confusion.", "q": "What's happening + management?", "opts": ["Aneurysm rebleeding event", "Delayed cerebral ischaemia from vasospasm", "Acute communicating hydrocephalus", "Stroke from clip occlusion event", "Anti-NMDA receptor encephalitis"], "correct": "B", "reasoning": "Classic delayed cerebral ischaemia from vasospasm post-SAH (peak days 4\u201314). Confirm with TCDs, perfusion imaging. Stepwise: euvolaemia, induced HTN, nimodipine, endovascular rescue.", "source": "AHA SAH guidelines"}, {"id": 53, "diff": "MOD", "vignette": "6-year-old hypertensive crisis (180/110) + seizure + cortical blindness. MRI: symmetric parieto-occipital subcortical T2/FLAIR without DWI restriction.", "q": "Best diagnosis + management cornerstone?", "opts": ["Bilateral PCA infarcts; thrombolysis", "Posterior reversible encephalopathy (PRES)", "Anti-NMDA encephalitis; steroids", "Cortical venous thrombosis; LMWH", "Migraine variant; sumatriptan therapy"], "correct": "B", "reasoning": "Classic PRES MRI + clinical picture. Avoid precipitous BP drop. Remove triggers (calcineurin inhibitor, chemotherapy). Typically reversible.", "source": "PRES literature"}, {"id": 54, "diff": "HARD", "vignette": "12-year-old CP with intrathecal baclofen pump. 3 days post battery change: fever, severe spasticity, tachycardia, HTN, agitation, hallucinations. Pump shows zero flow.", "q": "Diagnosis + immediate management?", "opts": ["Sepsis; antibiotics", "Acute ITB withdrawal", "Serotonin syndrome", "NMS; dantrolene", "Anti-NMDA"], "correct": "B", "reasoning": "Catastrophic intrathecal baclofen withdrawal syndrome \u2014 restoration of IT delivery is the only definitive treatment. Oral baclofen alone usually inadequate. Benzodiazepines bridge.", "source": "ITB withdrawal consensus"}, {"id": 55, "diff": "HARD", "vignette": "10-year-old DYT1: severe generalised dystonia 36 h despite oral meds. T 39.2, HR 150, CK 22 000, myoglobinuria, mild AKI.", "q": "Diagnosis + ICU management?", "opts": ["Malignant hyperthermia; dantrolene", "Status dystonicus", "Tetanus; HTIG", "Serotonin syndrome", "NMS"], "correct": "B", "reasoning": "Tiered approach to status dystonicus: optimise meds \u2192 ICU sedation/NMB \u2192 DBS (GPi) for refractory cases. Aggressive rhabdomyolysis management. Cool actively.", "source": "Status dystonicus consensus"}, {"id": 56, "diff": "MOD", "vignette": "9-year-old: 5 days back pain + fever \u2192 leg weakness + urinary retention. MRI: posterior epidural collection with rim enhancement compressing cord.", "q": "Most appropriate management?", "opts": ["IV antibiotics alone", "Emergency surgical decompression", "LP", "HBO", "Percutaneous drainage alone"], "correct": "B", "reasoning": "Spinal epidural abscess with cord compression = neurosurgical emergency. Empiric vancomycin + ceftriaxone (broader if immunocompromised). Outcome depends on prompt decompression.", "source": "IDSA SEA"}, {"id": 57, "diff": "MOD", "vignette": "9-year-old recurrent TIA + acute right weakness. MRA: bilateral supraclinoid ICA stenosis + 'puff of smoke' collaterals.", "q": "Diagnosis + management strategy?", "opts": ["Atherosclerosis; statin", "Moyamoya disease", "Vasculitis; cyclophosphamide", "FMD; angioplasty", "Migraine; topiramate"], "correct": "B", "reasoning": "Classic moyamoya on MRA. Definitive treatment is surgical revascularisation; medical therapy is bridge. Maintain CPP through hydration/normotension; treat anaemia.", "source": "AHA paediatric moyamoya"}, {"id": 58, "diff": "HARD", "vignette": "14-year-old acute liver failure from APAP: West Haven III HE, ICP monitor 28.", "q": "Best ICP management approach?", "opts": ["3% saline 5 mL/kg bolus", "Phenobarbital coma", "\u03b2-blockade", "Aggressive fluid resuscitation", "LP for diagnostic studies"], "correct": "A", "reasoning": "ALF cerebral oedema: hyperosmolar control, careful ammonia reduction (high-flux CRRT), transplant work-up. Avoid mannitol if Na > 145; phenytoin not effective for ALF encephalopathy. LP contraindicated.", "source": "AASLD ALF guideline"}, {"id": 59, "diff": "HARD", "vignette": "10-day-old: vomiting, lethargy \u2192 coma in 24 h. Ammonia 850. Glucose normal. Urea low. Urinary orotic acid elevated.", "q": "Likely UCD and immediate management?", "opts": ["CPS1; standard ICU", "OTC deficiency", "MMA; B12", "MSUD; thiamine", "Glutaric aciduria I; carnitine"], "correct": "B", "reasoning": "Elevated urinary orotic acid + low urea + neonatal hyperammonaemia = OTC deficiency. Emergent ammonia reduction with sodium phenylacetate/benzoate (Ammonul) + arginine; CRRT for severe.", "source": "UCD consensus"}, {"id": 60, "diff": "HARD", "vignette": "12-year-old on high-dose ifosfamide: acute confusion, hallucinations, choreoathetosis, seizures. EEG: generalised slowing.", "q": "Diagnosis + treatment?", "opts": ["Ifosfamide encephalopathy; methylene blue", "Anti-NMDA receptor encephalitis", "MTX neurotoxicity; folinic acid", "Cisplatin neurotoxicity; amifostine", "Carboplatin neurotoxicity; supportive"], "correct": "A", "reasoning": "Ifosfamide encephalopathy: chloroacetaldehyde toxic metabolite. Methylene blue restores oxidised flavins/MAO and reverses encephalopathy in many cases. Supportive care and discontinuation.", "source": "Ifosfamide neurotoxicity literature"}];
+
+let state = {
+  mode: 'study',
+  count: 20,
+  questions: [],
+  answers: {},
+  startTime: null,
+  endTime: null,
+  timerInterval: null,
+  duration: 0
+};
+
+document.getElementById('poolSize').textContent = QPOOL.length;
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function pickQuestions(count, diff) {
+  let pool = QPOOL.slice();
+  if (diff !== 'all') pool = pool.filter(q => q.diff === diff);
+  pool = shuffle(pool);
+  return pool.slice(0, Math.min(count, pool.length));
+}
+
+function startExam() {
+  state.mode = document.getElementById('modeSel').value;
+  state.count = parseInt(document.getElementById('countSel').value);
+  const diff = document.getElementById('diffSel').value;
+  state.questions = pickQuestions(state.count, diff);
+  state.answers = {};
+
+  document.getElementById('setup').querySelectorAll('select').forEach(s => s.disabled = true);
+  document.getElementById('startBtn').disabled = true;
+
+  const examDiv = document.getElementById('exam');
+  examDiv.innerHTML = '';
+  examDiv.classList.remove('hidden');
+
+  document.getElementById('progressWrap').classList.remove('hidden');
+  document.getElementById('submitBar').classList.remove('hidden');
+
+  const modeBadge = '<span class="mode-badge ' + (state.mode === 'study' ? 'mode-study' : 'mode-exam') + '">' + (state.mode === 'study' ? 'STUDY MODE' : 'EXAM MODE') + '</span>';
+  examDiv.insertAdjacentHTML('beforeend', '<div style="margin:6px 0 12px 0;">' + modeBadge + '  ' + state.questions.length + ' questions drawn from pool</div>');
+
+  state.questions.forEach((q, idx) => {
+    const optsHtml = q.opts.map((opt, i) => {
+      const letter = String.fromCharCode(65 + i);
+      return '<label data-letter="' + letter + '"><input type="radio" name="q' + idx + '" value="' + letter + '"> ' + letter + '. ' + escapeHtml(opt) + '</label>';
+    }).join('');
+    const diffTag = q.diff === 'HARD' ? '<span class="tag-hard">HARD</span>' : '<span class="tag-mod">MOD</span>';
+    examDiv.insertAdjacentHTML('beforeend',
+      '<div class="qblock" data-q="' + idx + '">' +
+      '<div class="qhead">Question ' + (idx+1) + ' of ' + state.questions.length + ' ' + diffTag + '</div>' +
+      '<div class="vignette">' + escapeHtml(q.vignette) + '</div>' +
+      '<div class="question">' + escapeHtml(q.q) + '</div>' +
+      '<div class="options">' + optsHtml + '</div>' +
+      (state.mode === 'study' ? '<button class="show-btn" data-show="' + idx + '">Show answer + reasoning</button>' : '') +
+      '<div class="reveal" id="rev' + idx + '"><h4>Answer: ' + q.correct + '</h4><p><strong>Reasoning:</strong> ' + escapeHtml(q.reasoning) + '</p><p class="small"><em>' + escapeHtml(q.source) + '</em></p></div>' +
+      '</div>'
+    );
+  });
+
+  examDiv.addEventListener('change', onAnswer);
+  examDiv.addEventListener('click', onShowBtn);
+
+  if (state.mode === 'exam') {
+    const minutesPerQ = 3;
+    state.duration = state.questions.length * minutesPerQ * 60;
+    state.startTime = Date.now();
+    document.getElementById('timer').classList.remove('hidden');
+    startTimer();
+  }
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c]));
+}
+
+function onAnswer(e) {
+  if (e.target.matches('input[type="radio"]')) {
+    const qIdx = parseInt(e.target.name.replace('q',''));
+    state.answers[qIdx] = e.target.value;
+    const block = e.target.closest('.qblock');
+    block.querySelectorAll('.options label').forEach(l => l.classList.remove('selected'));
+    e.target.parentElement.classList.add('selected');
+    if (state.mode === 'study') {
+      gradeOne(qIdx);
+    }
+    updateProgress();
+  }
+}
+
+function onShowBtn(e) {
+  if (e.target.matches('.show-btn')) {
+    const idx = parseInt(e.target.dataset.show);
+    gradeOne(idx);
+  }
+}
+
+function gradeOne(idx) {
+  const q = state.questions[idx];
+  const block = document.querySelector('.qblock[data-q="' + idx + '"]');
+  const labels = block.querySelectorAll('.options label');
+  const chosen = state.answers[idx];
+  labels.forEach(l => {
+    const letter = l.dataset.letter;
+    if (letter === q.correct) l.classList.add('correct');
+    if (chosen && letter === chosen && chosen !== q.correct) l.classList.add('wrong');
+  });
+  document.getElementById('rev' + idx).classList.add('show');
+}
+
+function updateProgress() {
+  const answered = Object.keys(state.answers).length;
+  const total = state.questions.length;
+  document.getElementById('progressBar').style.width = (100 * answered / total) + '%';
+  document.getElementById('progressLabel').textContent = answered + ' / ' + total + ' answered';
+}
+
+function startTimer() {
+  const timerEl = document.getElementById('timer');
+  state.timerInterval = setInterval(() => {
+    const elapsed = Math.floor((Date.now() - state.startTime) / 1000);
+    const remain = state.duration - elapsed;
+    if (remain <= 0) {
+      clearInterval(state.timerInterval);
+      timerEl.textContent = 'TIME UP';
+      submitExam();
+      return;
+    }
+    const m = Math.floor(remain / 60);
+    const s = remain % 60;
+    timerEl.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+    if (remain < 300) timerEl.classList.add('warning');
+  }, 1000);
+}
+
+function submitExam() {
+  if (state.timerInterval) clearInterval(state.timerInterval);
+  state.endTime = Date.now();
+  let correct = 0, wrong = 0, skipped = 0;
+  state.questions.forEach((q, idx) => {
+    const ans = state.answers[idx];
+    if (!ans) skipped++;
+    else if (ans === q.correct) correct++;
+    else wrong++;
+    if (state.mode === 'exam') gradeOne(idx);
+  });
+  const total = state.questions.length;
+  const pct = Math.round(100 * correct / total);
+  const passed = pct >= 60;
+  const minutesUsed = Math.round((state.endTime - state.startTime) / 60000);
+  const r = document.getElementById('results');
+  r.innerHTML =
+    '<div class="results">' +
+    '<div class="scorecard ' + (passed ? 'pass' : 'fail') + '">' +
+      'SCORE: ' + correct + ' / ' + total + ' (' + pct + '%) — ' + (passed ? 'PASS' : 'FAIL') +
+    '</div>' +
+    '<p><strong>Correct:</strong> <span class="status-correct">' + correct + '</span> · ' +
+       '<strong>Wrong:</strong> <span class="status-wrong">' + wrong + '</span> · ' +
+       '<strong>Skipped:</strong> <span class="status-skipped">' + skipped + '</span></p>' +
+    (state.mode === 'exam' ? '<p><strong>Time used:</strong> ' + minutesUsed + ' min of ' + Math.floor(state.duration/60) + ' min</p>' : '') +
+    '<p><em>Pass threshold: 60% (SEAP-aligned). Scroll up to review all questions with correct answers highlighted in green and wrong answers in red.</em></p>' +
+    '<button class="show-btn" onclick="location.reload()">Start a new exam</button>' +
+    '</div>';
+  r.classList.remove('hidden');
+  document.getElementById('submitBtn').disabled = true;
+  document.getElementById('abortBtn').disabled = true;
+  r.scrollIntoView({ behavior: 'smooth' });
+}
+
+function abortExam() {
+  if (!confirm('Abort the exam? Your answers will be DISCARDED — no marking, no review.')) return;
+  location.reload();
+}
+
+function endExamEarly() {
+  const answered = Object.keys(state.answers).length;
+  const total = state.questions.length;
+  const unanswered = total - answered;
+  const msg = 'End the test now?\n\n' +
+              '• ' + answered + ' of ' + total + ' questions answered\n' +
+              '• ' + unanswered + ' will be marked as SKIPPED (counted wrong for %)\n' +
+              '• You will be graded on what you have done so far';
+  if (!confirm(msg)) return;
+  submitExam();
+}
+
+document.getElementById('startBtn').addEventListener('click', startExam);
+document.getElementById('submitBtn').addEventListener('click', submitExam);
+document.getElementById('endBtn').addEventListener('click', endExamEarly);
+document.getElementById('abortBtn').addEventListener('click', abortExam);
+</script>
+
+
+<!-- INJECTED_SEARCH_WIDGET -->
+<style id="search-widget-style">
+  #searchWidget { position: fixed; top: 12px; right: 12px; z-index: 9999; background: #fff; border: 2px solid #6b3fa0; border-radius: 8px; padding: 6px 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.18); font-family: Georgia, serif; display: flex; align-items: center; gap: 6px; }
+  #searchWidget input { font-size: 0.95em; padding: 4px 8px; border: 1px solid #aaa; border-radius: 4px; width: 220px; outline: none; }
+  #searchWidget input:focus { border-color: #6b3fa0; }
+  #searchWidget button { background: #6b3fa0; color: #fff; border: none; border-radius: 4px; padding: 4px 9px; cursor: pointer; font-weight: bold; font-size: 0.95em; }
+  #searchWidget button:hover { background: #4a1f6f; }
+  #searchWidget .closeBtn { background: #b34a4a; }
+  #searchWidget .closeBtn:hover { background: #8a2f2f; }
+  #searchWidget .count { font-size: 0.85em; color: #555; min-width: 60px; text-align: center; }
+  #searchToggle { position: fixed; top: 12px; right: 12px; z-index: 9999; background: #6b3fa0; color: #fff; border: none; border-radius: 50%; width: 42px; height: 42px; font-size: 18px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.2); font-weight: bold; }
+  #searchToggle:hover { background: #4a1f6f; }
+  .search-hit { background: #fff385; padding: 0 2px; border-radius: 2px; }
+  .search-hit.active { background: #ff9d33; color: #000; outline: 2px solid #c95c20; }
+  @media print { #searchWidget, #searchToggle { display: none !important; } }
+</style>
+<button id="searchToggle" title="Search (Ctrl+F)">🔍</button>
+<div id="searchWidget" style="display:none;">
+  <input id="searchInput" type="text" placeholder="Search this page..." />
+  <span class="count" id="searchCount">0 / 0</span>
+  <button id="searchPrev" title="Previous (Shift+Enter)">↑</button>
+  <button id="searchNext" title="Next (Enter)">↓</button>
+  <button id="searchClose" class="closeBtn" title="Close">✕</button>
+</div>
+<script>
+(function() {
+  const toggle = document.getElementById('searchToggle');
+  const widget = document.getElementById('searchWidget');
+  const input = document.getElementById('searchInput');
+  const count = document.getElementById('searchCount');
+  const prev = document.getElementById('searchPrev');
+  const next = document.getElementById('searchNext');
+  const close = document.getElementById('searchClose');
+  let hits = [];
+  let activeIdx = -1;
+  let lastTerm = '';
+
+  function openWidget() {
+    widget.style.display = 'flex';
+    toggle.style.display = 'none';
+    input.focus();
+    input.select();
+  }
+  function closeWidget() {
+    clearHighlights();
+    widget.style.display = 'none';
+    toggle.style.display = 'block';
+    input.value = '';
+    lastTerm = '';
+  }
+  toggle.addEventListener('click', openWidget);
+  close.addEventListener('click', closeWidget);
+
+  // Ctrl+F intercept
+  document.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') {
+      e.preventDefault();
+      openWidget();
+    } else if (e.key === 'Escape' && widget.style.display !== 'none') {
+      closeWidget();
+    }
+  });
+
+  function clearHighlights() {
+    document.querySelectorAll('.search-hit').forEach(el => {
+      const parent = el.parentNode;
+      parent.replaceChild(document.createTextNode(el.textContent), el);
+      parent.normalize();
+    });
+    hits = [];
+    activeIdx = -1;
+    count.textContent = '0 / 0';
+  }
+
+  function escapeRegex(s) {
+    return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  function doSearch(term) {
+    clearHighlights();
+    if (!term || term.length < 2) { count.textContent = '0 / 0'; return; }
+    const regex = new RegExp(escapeRegex(term), 'gi');
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+      acceptNode: function(node) {
+        // skip search widget itself, scripts, styles, hidden details summary
+        if (!node.parentNode) return NodeFilter.FILTER_REJECT;
+        const tag = node.parentNode.tagName;
+        if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'NOSCRIPT') return NodeFilter.FILTER_REJECT;
+        if (node.parentNode.closest('#searchWidget') || node.parentNode.closest('#searchToggle')) return NodeFilter.FILTER_REJECT;
+        if (!node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    const textNodes = [];
+    let n;
+    while ((n = walker.nextNode())) textNodes.push(n);
+    textNodes.forEach(node => {
+      const text = node.nodeValue;
+      if (!regex.test(text)) return;
+      regex.lastIndex = 0;
+      const frag = document.createDocumentFragment();
+      let lastIdx = 0;
+      let m;
+      while ((m = regex.exec(text)) !== null) {
+        if (m.index > lastIdx) frag.appendChild(document.createTextNode(text.slice(lastIdx, m.index)));
+        const span = document.createElement('span');
+        span.className = 'search-hit';
+        span.textContent = m[0];
+        frag.appendChild(span);
+        hits.push(span);
+        lastIdx = m.index + m[0].length;
+        if (m[0].length === 0) regex.lastIndex++;
+      }
+      if (lastIdx < text.length) frag.appendChild(document.createTextNode(text.slice(lastIdx)));
+      node.parentNode.replaceChild(frag, node);
+    });
+    if (hits.length > 0) {
+      activeIdx = 0;
+      focusHit();
+    } else {
+      count.textContent = '0 / 0';
+    }
+  }
+
+  function focusHit() {
+    hits.forEach((h, i) => h.classList.toggle('active', i === activeIdx));
+    if (hits[activeIdx]) {
+      // Open <details> ancestors so hit is visible
+      let p = hits[activeIdx].parentNode;
+      while (p && p !== document.body) {
+        if (p.tagName === 'DETAILS') p.open = true;
+        p = p.parentNode;
+      }
+      hits[activeIdx].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    count.textContent = (hits.length ? (activeIdx + 1) : 0) + ' / ' + hits.length;
+  }
+
+  functi

@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ultra-Short Memorization Tables — PICU BoardIQ</title>
+<style>
+:root {
+  --navy-deepest: #060d1f;
+  --navy:         #122047;
+  --electric:     #2dd4ff;
+  --gold:         #f2c244;
+  --green:        #5be584;
+  --red:          #ff6b6b;
+  --amber:        #ffb74d;
+  --text:         #e7ecf5;
+  --text-dim:     #9aa6c0;
+  --border:       #243463;
+  --surface:      #0e1838;
+  --surface-2:    #15224a;
+}
+* { box-sizing: border-box; }
+body {
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  background: var(--navy-deepest); color: var(--text);
+  margin: 0; line-height: 1.5;
+}
+.header {
+  background: linear-gradient(180deg, var(--navy) 0%, var(--navy-deepest) 100%);
+  padding: 26px 24px; border-bottom: 1px solid var(--border); text-align: center;
+}
+.header h1 { margin: 0 0 6px 0; font-size: 1.7em; font-weight: 800; }
+.header h1 .accent { color: var(--electric); }
+.header .sub { color: var(--text-dim); font-size: 0.95em; }
+.header .tagline { color: var(--gold); margin-top: 8px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; font-size: 0.82em; }
+
+.controls {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--navy-deepest); padding: 12px 24px;
+  border-bottom: 1px solid var(--border); display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+}
+.btn {
+  background: var(--surface-2); border: 1px solid var(--border); color: var(--text);
+  padding: 7px 14px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.88em;
+}
+.btn:hover { background: var(--electric); color: var(--navy-deepest); border-color: var(--electric); }
+.btn.gold { background: var(--gold); color: var(--navy-deepest); border-color: var(--gold); }
+input.search {
+  flex-grow: 1; min-width: 200px; padding: 7px 12px;
+  background: var(--surface-2); color: var(--text); border: 1px solid var(--border);
+  border-radius: 6px; outline: none; font-size: 0.95em;
+}
+input.search:focus { border-color: var(--electric); }
+
+/* Topic-nav chips */
+.topic-nav { padding: 10px 24px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; gap: 6px; flex-wrap: wrap; }
+.topic-chip { background: var(--surface-2); color: var(--text-dim); padding: 4px 10px; border-radius: 12px; font-size: 0.82em; cursor: pointer; text-decoration: none; border: 1px solid var(--border); }
+.topic-chip:hover { background: var(--electric); color: var(--navy-deepest); border-color: var(--electric); }
+
+.container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+
+.table-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  margin: 18px 0; overflow: hidden;
+}
+.table-header {
+  padding: 12px 18px; background: var(--surface-2);
+  display: flex; justify-content: space-between; align-items: center;
+  cursor: pointer; border-bottom: 1px solid var(--border);
+}
+.table-header h2 { margin: 0; font-size: 1.05em; font-weight: 700; }
+.table-header .count { color: var(--gold); font-size: 0.85em; font-weight: 600; }
+.table-body { overflow-x: auto; }
+.table-card.collapsed .table-body { display: none; }
+table { width: 100%; border-collapse: collapse; font-size: 0.9em; }
+thead th {
+  background: var(--navy); padding: 10px 14px; text-align: left;
+  font-weight: 700; color: var(--electric); font-size: 0.82em;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--border);
+}
+tbody tr { transition: background 0.1s; }
+tbody tr:hover { background: rgba(45,212,255,0.04); }
+tbody tr.hidden-row { display: none; }
+tbody td { padding: 8px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tbody tr:last-child td { border-bottom: none; }
+tbody td:first-child { font-weight: 600; color: var(--text); }
+tbody td:nth-child(2) { color: var(--green); font-weight: 500; }
+mark { background: var(--gold); color: var(--navy-deepest); padding: 0 2px; border-radius: 2px; font-weight: 600; }
+
+.footer { text-align: center; color: var(--text-dim); padding: 20px; font-size: 0.85em; border-top: 1px solid var(--border); }
+
+@media print {
+  body { background: white; color: black; font-size: 9pt; line-height: 1.25; }
+  .controls, .header, .topic-nav, .footer { display: none; }
+  .container { max-width: 100%; padding: 4px; }
+  .table-card { background: white; border: 1px solid #999; border-radius: 0; page-break-inside: avoid; margin: 4px 0; }
+  .table-body { display: block !important; }
+  .table-header { background: #ddd; }
+  .table-header h2, .table-header .count { color: #000; }
+  thead th { background: #eee; color: #000; }
+  tbody td { color: #000; }
+  tbody td:nth-child(2) { color: #000; font-weight: 600; }
+  tbody tr:hover { background: white; }
+  mark { background: #ffeb3b; color: black; }
+}
+
+@media (max-width: 700px) {
+  .topic-nav { display: none; }
+  thead th { font-size: 0.72em; padding: 8px 10px; }
+  tbody td { padding: 6px 10px; font-size: 0.85em; }
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <h1>🧮 Ultra-Short <span class="accent">Memorization</span> Tables</h1>
+  <div class="sub">Drug doses · ICU thresholds · diagnostic criteria · antidotes · brain-death protocol</div>
+  <div class="tagline">213 rows · 19 tables</div>
+</header>
+
+<div class="controls">
+  <input type="text" class="search" id="searchInput" placeholder="Search across all tables — drug name, threshold, criterion..." />
+  <button class="btn" onclick="toggleAll(true)">Expand all</button>
+  <button class="btn" onclick="toggleAll(false)">Collapse all</button>
+  <button class="btn gold" onclick="window.print()">🖨️ Print</button>
+</div>
+
+<div class="topic-nav">
+  <a class="topic-chip" href="#t0">💊 AED Loading & Maintenance Doses</a>
+  <a class="topic-chip" href="#t1">🧠 ICP / CPP Thresholds by Age (BTF 2019)</a>
+  <a class="topic-chip" href="#t2">💉 Hyperosmolar Therapy</a>
+  <a class="topic-chip" href="#t3">⏹ Brain Death — Pediatric Protocol</a>
+  <a class="topic-chip" href="#t4">🍼 Neonatal HIE — Cooling</a>
+  <a class="topic-chip" href="#t5">🚨 Post-Cardiac-Arrest TTM (Pediatric, THAPCA)</a>
+  <a class="topic-chip" href="#t6">💊 Sedatives & Paralytics — PICU</a>
+  <a class="topic-chip" href="#t7">❤️ Vasoactive Drugs</a>
+  <a class="topic-chip" href="#t8">🩺 Empiric CNS Infection Antibiotics</a>
+  <a class="topic-chip" href="#t9">⚗️ Antidotes Quick-Reference</a>
+  <a class="topic-chip" href="#t10">🩸 Pediatric Stroke Thresholds</a>
+  <a class="topic-chip" href="#t11">🧬 Metabolic Decompensation Doses</a>
+  <a class="topic-chip" href="#t12">🌬️ PALICC-2 ARDS Stratification</a>
+  <a class="topic-chip" href="#t13">📡 Multimodal Monitoring Thresholds</a>
+  <a class="topic-chip" href="#t14">💉 Diabetic Ketoacidosis (Pediatric)</a>
+  <a class="topic-chip" href="#t15">🧪 Lab Toxicity & Dialysis Thresholds</a>
+  <a class="topic-chip" href="#t16">🔬 Diagnostic Criteria — Quick Reference</a>
+  <a class="topic-chip" href="#t17">🩸 Coagulation & Reversal</a>
+  <a class="topic-chip" href="#t18">🎯 Quick Numbers — Targets</a>
+</div>
+<div class="container">
+<div class="table-card" id="t0">
+  <div class="table-header" onclick="this.parentElement.classList.toggle('collapsed')">
+    <h2>💊 AED Loading & Maintenance Doses</h2><span class="count">16 rows</span>
+  </div>
+  <div class="table-body">
+    <table>
+      <thead><tr><th>Drug</th><th>Loading dose</th><th>Maintenance</th><th>Watch for</th></tr></thead>
+      <tbody>
+        <tr data-search="lorazepam (iv) 0.1 mg/kg (max 4 mg) repeat × 1 if seizing respiratory depression"><td>Lorazepam (IV)</td><td>0.1 mg/kg (max 4 mg)</td><td>Repeat × 1 if seizing</td><td>Respiratory depression</td></tr>
+        <tr data-search="midazolam (im/in/iv) im/in 0.2 mg/kg; iv 0.1 mg/kg infusion 0.05–2 mg/kg/h hypotension"><td>Midazolam (IM/IN/IV)</td><td>IM/IN 0.2 mg/kg; IV 0.1 mg/kg</td><td>Infusion 0.05–2 mg/kg/h</td><td>Hypotension</td></tr>
+        <tr data-search="diazepam (pr) 0.5 mg/kg pr — sedation, hypotension"><td>Diazepam (PR)</td><td>0.5 mg/kg PR</td><td>—</td><td>Sedation, hypotension</td></tr>
+        <tr data-search="fosphenytoin 20 mg pe/kg iv 5–10 mg pe/kg/day divided cardiac monitoring; avoid in dravet"><td>Fosphenytoin</td><td>20 mg PE/kg IV</td><td>5–10 mg PE/kg/day divided</td><td>Cardiac monitoring; AVOID in Dravet</td></tr>
+        <tr data-search="levetiracetam 60 mg/kg iv (se) 20–60 mg/kg/day divided bid behavioural change"><td>Levetiracetam</td><td>60 mg/kg IV (SE)</td><td>20–60 mg/kg/day divided BID</td><td>Behavioural change</td></tr>
+        <tr data-search="valproate 40 mg/kg iv (se) 30–60 mg/kg/day divided avoid in mitochondrial / polg / reye"><td>Valproate</td><td>40 mg/kg IV (SE)</td><td>30–60 mg/kg/day divided</td><td>AVOID in mitochondrial / POLG / Reye</td></tr>
+        <tr data-search="phenobarbital 20 mg/kg iv (neonatal) 5 mg/kg/day sedation; first-line neonatal"><td>Phenobarbital</td><td>20 mg/kg IV (neonatal)</td><td>5 mg/kg/day</td><td>Sedation; first-line neonatal</td></tr>
+        <tr data-search="lacosamide 10 mg/kg iv 8–12 mg/kg/day pr interval prolongation"><td>Lacosamide</td><td>10 mg/kg IV</td><td>8–12 mg/kg/day</td><td>PR interval prolongation</td></tr>
+        <tr data-search="topiramate — 5–9 mg/kg/day metabolic acidosis, hypohidrosis"><td>Topiramate</td><td>—</td><td>5–9 mg/kg/day</td><td>Metabolic acidosis, hypohidrosis</td></tr>
+        <tr data-search="vigabatrin — 100–150 mg/kg/day visual field constriction (irreversible); first-line tsc spasms"><td>Vigabatrin</td><td>—</td><td>100–150 mg/kg/day</td><td>Visual field constriction (irreversible); first-line TSC spasms</td></tr>
+        <tr data-search="clobazam — 0.5–1 mg/kg/day fda-approved lgs"><td>Clobazam</td><td>—</td><td>0.5–1 mg/kg/day</td><td>FDA-approved LGS</td></tr>
+        <tr data-search="cannabidiol (epidiolex) — 10 mg/kg/day → up to 20 mg/kg/day fda-approved dravet, lgs, tsc"><td>Cannabidiol (Epidiolex)</td><td>—</td><td>10 mg/kg/day → up to 20 mg/kg/day</td><td>FDA-approved Dravet, LGS, TSC</td></tr>
+        <tr data-search="rufinamide — 10 mg/kg/day → 45 mg/kg/day fda-approved lgs"><td>Rufinamide</td><td>—</td><td>10 mg/kg/day → 45 mg/kg/day</td><td>FDA-approved LGS</td></tr>
+        <tr data-search="fenfluramine (fintepla) — 0.2 mg/kg/day → 0.7 mg/kg/day echocardiogram screening (valvulopathy)"><td>Fenfluramine (Fintepla)</td><td>—</td><td>0.2 mg/kg/day → 0.7 mg/kg/day</td><td>Echocardiogram screening (valvulopathy)</td></tr>
+        <tr data-search="pentobarbital 5–10 mg/kg load infusion 1–5 mg/kg/h → eeg burst-suppression cardiovascular collapse"><td>Pentobarbital</td><td>5–10 mg/kg load</td><td>Infusion 1–5 mg/kg/h → EEG burst-suppression</td><td>Cardiovascular collapse</td></tr>
+        <tr data-search="ketamine (srse) 1–2 mg/kg bolus infusion 1–5 mg/kg/h nmda-targeted second-line refractory se"><td>Ketamine (SRSE)</td><td>1–2 mg/kg bolus</td><td>Infusion 1–5 mg/kg/h</td><td>NMDA-targeted second-line refractory SE</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="table-card" id="t1">
+  <div class="table-header" onclick="this.parentElement.classList.toggle('collapsed')">
+    <h2>🧠 ICP / CPP Thresholds by Age (BTF 2019)</h2><span class="count">5 rows</span>
+  </div>
+  <div class="table-body">
+    <table>
+      <thead><tr><th>Age group</th><th>CPP minimum</th><th>ICP threshold</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr data-search="infant < 2 y ≥ 40 mm hg > 20 mm hg = treat lower map needs lower cpp"><td>Infant < 2 y</td><td>≥ 40 mm Hg</td><td>> 20 mm Hg = treat</td><td>Lower MAP needs lower CPP</td></tr>
+        <tr data-search="young child 2–6 y ≥ 40–50 mm hg > 20 mm hg = treat age-appropriate map"><td>Young child 2–6 y</td><td>≥ 40–50 mm Hg</td><td>> 20 mm Hg = treat</td><td>Age-appropriate MAP</td></tr>
+        <tr data-search="school-age 6–12 y ≥ 50 mm hg > 20 mm hg = treat "><td>School-age 6–12 y</td><td>≥ 50 mm Hg</td><td>> 20 mm Hg = treat</td><td></td></tr>
+        <tr data-search="adolescent 13–17 y ≥ 50–60 mm hg > 22 mm hg = treat some apply adult ≥ 60"><td>Adolescent 13–17 y</td><td>≥ 50–60 mm Hg</td><td>> 22 mm Hg = treat</td><td>Some apply adult ≥ 60</td></tr>
+        <tr data-search="— — — target individualised cppopt using prx if available"><td>—</td><td>—</td><td>—</td><td>Target individualised CPPopt using PRx if available</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="table-card" id="t2">
+  <div class="table-header" onclick="this.parentElement.classList.toggle('collapsed')">
+    <h2>💉 Hyperosmolar Therapy</h2><span class="count">4 rows</span>
+  </div>
+  <div class="table-body">
+    <table>
+      <thead><tr><th>Agent</th><th>Bolus dose</th><th>Targets</th><th>Cautions</th></tr></thead>
+      <tbody>
+        <tr data-search="3% saline 3–10 ml/kg over 10–20 min tier 1: na 145–155; tier 2: up to 160 central line preferred; avoid rapid na shifts"><td>3% saline</td><td>3–10 mL/kg over 10–20 min</td><td>Tier 1: Na 145–155; Tier 2: up to 160</td><td>Central line preferred; avoid rapid Na shifts</td></tr>
+        <tr data-search="23.4% saline 0.5–2 ml/kg via central line rescue for refractory icp central line mandatory"><td>23.4% saline</td><td>0.5–2 mL/kg via central line</td><td>Rescue for refractory ICP</td><td>Central line mandatory</td></tr>
+        <tr data-search="mannitol 20% 0.25–1 g/kg over 15–30 min q4–6h serum osm 295–320; hold if osmol gap > 10 diuresis; volume status"><td>Mannitol 20%</td><td>0.25–1 g/kg over 15–30 min q4–6h</td><td>Serum osm 295–320; hold if osmol gap > 10</td><td>Diuresis; volume status</td></tr>
+        <tr data-search="continuous 3% saline infusion 0.1–1 ml/kg/h maintain target na monitor na q4–6h"><td>Continuous 3% saline infusion</td><td>0.1–1 mL/kg/h</td><td>Maintain target Na</td><td>Monitor Na q4–6h</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="table-card" id="t3">
+  <div class="table-header" onclick="this.parentElement.classList.toggle('collapsed')">
+    <h2>⏹ Brain Death — Pediatric Protocol</h2><span class="count">10 rows</span>
+  </div>
+  <div class="table-body">
+    <table>
+      <thead><tr><th>Parameter</th><th>Requirement</th></tr></thead>
+      <tbody>
+        <tr data-search="observation period — newborn–30 days 24 hours, two exams by two attendings"><td>Observation period — newborn–30 days</td><td>24 hours, two exams by two attendings</td></tr>
+        <tr data-search="observation period — > 30 days–18 years 12 hours, two exams"><td>Observation period — > 30 days–18 years</td><td>12 hours, two exams</td></tr>
+        <tr data-search="core temperature minimum ≥ 35 °c (preferably 36)"><td>Core temperature minimum</td><td>≥ 35 °C (preferably 36)</td></tr>
+        <tr data-search="sbp minimum (per age) > 5th percentile, minimal vasopressor"><td>SBP minimum (per age)</td><td>> 5th percentile, minimal vasopressor</td></tr>
+        <tr data-search="apnoea test pre-test pao₂ > 200 mm hg on fio₂ 1.0 × 10 min"><td>Apnoea test pre-test PaO₂</td><td>> 200 mm Hg on FiO₂ 1.0 × 10 min</td></tr>
+        <tr data-search="apnoea test pre-test paco₂ 35–45 mm hg (baseline)"><td>Apnoea test pre-test PaCO₂</td><td>35–45 mm Hg (baseline)</td></tr>
+        <tr data-search="apnoea positive paco₂ ≥ 60 mm hg and ≥ 20 above baseline; no respiratory effort"><td>Apnoea POSITIVE</td><td>PaCO₂ ≥ 60 mm Hg AND ≥ 20 above baseline; no respiratory effort</td></tr>
+        <tr data-search="abort apnoea test if sbp drops > 20%, spo₂ < 85%, arrhythmia"><td>Abort apnoea test if</td><td>SBP drops > 20%, SpO₂ < 85%, arrhythmia</td></tr>
+        <tr data-search="acceptable ancillary tests radionuclide cbf (hmpao 'hollow skull'); 4-vessel angio; cta"><td>Acceptable ancillary tests</td><td>Radionuclide CBF (HMPAO 'hollow skull'); 4-vessel angio; CTA</td></tr>
+        <tr data-search="eeg as sole ancillary not recommended (false confirmation in barbiturate coma)"><td>EEG as sole ancillary</td><td>NOT recommended (false confirmation in barbiturate coma)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="table-card" id="t4">
+  <div class="table-header" onclick="this.parentElement.classList.toggle('collapsed')">
+    <h2>🍼 Neonatal HIE — Cooling</h2><span class="count">9 rows</span>
+  </div>
+  <div class="table-body">
+    <table>
+      <thead><tr><th>Parameter</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr data-search="target temperature 33–34 °c"><td>Target temperature</td><td>33–34 °C</td></tr>
+        <tr data-search="duration 72 hours"><td>Duration</td><td>72 hours</td></tr>
+        <tr data-search="initiation window < 6 hours of birth"><td>Initiation window</td><td>< 6 hours of birth</td></tr>
+        <tr data-search="gestational age ≥ 35–36 weeks"><td>Gestational age</td><td>≥ 35–36 weeks</td></tr>
+        <tr data-search="eligibility — step a (perinatal) apgar ≤ 5 at 10 min or cord ph < 7.0 or be ≤ –12 or continued vent at 10 min"><td>Eligibility — Step A (perinatal)</td><td>Apgar ≤ 5 at 10 min OR cord pH < 7.0 OR BE ≤ –12 OR continued vent at 10 min</td></tr>
+        <tr data-search="eligibility — step b (encephalopathy) moderate–severe sarnat (stage 2 or 3) or aeeg abnormal"><td>Eligibility — Step B (encephalopathy)</td><td>Moderate–severe Sarnat (Stage 2 or 3) OR aEEG abnormal</td></tr>
+        <tr data-search="rewarming rate ≤ 0.5 °c/hour"><td>Rewarming rate</td><td>≤ 0.5 °C/hour</td></tr>
+        <tr data-search="first-line seizure rx phenobarbital 20 mg/kg iv"><td>First-line seizure Rx</td><td>Phenobarbital 20 mg/kg IV</td></tr>
+        <tr data-search="mri optimal timing day 4–10 of life (dwi peak)"><td>MRI optimal timing</td><td>Day 4–10 of life (DWI peak)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="table-card" id="t5">
+  <div class="table-header" onclick="this.parentElement.classList.toggle('collapsed')">
+    <h2>🚨 Post-Cardiac-Arrest TTM (Pediatric, THAPCA)</h2><span class="count">6 rows</span>
+  </div>
+  <div class="table-body">
+    <table>
+      <thead><tr><th>Parameter</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr data-search="target temperature 33 °c or 36.8 °c × 48 hours (no significant difference per thapca)"><td>Target temperature</td><td>33 °C OR 36.8 °C × 48 hours (no significant difference per THAPCA)</td></tr>
+        <tr data-search="followed by strict normothermia × 5 days total"><td>Followed by</td><td>Strict normothermia × 5 days total</td></tr>
+        <tr data-search="avoid temperature > 37.5 °c — fever worsens outcome"><td>Avoid</td><td>Temperature > 37.5 °C — fever worsens outcome</td></tr>
+        <tr data-search="prognostication off sedation ≥ 72 hours, normothermic, no confounders"><td>Prognostication off sedation</td><td>≥ 72 hours, normothermic, no confounders</td></tr>
+        <tr data-search="nse in pediatrics not well validated as standalone marker"><td>NSE in pediatrics</td><td>Not well validated as standalone marker</td></tr>
+        <tr data-search="bilateral absent n20 sseps highly specific for poor outcome when confounders excluded"><td>Bilateral absent N20 SSEPs</td><td>Highly specific for poor outcome when confounders excluded</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="table-card" id="t6">
+  <div class="table-header" onclick="this.parentElement.classList.toggle('collapsed')">
+    <h2>💊 Sedatives & Paralytics — PICU</h2><span class="count">9 rows</span>
+  </div>
+  <div class="table-body">
+    <table>
+      <thead><tr><th>Drug</th><th>Bolus</th><th>Infusion</th><th>Watch</th></tr></thead>
+      <tbody>
+        <tr data-search="midazolam 0.1 mg/kg 0.05–0.4 mg/kg/h tolerance, withdrawal, deliriogenic"><td>Midazolam</td><td>0.1 mg/kg</td><td>0.05–0.4 mg/kg/h</td><td>Tolerance, withdrawal, deliriogenic</td></tr>
+        <tr data-search="lorazepam 0.05–0.1 mg/kg — propylene glycol toxicity at high doses"><td>Lorazepam</td><td>0.05–0.1 mg/kg</td><td>—</td><td>Propylene glycol toxicity at high doses</td></tr>
+        <tr data-search="propofol (procedure) 1–2 mg/kg avoid prolonged > 4 mg/kg/h × > 48 h (pris) bradycardia, hypotension; pris in children"><td>Propofol (procedure)</td><td>1–2 mg/kg</td><td>Avoid prolonged > 4 mg/kg/h × > 48 h (PRIS)</td><td>Bradycardia, hypotension; PRIS in children</td></tr>
+        <tr data-search="dexmedetomidine 0.5–1 µg/kg over 10 min 0.2–1 µg/kg/h bradycardia, hypotension; less delirium"><td>Dexmedetomidine</td><td>0.5–1 µg/kg over 10 min</td><td>0.2–1 µg/kg/h</td><td>Bradycardia, hypotension; less delirium</td></tr>
+        <tr data-search="ketamine 1–2 mg/kg iv 0.5–2 mg/kg/h bronchodilator; preserves bp; emergence reaction"><td>Ketamine</td><td>1–2 mg/kg IV</td><td>0.5–2 mg/kg/h</td><td>Bronchodilator; preserves BP; emergence reaction</td></tr>
+        <tr data-search="fentanyl 1–2 µg/kg 1–5 µg/kg/h chest wall rigidity; tolerance"><td>Fentanyl</td><td>1–2 µg/kg</td><td>1–5 µg/kg/h</td><td>Chest wall rigidity; tolerance</td></tr>
+        <tr data-search="morphine 0.05–0.1 mg/kg 10–40 µg/kg/h histamine release"><td>Morphine</td><td>0.05–0.1 mg/kg</td><td>10–40 µg/kg/h</td><td>Histamine release</td></tr>
+        <tr data-search="rocuronium 1 mg/kg (rsi 1.2 mg/kg) 10 µg/kg/min reverse with sugammadex"><td>Rocuronium</td><td>1 mg/kg (RSI 1.2 mg/kg)</td><td>10 µg/kg/min</td><td>Reverse with sugammadex</td></tr>
+        <tr data-search="cisatracurium 0.1–0.2 mg/kg 1–3 µg/kg/min hofmann elimination — safe in renal/hepatic failure"><td>Cisatracurium</td><td>0.1–0.2 mg/kg</td><td>1–3 µg/kg/min</td><td>Hofmann elimination — safe in renal/hepatic failure</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="table-card" id="t7">
+  <div class="table-header" onclick="this.parentElement.classList.toggle('collapsed')">
+    <h2>❤️ Vasoactive Drugs</h2><span class="count">11 rows</span>
+  </div>
+  <div class="table-body">
+    <table>
+      <thead><tr><th>Drug</th><th>Dose range</th><th>Primary effect</th><th>Use</th></tr></thead>
+      <tbody>
+        <tr data-search="epinephrine 0.05–1 µg/kg/min β1 + β2 + α (dose-dependent) anaphylaxis, cardiac arrest, refractory shock"><td>Epinephrine</td><td>0.05–1 µg/kg/min</td><td>β1 + β2 + α (dose-dependent)</td><td>Anaphylaxis, cardiac arrest, refractory shock</td></tr>
+        <tr data-search="norepinephrine 0.05–1 µg/kg/min α1 (β1 at higher dose) first-line vasopressor; warm shock, neurogenic shock"><td>Norepinephrine</td><td>0.05–1 µg/kg/min</td><td>α1 (β1 at higher dose)</td><td>First-line vasopressor; warm shock, neurogenic shock</td></tr>
+        <tr data-search="dopamine 5–20 µg/kg/min dose-dependent (d > β > α) pediatric shock (less preferred than ne/epi)"><td>Dopamine</td><td>5–20 µg/kg/min</td><td>Dose-dependent (D > β > α)</td><td>Pediatric shock (less preferred than NE/epi)</td></tr>
+        <tr data-search="dobutamine 2–20 µg/kg/min β1  cardiogenic shock, low co"><td>Dobutamine</td><td>2–20 µg/kg/min</td><td>β1 </td><td>Cardiogenic shock, low CO</td></tr>
+        <tr data-search="milrinone load 50 µg/kg over 10 min, then 0.25–0.75 µg/kg/min pde3 inhibitor — inotropy + vasodilation cold shock, post-chd surgery"><td>Milrinone</td><td>Load 50 µg/kg over 10 min, then 0.25–0.75 µg/kg/min</td><td>PDE3 inhibitor — inotropy + vasodilation</td><td>Cold shock, post-CHD surgery</td></tr>
+        <tr data-search="vasopressin 0.0003–0.002 u/kg/min v1 receptor vasoplegic shock; refractory"><td>Vasopressin</td><td>0.0003–0.002 U/kg/min</td><td>V1 receptor</td><td>Vasoplegic shock; refractory</td></tr>
+        <tr data-search="phenylephrine 0.1–2 µg/kg/min pure α1 use with caution — pure vasoconstriction"><td>Phenylephrine</td><td>0.1–2 µg/kg/min</td><td>Pure α1</td><td>Use with caution — pure vasoconstriction</td></tr>
+        <tr data-search="esmolol 100–500 µg/kg load, 25–300 µg/kg/min β1-selective tachyarrhythmias"><td>Esmolol</td><td>100–500 µg/kg load, 25–300 µg/kg/min</td><td>β1-selective</td><td>Tachyarrhythmias</td></tr>
+        <tr data-search="nicardipine 0.5–5 µg/kg/min ccb — arterial vasodilation pediatric hypertensive emergency"><td>Nicardipine</td><td>0.5–5 µg/kg/min</td><td>CCB — arterial vasodilation</td><td>Pediatric hypertensive emergency</td></tr>
+        <tr data-search="labetalol 0.2–1 mg/kg bolus, 0.4–3 mg/kg/h α + β block (7:1) hypertensive crisis"><td>Labetalol</td><td>0.2–1 mg/kg bolus, 0.4–3 mg/kg/h</td><td>α + β block (7:1)</td><td>Hypertensive crisis</td></tr>
+        <tr data-search="nitroprusside 0.5–10 µg/kg/min arterial + venous dilation cyanide toxicity at high doses"><td>Nitroprusside</td><td>0.5–10 µg/kg/min</td><td>Arterial + venous dilation</td><td>Cyanide toxicity at high doses</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="table-card" id="t8">
+  <div class="table-header" onclick="this.parentElement.classList.toggle('collapsed')">
+    <h2>🩺 Empiric CNS Infection Antibiotics</h2><span class="count">12 rows</span>
+  </div>
+  <div class="table-body">
+    <table>
+      <thead><tr><th>Population</th><th>Empiric regimen</th><th>Duration</th></tr></thead>
+      <tbody>
+        <tr data-search="neonate < 1 month ampicillin + cefotaxime/ceftazidime + gentamicin 14–21 d"><td>Neonate < 1 month</td><td>Ampicillin + cefotaxime/ceftazidime + gentamicin</td><td>14–21 d</td></tr>
+        <tr data-search="infant 1–3 months ampicillin + ceftriaxone/cefotaxime 10–14 d"><td>Infant 1–3 months</td><td>Ampicillin + ceftriaxone/cefotaxime</td><td>10–14 d</td></tr>
+        <tr data-search="child > 3 months — bacterial meningitis ceftriaxone 100 mg/kg/day + vancomycin (pcn-resistant pneumococcus) 10–14 d"><td>Child > 3 months — bacterial meningitis</td><td>Ceftriaxone 100 mg/kg/day + vancomycin (PCN-resistant pneumococcus)</td><td>10–14 d</td></tr>
+        <tr data-search="hsv encephalitis < 12 y acyclovir 15 mg/kg q8h 14–21 d"><td>HSV encephalitis < 12 y</td><td>Acyclovir 15 mg/kg q8h</td><td>14–21 d</td></tr>
+        <tr data-search="hsv encephalitis ≥ 12 y acyclovir 10 mg/kg q8h 14–21 d"><td>HSV encephalitis ≥ 12 y</td><td>Acyclovir 10 mg/kg q8h</td><td>14–21 d</td></tr>
+        <tr data-search="brain abscess ceftriaxone + metronidazole (+ vancomycin if mrsa) 6–8 weeks iv"><td>Brain abscess</td><td>Ceftriaxone + metronidazole (+ vancomycin if MRSA)</td><td>6–8 weeks IV</td></tr>
+        <tr data-search="subdural empyema vancomycin + ceftriaxone + metronidazole + neurosurgical drainage 4–6 weeks"><td>Subdural empyema</td><td>Vancomycin + ceftriaxone + metronidazole + neurosurgical drainage</td><td>4–6 weeks</td></tr>
+        <tr data-search="tbm ripe + dexamethasone 0.4 mg/kg/day 9–12 months"><td>TBM</td><td>RIPE + dexamethasone 0.4 mg/kg/day</td><td>9–12 months</td></tr>
+        <tr data-search="cryptococcal induction liposomal amb + flucytosine ≥ 2 weeks → fluconazole consolidation 8 weeks"><td>Cryptococcal induction</td><td>Liposomal AmB + flucytosine</td><td>≥ 2 weeks → fluconazole consolidation 8 weeks</td></tr>
+        <tr data-search="toxoplasma pyrimethamine + sulfadiazine + leucovorin 6 weeks then suppressive"><td>Toxoplasma</td><td>Pyrimethamine + sulfadiazine + leucovorin</td><td>6 weeks then suppressive</td></tr>
+        <tr data-search="cerebral aspergillosis voriconazole iv (tdm trough 1–5.5) long-term"><td>Cerebral aspergillosis</td><td>Voriconazole IV (TDM trough 1–5.5)</td><td>Long-term</td></tr>
+        <tr data-search="mucormycosis liposomal amphotericin b 5–10 mg/kg/day + surgical debridement long-term"><td>Mucormycosis</td><td>Liposomal amphotericin B 5–10 mg/kg/day + surgical debridement</td><td>Long-term</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="table-card" id="t9">
+  <div class="table-header" onclick="this.parentElement.classList.toggle('collapsed')">
+    <h2>⚗️ Antidotes Quick-Reference</h2><span class="count">24 rows</span>
+  </div>
+  <div class="table-body">
+    <table>
+      <thead><tr><th>Toxin</th><th>Antidote</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr data-search="acetaminophen n-acetylcysteine 150 mg/kg over 1 h → 50 mg/kg over 4 h → 100 mg/kg over 16 h"><td>Acetaminophen</td><td>N-acetylcysteine</td><td>150 mg/kg over 1 h → 50 mg/kg over 4 h → 100 mg/kg over 16 h</td></tr>
+        <tr data-search="opioid naloxone 0.01–0.1 mg/kg iv may need infusion for long-acting (methadone)"><td>Opioid</td><td>Naloxone 0.01–0.1 mg/kg IV</td><td>May need infusion for long-acting (methadone)</td></tr>
+        <tr data-search="benzodiazepine flumazenil 0.01 mg/kg avoid in mixed od (tca, seizure risk)"><td>Benzodiazepine</td><td>Flumazenil 0.01 mg/kg</td><td>AVOID in mixed OD (TCA, seizure risk)</td></tr>
+        <tr data-search="tca sodium bicarbonate (qrs > 100 ms) target serum ph 7.45–7.55; avoid phenytoin"><td>TCA</td><td>Sodium bicarbonate (QRS > 100 ms)</td><td>Target serum pH 7.45–7.55; AVOID phenytoin</td></tr>
+        <tr data-search="beta-blocker glucagon 5 mg iv + high-dose insulin euglycaemia insulin 1 u/kg bolus then 0.5–1 u/kg/h + d10/d20"><td>Beta-blocker</td><td>Glucagon 5 mg IV + high-dose insulin euglycaemia</td><td>Insulin 1 U/kg bolus then 0.5–1 U/kg/h + D10/D20</td></tr>
+        <tr data-search="calcium channel blocker calcium + high-dose insulin euglycaemia + lipid emulsion may need pacing"><td>Calcium channel blocker</td><td>Calcium + high-dose insulin euglycaemia + lipid emulsion</td><td>May need pacing</td></tr>
+        <tr data-search="cyanide (fire victim) hydroxocobalamin 70 mg/kg iv safer than nitrites in co co-poisoning"><td>Cyanide (fire victim)</td><td>Hydroxocobalamin 70 mg/kg IV</td><td>Safer than nitrites in CO co-poisoning</td></tr>
+        <tr data-search="carbon monoxide 100% o₂ → hbo if criteria met cohb t½: ra 5 h; 100% o₂ 80 min; hbo 20 min"><td>Carbon monoxide</td><td>100% O₂ → HBO if criteria met</td><td>COHb t½: RA 5 h; 100% O₂ 80 min; HBO 20 min</td></tr>
+        <tr data-search="methaemoglobinaemia methylene blue 1–2 mg/kg iv contraindicated in g6pd deficiency"><td>Methaemoglobinaemia</td><td>Methylene blue 1–2 mg/kg IV</td><td>Contraindicated in G6PD deficiency</td></tr>
+        <tr data-search="methanol / ethylene glycol fomepizole 15 mg/kg load, 10 mg/kg q12h + hd for severe; folinic acid for methanol"><td>Methanol / ethylene glycol</td><td>Fomepizole 15 mg/kg load, 10 mg/kg q12h</td><td>+ HD for severe; folinic acid for methanol</td></tr>
+        <tr data-search="organophosphate atropine (high-dose, doubled q5 min) + pralidoxime 25–50 mg/kg aggressive — until secretions dry"><td>Organophosphate</td><td>Atropine (high-dose, doubled q5 min) + pralidoxime 25–50 mg/kg</td><td>Aggressive — until secretions dry</td></tr>
+        <tr data-search="salicylate nahco₃ alkalinisation; hd for level > 100 mg/dl target serum ph ≥ 7.45, urine ph ≥ 7.5"><td>Salicylate</td><td>NaHCO₃ alkalinisation; HD for level > 100 mg/dL</td><td>Target serum pH ≥ 7.45, urine pH ≥ 7.5</td></tr>
+        <tr data-search="lead (severe) dimercaprol (bal) im → cana₂edta iv 4 h later 4-hour rule — don't reverse"><td>Lead (severe)</td><td>Dimercaprol (BAL) IM → CaNa₂EDTA IV 4 h later</td><td>4-hour rule — don't reverse</td></tr>
+        <tr data-search="iron deferoxamine 15 mg/kg/h iv urine becomes 'vin-rose' colour"><td>Iron</td><td>Deferoxamine 15 mg/kg/h IV</td><td>Urine becomes 'vin-rose' colour</td></tr>
+        <tr data-search="lithium hd if level > 4 meq/l or > 2.5 with severe symptoms watch post-dialysis rebound"><td>Lithium</td><td>HD if level > 4 mEq/L or > 2.5 with severe symptoms</td><td>Watch post-dialysis rebound</td></tr>
+        <tr data-search="botulism (infant) babybig iv (human) equine antitoxin for older patients"><td>Botulism (infant)</td><td>BabyBIG IV (human)</td><td>Equine antitoxin for older patients</td></tr>
+        <tr data-search="tetanus htig 3000–6000 iu im + metronidazole + supportive magnesium for autonomic storm"><td>Tetanus</td><td>HTIG 3000–6000 IU IM + metronidazole + supportive</td><td>Magnesium for autonomic storm</td></tr>
+        <tr data-search="nms dantrolene 1–2.5 mg/kg q6h + bromocriptine 2.5–5 mg po q6h stop neuroleptic; cooling"><td>NMS</td><td>Dantrolene 1–2.5 mg/kg q6h + bromocriptine 2.5–5 mg PO q6h</td><td>Stop neuroleptic; cooling</td></tr>
+        <tr data-search="serotonin syndrome cyproheptadine 4–8 mg po + benzodiazepines hyperreflexia/clonus distinguishes from nms"><td>Serotonin syndrome</td><td>Cyproheptadine 4–8 mg PO + benzodiazepines</td><td>Hyperreflexia/clonus distinguishes from NMS</td></tr>
+        <tr data-search="mh dantrolene 2.5 mg/kg iv q5–10 min stop volatile/succinylcholine; cooling; bicarbonate"><td>MH</td><td>Dantrolene 2.5 mg/kg IV q5–10 min</td><td>Stop volatile/succinylcholine; cooling; bicarbonate</td></tr>
+        <tr data-search="acute dystonic reaction benztropine 1–2 mg iv/im or diphenhydramine 1 mg/kg response in 5–20 min"><td>Acute dystonic reaction</td><td>Benztropine 1–2 mg IV/IM OR diphenhydramine 1 mg/kg</td><td>Response in 5–20 min</td></tr>
+        <tr data-search="acute intermittent porphyria hemin iv 3–4 mg/kg/day × 4 d + dextrose givosiran (sirna) for prevention"><td>Acute intermittent porphyria</td><td>Hemin IV 3–4 mg/kg/day × 4 d + dextrose</td><td>Givosiran (siRNA) for prevention</td></tr>
+        <tr data-search="ifosfamide encephalopathy methylene blue 1–2 mg/kg iv chloroacetaldehyde metabolite"><td>Ifosfamide encephalopathy</td><td>Methylene blue 1–2 mg/kg IV</td><td>Chloroacetaldehyde metabolite</td></tr>
+        <tr data-search="methotrexate (cns) leucovorin rescue; carboxypeptidase for high csf level dextromethorphan / aminophylline anecdotal"><td>Methotrexate (CNS)</td><td>Leucovorin rescue; carboxypeptidase for high CSF level</td><td>Dextromethorphan / aminophylline anecdotal</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="table-card" id="t10">
+  <div class="table-header" onclick="this.parentElement.classList.toggle('collapsed')">
+    <h2>🩸 Pediatric Stroke Thresholds</h2><span class="count">10 rows</span>
+  </div>
+  <div class="table-body">
+    <table>
+      <thead><tr><th>Parameter</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr data-search="tcd tamv abnormal (scd) ≥ 200 cm/s → chronic transfusion (stop trial)"><td>TCD TAMV abnormal (SCD)</td><td>≥ 200 cm/s → chronic transfusion (STOP trial)</td></tr>
+        <tr data-search="tcd tamv conditional 170–199 cm/s"><td>TCD TAMV conditional</td><td>170–199 cm/s</td></tr>
+        <tr data-search="tcd tamv normal < 170 cm/s"><td>TCD TAMV normal</td><td>< 170 cm/s</td></tr>
+        <tr data-search="scd stroke target hbs < 30% (chronic transfusion)"><td>SCD stroke target HbS</td><td>< 30% (chronic transfusion)</td></tr>
+        <tr data-search="scd stroke acute hb target ~ 10 g/dl via exchange transfusion"><td>SCD stroke acute Hb</td><td>Target ~ 10 g/dL via exchange transfusion</td></tr>
+        <tr data-search="aspirin secondary prevention 1–5 mg/kg/day"><td>Aspirin secondary prevention</td><td>1–5 mg/kg/day</td></tr>
+        <tr data-search="lmwh therapeutic (enoxaparin) 1 mg/kg q12h"><td>LMWH therapeutic (enoxaparin)</td><td>1 mg/kg q12h</td></tr>
+        <tr data-search="nimodipine post-sah 60 mg po q4h × 21 days"><td>Nimodipine post-SAH</td><td>60 mg PO q4h × 21 days</td></tr>
+        <tr data-search="vasospasm peak days 4–14 post-sah"><td>Vasospasm peak</td><td>Days 4–14 post-SAH</td></tr>
+        <tr data-search="melas l-arginine acute 0.5 g/kg iv over 30–60 min, then 0.5 g/kg/day × 3–5 d"><td>MELAS L-arginine acute</td><td>0.5 g/kg IV over 30–60 min, then 0.5 g/kg/day × 3–5 d</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="table-card" id="t11">
+  <div class="table-header" onclick="this.parentElement.classList.toggle('collapsed')">
+    <h2>🧬 Metabolic Decompensation Doses</h2><span class="count">11 rows</span>
+  </div>
+  <div class="table-body">
+    <table>
+      <thead><tr><th>Disorder/Need</th><th>Therapy</th><th>Dose</th></tr></thead>
+      <tbody>
+        <tr data-search="hyperammonaemia (ucd) sodium phenylacetate + benzoate (ammonul) 250 mg/kg load over 90 min, then maintenance"><td>Hyperammonaemia (UCD)</td><td>Sodium phenylacetate + benzoate (Ammonul)</td><td>250 mg/kg load over 90 min, then maintenance</td></tr>
+        <tr data-search="ucd adjunct arginine hcl 10% 200–600 mg/kg load"><td>UCD adjunct</td><td>Arginine HCl 10%</td><td>200–600 mg/kg load</td></tr>
+        <tr data-search="hd threshold for hyperammonaemia nh₃ > 250 µmol/l or rising preferred over crrt for speed"><td>HD threshold for hyperammonaemia</td><td>NH₃ > 250 µmol/L or rising</td><td>Preferred over CRRT for speed</td></tr>
+        <tr data-search="msud hd threshold leucine > 1500 µmol/l or encephalopathy aim leucine < 1000"><td>MSUD HD threshold</td><td>Leucine > 1500 µmol/L or encephalopathy</td><td>Aim leucine < 1000</td></tr>
+        <tr data-search="nkh treatment sodium benzoate 250–750 mg/kg/d + dextromethorphan (nmda antagonist)"><td>NKH treatment</td><td>Sodium benzoate 250–750 mg/kg/d</td><td>+ dextromethorphan (NMDA antagonist)</td></tr>
+        <tr data-search="pyridoxine-dependent epilepsy pyridoxine 100 mg iv trial (with eeg) maintenance 15–30 mg/kg/d oral"><td>Pyridoxine-dependent epilepsy</td><td>Pyridoxine 100 mg IV trial (with EEG)</td><td>Maintenance 15–30 mg/kg/d oral</td></tr>
+        <tr data-search="pnpo deficiency pyridoxal-5'-phosphate 30–50 mg/kg/d pyridoxine doesn't work"><td>PNPO deficiency</td><td>Pyridoxal-5'-phosphate 30–50 mg/kg/d</td><td>Pyridoxine doesn't work</td></tr>
+        <tr data-search="glutaric aciduria 1 acute stop protein; d10 + carnitine 100 mg/kg/d + riboflavin"><td>Glutaric aciduria 1 acute</td><td>Stop protein; D10 + carnitine 100 mg/kg/d</td><td>+ riboflavin</td></tr>
+        <tr data-search="wilson disease neuro trientine 20 mg/kg/d penicillamine risks paradoxical worsening"><td>Wilson disease neuro</td><td>Trientine 20 mg/kg/d</td><td>Penicillamine risks paradoxical worsening</td></tr>
+        <tr data-search="friedreich ataxia dmt omaveloxolone (skyclarys) 150 mg/d ≥ 16 y"><td>Friedreich ataxia DMT</td><td>Omaveloxolone (Skyclarys)</td><td>150 mg/d ≥ 16 y</td></tr>
+        <tr data-search="x-ald adrenal crisis iv hydrocortisone 50–100 mg/m² bolus then maintenance + isotonic saline + dextrose"><td>X-ALD adrenal crisis</td><td>IV hydrocortisone 50–100 mg/m² bolus</td><td>Then maintenance + isotonic saline + dextrose</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="table-card" id="t12">
+  <div class="table-header" onclick="this.parentElement.classList.toggle('collapsed')">
+    <h2>🌬️ PALICC-2 ARDS Stratification</h2><span class="count">10 rows</span>
+  </div>
+  <div class="table-body">
+    <table>
+      <thead><tr><th>Severity</th><th>Invasive (OI)</th><th>NIV (SpO₂/FiO₂ or PaO₂/FiO₂)</th></tr></thead>
+      <tbody>
+        <tr data-search="at risk — lower threshold"><td>At risk</td><td>—</td><td>Lower threshold</td></tr>
+        <tr data-search="mild pards (invasive) oi 4–8 —"><td>Mild PARDS (invasive)</td><td>OI 4–8</td><td>—</td></tr>
+        <tr data-search="moderate pards oi 8–16 —"><td>Moderate PARDS</td><td>OI 8–16</td><td>—</td></tr>
+        <tr data-search="severe pards oi ≥ 16 —"><td>Severe PARDS</td><td>OI ≥ 16</td><td>—</td></tr>
+        <tr data-search="pards (niv, cpap/bipap ≥ 5) — spo₂/fio₂ ≤ 264 or pao₂/fio₂ ≤ 300"><td>PARDS (NIV, CPAP/BiPAP ≥ 5)</td><td>—</td><td>SpO₂/FiO₂ ≤ 264 OR PaO₂/FiO₂ ≤ 300</td></tr>
+        <tr data-search="lung-protective vt 5–8 ml/kg ibw (3–6 in severe) —"><td>Lung-protective Vt</td><td>5–8 mL/kg IBW (3–6 in severe)</td><td>—</td></tr>
+        <tr data-search="plateau pressure target < 28 cmh₂o —"><td>Plateau pressure target</td><td>< 28 cmH₂O</td><td>—</td></tr>
+        <tr data-search="driving pressure target ≤ 15 cmh₂o —"><td>Driving pressure target</td><td>≤ 15 cmH₂O</td><td>—</td></tr>
+        <tr data-search="permissive hypercapnia ph > 7.20 ok —"><td>Permissive hypercapnia</td><td>pH > 7.20 OK</td><td>—</td></tr>
+        <tr data-search="permissive hypoxaemia spo₂ 88–92% ok (severe) —"><td>Permissive hypoxaemia</td><td>SpO₂ 88–92% OK (severe)</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="table-card" id="t13">
+  <div class="table-header" onclick="this.parentElement.classList.toggle('collapsed')">
+    <h2>📡 Multimodal Monitoring Thresholds</h2><span class="count">10 rows</span>
+  </div>
+  <div class="table-body">
+    <table>
+      <thead><tr><th>Parameter</th><th>Normal/Target</th><th>Concerning</th></tr></thead>
+      <tbody>
+        <tr data-search="icp < 20 mm hg > 20 mm hg = treat"><td>ICP</td><td>< 20 mm Hg</td><td>> 20 mm Hg = treat</td></tr>
+        <tr data-search="cpp (general) age-stratified minimum (40–60) below age threshold = treat"><td>CPP (general)</td><td>Age-stratified minimum (40–60)</td><td>Below age threshold = treat</td></tr>
+        <tr data-search="prx < 0 (intact autoregulation) > 0.3 = impaired"><td>PRx</td><td>< 0 (intact autoregulation)</td><td>> 0.3 = impaired</td></tr>
+        <tr data-search="pbto₂ 23–35 mm hg < 15 hypoxia; < 10 critical"><td>PbtO₂</td><td>23–35 mm Hg</td><td>< 15 hypoxia; < 10 critical</td></tr>
+        <tr data-search="microdialysis l/p < 25 > 40 ischaemia"><td>Microdialysis L/P</td><td>< 25</td><td>> 40 ischaemia</td></tr>
+        <tr data-search="microdialysis glucose > 1.5 mmol/l < 0.8 = energy failure"><td>Microdialysis glucose</td><td>> 1.5 mmol/L</td><td>< 0.8 = energy failure</td></tr>
+        <tr data-search="nirs rso₂ 60–80% < 50% or > 20% drop from baseline"><td>NIRS rSO₂</td><td>60–80%</td><td>< 50% or > 20% drop from baseline</td></tr>
+        <tr data-search="tcd mca velocity (post-sah) < 120 cm/s > 200 cm/s severe vasospasm"><td>TCD MCA velocity (post-SAH)</td><td>< 120 cm/s</td><td>> 200 cm/s severe vasospasm</td></tr>
+        <tr data-search="tcd lindegaard ratio < 3 > 3 distinguishes vasospasm from hyperaemia"><td>TCD Lindegaard ratio</td><td>< 3</td><td>> 3 distinguishes vasospasm from hyperaemia</td></tr>
+        <tr data-search="cerebral autoregulation testing prx, mx, orx all useful cppopt for individualised target"><td>Cerebral autoregulation testing</td><td>PRx, Mx, ORx all useful</td><td>CPPopt for individualised target</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="table-card" id="t14">
+  <div class="table-header" onclick="this.parentElement.classList.toggle('collapsed')">
+    <h2>💉 Diabetic Ketoacidosis (Pediatric)</h2><span class="count">10 rows</span>
+  </div>
+  <div class="table-body">
+    <table>
+      <thead><tr><th>Parameter</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr data-search="diagnosis hyperglycaemia > 11 mmol/l + venous ph < 7.30 or hco₃ < 18 + ketosis"><td>Diagnosis</td><td>Hyperglycaemia > 11 mmol/L + venous pH < 7.30 OR HCO₃ < 18 + ketosis</td></tr>
+        <tr data-search="severity — mild ph 7.20–7.30, hco₃ 10–18"><td>Severity — mild</td><td>pH 7.20–7.30, HCO₃ 10–18</td></tr>
+        <tr data-search="severity — moderate ph 7.10–7.20, hco₃ 5–10"><td>Severity — moderate</td><td>pH 7.10–7.20, HCO₃ 5–10</td></tr>
+        <tr data-search="severity — severe ph < 7.10, hco₃ < 5"><td>Severity — severe</td><td>pH < 7.10, HCO₃ < 5</td></tr>
+        <tr data-search="fluid bolus 10 ml/kg over 30–60 min (cautious — cerebral oedema risk)"><td>Fluid bolus</td><td>10 mL/kg over 30–60 min (cautious — cerebral oedema risk)</td></tr>
+        <tr data-search="insulin start after initial bolus (avoid iv insulin bolus); 0.05–0.1 u/kg/h infusion"><td>Insulin start</td><td>AFTER initial bolus (avoid IV insulin bolus); 0.05–0.1 U/kg/h infusion</td></tr>
+        <tr data-search="add dextrose when glucose drops to 14–17 mmol/l"><td>Add dextrose when</td><td>Glucose drops to 14–17 mmol/L</td></tr>
+        <tr data-search="maintenance fluid 1.5× maintenance with 0.45–0.9% nacl + k replacement"><td>Maintenance fluid</td><td>1.5× maintenance with 0.45–0.9% NaCl + K replacement</td></tr>
+        <tr data-search="cerebral oedema treatment mannitol 0.5–1 g/kg or 3% saline 3–5 ml/kg; hob up; intubation if needed"><td>Cerebral oedema treatment</td><td>Mannitol 0.5–1 g/kg or 3% saline 3–5 mL/kg; HOB up; intubation if needed</td></tr>
+        <tr data-search="cerebral oedema risk factors young age, severe acidosis, high bun, rapid na drop, iv insulin bolus, hco₃ use"><td>Cerebral oedema risk factors</td><td>Young age, severe acidosis, high BUN, rapid Na drop, IV insulin bolus, HCO₃ use</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="table-card" id="t15">
+  <div class="table-header" onclick="this.parentElement.classList.toggle('collapsed')">
+    <h2>🧪 Lab Toxicity & Dialysis Thresholds</h2><span class="count">13 rows</span>
+  </div>
+  <div class="table-body">
+    <table>
+      <thead><tr><th>Substance</th><th>Toxic level</th><th>HD/CRRT indication</th></tr></thead>
+      <tbody>
+        <tr data-search="salicylate (acute) > 35 mg/dl = toxic > 100 mg/dl or severe acidosis or ams or pulm/cerebral oedema"><td>Salicylate (acute)</td><td>> 35 mg/dL = toxic</td><td>> 100 mg/dL OR severe acidosis OR AMS OR pulm/cerebral oedema</td></tr>
+        <tr data-search="salicylate (chronic) > 25–35 mg/dl > 60 mg/dl with symptoms"><td>Salicylate (chronic)</td><td>> 25–35 mg/dL</td><td>> 60 mg/dL with symptoms</td></tr>
+        <tr data-search="lithium toxic > 1.5; severe > 3.5 meq/l > 4 or > 2.5 with severe symptoms"><td>Lithium</td><td>Toxic > 1.5; severe > 3.5 mEq/L</td><td>> 4 OR > 2.5 with severe symptoms</td></tr>
+        <tr data-search="methanol > 20 mg/dl toxic level or severe acidosis"><td>Methanol</td><td>> 20 mg/dL</td><td>Toxic level or severe acidosis</td></tr>
+        <tr data-search="ethylene glycol > 25 mg/dl toxic level or severe acidosis"><td>Ethylene glycol</td><td>> 25 mg/dL</td><td>Toxic level or severe acidosis</td></tr>
+        <tr data-search="valproate therapeutic 50–100; toxic > 150 µg/ml severe hyperammonaemia, ams"><td>Valproate</td><td>Therapeutic 50–100; toxic > 150 µg/mL</td><td>Severe hyperammonaemia, AMS</td></tr>
+        <tr data-search="carbamazepine therapeutic 4–12; toxic > 20 µg/ml > 40 µg/ml with severe toxicity"><td>Carbamazepine</td><td>Therapeutic 4–12; toxic > 20 µg/mL</td><td>> 40 µg/mL with severe toxicity</td></tr>
+        <tr data-search="theophylline therapeutic 10–20; toxic > 30 µg/ml severe toxicity or seizures"><td>Theophylline</td><td>Therapeutic 10–20; toxic > 30 µg/mL</td><td>Severe toxicity or seizures</td></tr>
+        <tr data-search="ammonia (neonate) > 100 µmol/l = abnormal > 250 µmol/l or rising despite scavengers"><td>Ammonia (neonate)</td><td>> 100 µmol/L = abnormal</td><td>> 250 µmol/L or rising despite scavengers</td></tr>
+        <tr data-search="leucine (msud) normal < 200 µmol/l > 1500 or encephalopathy"><td>Leucine (MSUD)</td><td>Normal < 200 µmol/L</td><td>> 1500 OR encephalopathy</td></tr>
+        <tr data-search="phenytoin therapeutic 10–20; toxic > 30 mg/l severe toxicity (rare)"><td>Phenytoin</td><td>Therapeutic 10–20; toxic > 30 mg/L</td><td>Severe toxicity (rare)</td></tr>
+        <tr data-search="cohb normal < 5% hbo indications: loc, seizure, ischaemia, > 25%"><td>COHb</td><td>Normal < 5%</td><td>HBO indications: LOC, seizure, ischaemia, > 25%</td></tr>
+        <tr data-search="methb normal < 2% methylene blue if symptomatic > 20% or any > 30%"><td>MetHb</td><td>Normal < 2%</td><td>Methylene blue if symptomatic > 20% OR any > 30%</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="table-card" id="t16">
+  <div class="table-header" onclick="this.parentElement.classList.toggle('collapsed')">
+    <h2>🔬 Diagnostic Criteria — Quick Reference</h2><span class="count">18 rows</span>
+  </div>
+  <div class="table-body">
+    <table>
+      <thead><tr><th>Disorder</th><th>Criteria</th></tr></thead>
+      <tbody>
+        <tr data-search="anti-nmdar encephalitis (probable, graus 2016) ≥ 4 of 6: psychiatric/behavioural, speech, seizures, dyskinesias, decreased loc, autonomic + 1 of (eeg abnormal or csf inflammatory)"><td>Anti-NMDAR encephalitis (probable, Graus 2016)</td><td>≥ 4 of 6: psychiatric/behavioural, speech, seizures, dyskinesias, decreased LOC, autonomic + 1 of (EEG abnormal OR CSF inflammatory)</td></tr>
+        <tr data-search="anti-nmdar (definite) probable plus positive csf igg anti-glun1"><td>Anti-NMDAR (definite)</td><td>Probable PLUS positive CSF IgG anti-GluN1</td></tr>
+        <tr data-search="nmosd aqp4+ core feature (on / myelitis / area postrema / brainstem / diencephalic / cerebral) + aqp4-igg positive"><td>NMOSD AQP4+</td><td>Core feature (ON / myelitis / area postrema / brainstem / diencephalic / cerebral) + AQP4-IgG positive</td></tr>
+        <tr data-search="mogad (2023 consensus) mog-igg cell-based assay positive ≥ 1:160 + compatible clinical/radiologic event + exclude alternatives"><td>MOGAD (2023 consensus)</td><td>MOG-IgG cell-based assay positive ≥ 1:160 + compatible clinical/radiologic event + exclude alternatives</td></tr>
+        <tr data-search="adem (ipmssg 2013) first polyfocal demyelinating event + encephalopathy + no new findings ≥ 3 months + compatible mri"><td>ADEM (IPMSSG 2013)</td><td>First polyfocal demyelinating event + encephalopathy + no new findings ≥ 3 months + compatible MRI</td></tr>
+        <tr data-search="brain death (pediatric) coma + absent brainstem reflexes + absent motor + positive apnoea + observation period (12/24 h) × 2 exams"><td>Brain death (pediatric)</td><td>Coma + absent brainstem reflexes + absent motor + positive apnoea + observation period (12/24 h) × 2 exams</td></tr>
+        <tr data-search="west syndrome infantile spasms + hypsarrhythmia + developmental arrest"><td>West syndrome</td><td>Infantile spasms + hypsarrhythmia + developmental arrest</td></tr>
+        <tr data-search="lgs multiple seizure types + slow spike-wave 1.5–2.5 hz + cognitive impairment"><td>LGS</td><td>Multiple seizure types + slow spike-wave 1.5–2.5 Hz + cognitive impairment</td></tr>
+        <tr data-search="dravet (clinical) onset 4–12 months prolonged febrile hemiclonic + afebrile multiple types + scn1a often positive"><td>Dravet (clinical)</td><td>Onset 4–12 months prolonged febrile hemiclonic + afebrile multiple types + SCN1A often positive</td></tr>
+        <tr data-search="iih (modified dandy / friedman) symptoms/signs of raised icp only; normal csf; normal imaging; opening pressure > 28 cmh₂o in non-sedated obese child"><td>IIH (modified Dandy / Friedman)</td><td>Symptoms/signs of raised ICP only; normal CSF; normal imaging; opening pressure > 28 cmH₂O in non-sedated obese child</td></tr>
+        <tr data-search="tsc (genetic) pathogenic tsc1 or tsc2 mutation"><td>TSC (genetic)</td><td>Pathogenic TSC1 or TSC2 mutation</td></tr>
+        <tr data-search="tsc (clinical) 2 major or 1 major + ≥ 2 minor"><td>TSC (clinical)</td><td>2 major OR 1 major + ≥ 2 minor</td></tr>
+        <tr data-search="dka hyperglycaemia > 11 + ph < 7.30 or hco₃ < 18 + ketosis"><td>DKA</td><td>Hyperglycaemia > 11 + pH < 7.30 OR HCO₃ < 18 + ketosis</td></tr>
+        <tr data-search="bmrc tbm staging i alert; ii lethargic + deficits; iii stupor/coma"><td>BMRC TBM staging</td><td>I alert; II lethargic + deficits; III stupor/coma</td></tr>
+        <tr data-search="west haven he 0 minimal; i trivial inattention; ii lethargy + asterixis; iii stupor; iv coma"><td>West Haven HE</td><td>0 minimal; I trivial inattention; II lethargy + asterixis; III stupor; IV coma</td></tr>
+        <tr data-search="king's college alf (paracetamol) ph < 7.30 or (inr > 6.5 + cr > 300 + grade iii/iv he)"><td>King's College ALF (paracetamol)</td><td>pH < 7.30 OR (INR > 6.5 + Cr > 300 + grade III/IV HE)</td></tr>
+        <tr data-search="catastrophic aps ≥ 3 organs + manifestations < 1 week + histology small-vessel + apl antibodies"><td>Catastrophic APS</td><td>≥ 3 organs + manifestations < 1 week + histology small-vessel + aPL antibodies</td></tr>
+        <tr data-search="ahus triad maha + thrombocytopenia + aki; stec-negative"><td>aHUS triad</td><td>MAHA + thrombocytopenia + AKI; STEC-negative</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="table-card" id="t17">
+  <div class="table-header" onclick="this.parentElement.classList.toggle('collapsed')">
+    <h2>🩸 Coagulation & Reversal</h2><span class="count">10 rows</span>
+  </div>
+  <div class="table-body">
+    <table>
+      <thead><tr><th>Need</th><th>Strategy</th></tr></thead>
+      <tbody>
+        <tr data-search="vitamin k (vkdb) iv 1–2 mg slow bolus; corrects in 6–12 h"><td>Vitamin K (VKDB)</td><td>IV 1–2 mg slow bolus; corrects in 6–12 h</td></tr>
+        <tr data-search="ffp 10–15 ml/kg for active bleeding"><td>FFP</td><td>10–15 mL/kg for active bleeding</td></tr>
+        <tr data-search="4-factor pcc life-threatening haemorrhage on warfarin"><td>4-factor PCC</td><td>Life-threatening haemorrhage on warfarin</td></tr>
+        <tr data-search="platelet transfusion threshold 10–20 (asymptomatic), 50 (procedure), 100 (cns surgery)"><td>Platelet transfusion</td><td>Threshold 10–20 (asymptomatic), 50 (procedure), 100 (CNS surgery)</td></tr>
+        <tr data-search="cryoprecipitate 1 unit/10 kg for low fibrinogen (< 100 mg/dl)"><td>Cryoprecipitate</td><td>1 unit/10 kg for low fibrinogen (< 100 mg/dL)</td></tr>
+        <tr data-search="heparin reversal protamine 1 mg per 100 u heparin (max 50 mg)"><td>Heparin reversal</td><td>Protamine 1 mg per 100 U heparin (max 50 mg)</td></tr>
+        <tr data-search="lmwh reversal protamine partial reversal; recombinant factor viia for severe"><td>LMWH reversal</td><td>Protamine partial reversal; recombinant factor VIIa for severe</td></tr>
+        <tr data-search="tpa-induced ich cryoprecipitate + tranexamic acid + platelets"><td>tPA-induced ICH</td><td>Cryoprecipitate + tranexamic acid + platelets</td></tr>
+        <tr data-search="doac reversal andexanet for fxa inhibitors; idarucizumab for dabigatran"><td>DOAC reversal</td><td>Andexanet for FXa inhibitors; idarucizumab for dabigatran</td></tr>
+        <tr data-search="sugammadex 16 mg/kg (rsi reversal); 4 mg/kg (deep blockade); 2 mg/kg (moderate)"><td>Sugammadex</td><td>16 mg/kg (RSI reversal); 4 mg/kg (deep blockade); 2 mg/kg (moderate)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="table-card" id="t18">
+  <div class="table-header" onclick="this.parentElement.classList.toggle('collapsed')">
+    <h2>🎯 Quick Numbers — Targets</h2><span class="count">15 rows</span>
+  </div>
+  <div class="table-body">
+    <table>
+      <thead><tr><th>Target</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr data-search="glucose (neuro icu) 4–10 mmol/l"><td>Glucose (neuro ICU)</td><td>4–10 mmol/L</td></tr>
+        <tr data-search="hb in tbi > 80–90 g/l"><td>Hb in TBI</td><td>> 80–90 g/L</td></tr>
+        <tr data-search="hb in scd stroke target ~ 10 g/dl via exchange (hbs < 30%)"><td>Hb in SCD stroke</td><td>Target ~ 10 g/dL via exchange (HbS < 30%)</td></tr>
+        <tr data-search="sodium (tbi tier 1) 145–155 mmol/l"><td>Sodium (TBI tier 1)</td><td>145–155 mmol/L</td></tr>
+        <tr data-search="sodium (tbi tier 2) up to 160 mmol/l"><td>Sodium (TBI tier 2)</td><td>Up to 160 mmol/L</td></tr>
+        <tr data-search="paco₂ (general) 35–45 mm hg"><td>PaCO₂ (general)</td><td>35–45 mm Hg</td></tr>
+        <tr data-search="paco₂ (tier-2 hyperventilation) 30–35 mm hg only briefly"><td>PaCO₂ (tier-2 hyperventilation)</td><td>30–35 mm Hg only briefly</td></tr>
+        <tr data-search="map (sci) ≥ 85–90 mm hg × 7 days"><td>MAP (SCI)</td><td>≥ 85–90 mm Hg × 7 days</td></tr>
+        <tr data-search="map (sah post-aneurysm) higher to support cpp, no fixed target"><td>MAP (SAH post-aneurysm)</td><td>Higher to support CPP, no fixed target</td></tr>
+        <tr data-search="sodium correction rate < 8–10 mmol/l per 24 h"><td>Sodium correction rate</td><td>< 8–10 mmol/L per 24 h</td></tr>
+        <tr data-search="refeeding starting calories 10–20 kcal/kg/day initially"><td>Refeeding starting calories</td><td>10–20 kcal/kg/day initially</td></tr>
+        <tr data-search="thiamine in wernicke 500 mg iv tid × 3 d, then 250 mg/d × 5 d"><td>Thiamine in Wernicke</td><td>500 mg IV TID × 3 d, then 250 mg/d × 5 d</td></tr>
+        <tr data-search="ivig dose (most uses) 2 g/kg over 2–5 days"><td>IVIG dose (most uses)</td><td>2 g/kg over 2–5 days</td></tr>
+        <tr data-search="methylprednisolone pulse 30 mg/kg/day × 3–5 days (max 1 g/day)"><td>Methylprednisolone pulse</td><td>30 mg/kg/day × 3–5 days (max 1 g/day)</td></tr>
+        <tr data-search="plasma exchange (typical) 5 sessions, every other day"><td>Plasma exchange (typical)</td><td>5 sessions, every other day</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</div>
+
+<footer class="footer">
+  PICU BoardIQ · Ultra-Short Memorization · 2026-05-15 · For RCPSC SEAP preparation
+</footer>
+
+<script>
+function toggleAll(expand) {
+  document.querySelectorAll('.table-card').forEach(t => t.classList.toggle('collapsed', !expand));
+}
+const sInput = document.getElementById('searchInput');
+let debounce;
+sInput.addEventListener('input', () => {
+  clearTimeout(debounce);
+  debounce = setTimeout(runSearch, 150);
+});
+function runSearch() {
+  const term = sInput.value.toLowerCase().trim();
+  document.querySelectorAll('tbody tr').forEach(r => {
+    const match = !term || (r.dataset.search || '').includes(term);
+    r.classList.toggle('hidden-row', !match);
+    r.querySelectorAll('td').forEach(td => {
+      if (match && term.length >= 2) {
+        const re = new RegExp(term.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'gi');
+        td.innerHTML = td.textContent.replace(re, m => `<mark>${m}</mark>`);
+      } else {
+        td.innerHTML = td.textContent;
+      }
+    });
+  });
+  document.querySelectorAll('.table-card').forEach(card => {
+    const anyVisible = !!card.querySelector('tbody tr:not(.hidden-row)');
+    card.style.display = anyVisible ? '' : 'none';
+  });
+}
+</script>
+</body>
+</html>
