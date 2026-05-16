@@ -2,7 +2,7 @@
 // Strategy: cache-first for app shell + HTML pages, network update in background
 // Bump CACHE_VERSION whenever you want browsers to refetch everything.
 
-const CACHE_VERSION = 'biq-v31-2026-05-15-bulletproof-networkfirst';
+const CACHE_VERSION = 'biq-v32-2026-05-15-staticcards';
 const RUNTIME_CACHE = 'biq-runtime-v1';
 
 // Pre-cache the core shell so the app launches fully offline after first visit.
