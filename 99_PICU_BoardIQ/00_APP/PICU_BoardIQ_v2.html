@@ -457,7 +457,12 @@ body.focus-mode .focus-exit{display:block;}
 .primary-card{position:relative;}
 .pc-modes{display:flex;gap:8px;margin-top:6px;max-height:0;overflow:hidden;opacity:0;transition:max-height .22s ease, opacity .22s ease, margin-top .22s ease;}
 .primary-card.modes-open .pc-modes{max-height:80px;opacity:1;margin-top:10px;}
-.pc-mode-btn{flex:1;padding:9px 10px;border-radius:8px;font-size:0.85em;font-weight:700;cursor:pointer;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-family:inherit;transition:all .15s;}
+/* Always-open mode buttons (used by static-link version of the cards) */
+.pc-modes.pc-modes-always{max-height:none;opacity:1;margin-top:12px;overflow:visible;}
+.primary-card.always-open{cursor:default;}
+.primary-card.always-open:hover{transform:translateY(-2px);}
+.pc-mode-btn{flex:1;padding:9px 10px;border-radius:8px;font-size:0.85em;font-weight:700;cursor:pointer;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-family:inherit;transition:all .15s;text-decoration:none;text-align:center;display:inline-block;}
+a.pc-mode-btn{text-decoration:none;}
 .pc-mode-btn.study{border-color:rgba(20,184,166,0.4);}
 .pc-mode-btn.study:hover{background:rgba(20,184,166,0.12);border-color:#14b8a6;color:#14b8a6;}
 .pc-mode-btn.exam{border-color:rgba(245,158,11,0.4);}
@@ -661,59 +666,64 @@ body.focus-mode .focus-exit{display:block;}
     <span class="count" id="cntFlag2">0</span>
   </div>
 
-  <!-- Primary grid: pre-rendered static cards so they ALWAYS show even if JS fails. -->
-  <!-- App.renderPrimaryGrid() will replace this with the dynamic version once JS runs. -->
+  <!-- Primary grid: cards with DIRECT links so they always work, no JS required. -->
   <div class="primary-grid" id="primaryGrid">
-    <div class="primary-card" id="pcard-saq" onclick="App.toggleCardModes('saq', event)">
+
+    <div class="primary-card always-open" id="pcard-saq">
       <div class="pc-label">SAQ</div>
       <h3>SAQ</h3>
       <div class="pc-desc">Structured short-answer questions with model answers</div>
-      <div class="pc-meta">300 questions · tap to choose mode</div>
-      <div class="pc-modes">
-        <button class="pc-mode-btn study" onclick="App.openPrimaryMode('saq','study',event)">Study Mode</button>
-        <button class="pc-mode-btn exam"  onclick="App.openPrimaryMode('saq','exam',event)">Timed Exam</button>
+      <div class="pc-meta">300 questions</div>
+      <div class="pc-modes pc-modes-always">
+        <a class="pc-mode-btn study" href="../03_SEAP_STYLE_QBANK/BIQ_NEURO_SAQ_Master_v1.html?mode=study">Study Mode</a>
+        <a class="pc-mode-btn exam"  href="../03_SEAP_STYLE_QBANK/BIQ_NEURO_SAQ_Master_v1.html?mode=exam">Timed Exam</a>
       </div>
     </div>
-    <div class="primary-card" id="pcard-mcq" onclick="App.toggleCardModes('mcq', event)">
+
+    <div class="primary-card always-open" id="pcard-mcq">
       <div class="pc-label">MCQ</div>
       <h3>MCQ</h3>
       <div class="pc-desc">Curated board-style MCQs · 5 options · multi-layered reasoning</div>
-      <div class="pc-meta">200 board MCQs · tap to choose mode</div>
-      <div class="pc-modes">
-        <button class="pc-mode-btn study" onclick="App.openPrimaryMode('mcq','study',event)">Study Mode</button>
-        <button class="pc-mode-btn exam"  onclick="App.openPrimaryMode('mcq','exam',event)">Timed Exam</button>
+      <div class="pc-meta">200 board MCQs</div>
+      <div class="pc-modes pc-modes-always">
+        <a class="pc-mode-btn study" href="../17_MCQ_BANK/BIQ_MCQ_UWorld_Style_v1.html?mode=study">Study Mode</a>
+        <a class="pc-mode-btn exam"  href="../17_MCQ_BANK/BIQ_MCQ_UWorld_Style_v1.html?mode=exam">Timed Exam</a>
       </div>
     </div>
-    <div class="primary-card" id="pcard-vignette" onclick="App.toggleCardModes('vignette', event)">
+
+    <div class="primary-card always-open" id="pcard-vignette">
       <div class="pc-label">VIGNETTE QUESTIONS</div>
       <h3>Vignette Questions</h3>
       <div class="pc-desc">Complex multi-stage clinical cases with graphs and reasoning</div>
-      <div class="pc-meta">300 cases · tap to choose mode</div>
-      <div class="pc-modes">
-        <button class="pc-mode-btn study" onclick="App.openPrimaryMode('vignette','study',event)">Study Mode</button>
-        <button class="pc-mode-btn exam"  onclick="App.openPrimaryMode('vignette','exam',event)">Timed Exam</button>
+      <div class="pc-meta">300 cases</div>
+      <div class="pc-modes pc-modes-always">
+        <a class="pc-mode-btn study" href="../04_CRITICAL_CASE_SIMULATIONS/BIQ_NEURO_Cases_Master_v1.html?mode=study">Study Mode</a>
+        <a class="pc-mode-btn exam"  href="../04_CRITICAL_CASE_SIMULATIONS/BIQ_NEURO_Cases_Master_v1.html?mode=exam">Timed Exam</a>
       </div>
     </div>
-    <div class="primary-card" id="pcard-recall" onclick="App.toggleCardModes('recall', event)">
+
+    <div class="primary-card always-open" id="pcard-recall">
       <div class="pc-label">RCPSC REAL RECALL</div>
       <h3>RCPSC Real Recall</h3>
       <div class="pc-desc">32 multi-layered RCPSC SEAP-style recall SAQs</div>
-      <div class="pc-meta">32 recall SAQs · tap to choose mode</div>
-      <div class="pc-modes">
-        <button class="pc-mode-btn study" onclick="App.openPrimaryMode('recall','study',event)">Open Recalls</button>
-        <button class="pc-mode-btn exam"  onclick="App.openPrimaryMode('recall','exam',event)">Timed Recall</button>
+      <div class="pc-meta">32 recall SAQs</div>
+      <div class="pc-modes pc-modes-always">
+        <a class="pc-mode-btn study" href="../16_RCPSC_REAL_RECALLS/BIQ_RCPSC_RealRecalls_v1.html?mode=study">Open Recalls</a>
+        <a class="pc-mode-btn exam"  href="../16_RCPSC_REAL_RECALLS/BIQ_RCPSC_RealRecalls_v1.html?mode=exam">Timed Recall</a>
       </div>
     </div>
-    <div class="primary-card" id="pcard-textbook" onclick="App.toggleCardModes('textbook', event)">
+
+    <div class="primary-card always-open" id="pcard-textbook">
       <div class="pc-label">CNS TEXTBOOK</div>
       <h3>CNS Textbook</h3>
       <div class="pc-desc">Rogers Chapters 53–68 · structured neuro-ICU theory</div>
-      <div class="pc-meta">16 chapters · tap to choose mode</div>
-      <div class="pc-modes">
-        <button class="pc-mode-btn study" onclick="App.openPrimaryMode('textbook','study',event)">Open Chapters</button>
-        <button class="pc-mode-btn exam"  onclick="App.openPrimaryMode('textbook','exam',event)">Quick MCQs</button>
+      <div class="pc-meta">16 chapters</div>
+      <div class="pc-modes pc-modes-always">
+        <a class="pc-mode-btn study" href="../../01_NEUROLOGY/Chapter_53_Electrodiagnostic_Techniques_Neuromuscular/NEURO_Ch53_StudyMode_v1.html">Open Chapters</a>
+        <a class="pc-mode-btn exam"  href="../17_MCQ_BANK/BIQ_MCQ_UWorld_Style_v1.html?mode=exam">Quick MCQs</a>
       </div>
     </div>
+
   </div>
 </section>
 
@@ -2027,6 +2037,4 @@ const App = {
       {n:56, t:"Developmental Neurobiology", z:true,  slug:"Developmental_Neurobiology_Neurophysiology"},
       {n:57, t:"Molecular Biology of Brain Injury", z:false, slug:"Molecular_Biology_of_Brain_Injury"},
       {n:58, t:"Evaluation of the Comatose Child", z:false, slug:"Evaluation_of_the_Comatose_Child"},
-      {n:59, t:"Neurologic Monitoring", z:true,  slug:"Neurologic_Monitoring"},
-      {n:60, t:"Neurologic Imaging", z:false, slug:"Neurologic_Imaging"},
-      {n:61, t:"Neurosurgical & Neuroradiologic CC", z:true,  slug:"Neurosurgical_and_Neurorad
+      {n:59, t:"Neurologic Monitoring", z:true,  slug:"Neurologic_Monit
