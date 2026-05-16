@@ -661,7 +661,60 @@ body.focus-mode .focus-exit{display:block;}
     <span class="count" id="cntFlag2">0</span>
   </div>
 
-  <div class="primary-grid" id="primaryGrid"></div>
+  <!-- Primary grid: pre-rendered static cards so they ALWAYS show even if JS fails. -->
+  <!-- App.renderPrimaryGrid() will replace this with the dynamic version once JS runs. -->
+  <div class="primary-grid" id="primaryGrid">
+    <div class="primary-card" id="pcard-saq" onclick="App.toggleCardModes('saq', event)">
+      <div class="pc-label">SAQ</div>
+      <h3>SAQ</h3>
+      <div class="pc-desc">Structured short-answer questions with model answers</div>
+      <div class="pc-meta">300 questions · tap to choose mode</div>
+      <div class="pc-modes">
+        <button class="pc-mode-btn study" onclick="App.openPrimaryMode('saq','study',event)">Study Mode</button>
+        <button class="pc-mode-btn exam"  onclick="App.openPrimaryMode('saq','exam',event)">Timed Exam</button>
+      </div>
+    </div>
+    <div class="primary-card" id="pcard-mcq" onclick="App.toggleCardModes('mcq', event)">
+      <div class="pc-label">MCQ</div>
+      <h3>MCQ</h3>
+      <div class="pc-desc">Curated board-style MCQs · 5 options · multi-layered reasoning</div>
+      <div class="pc-meta">200 board MCQs · tap to choose mode</div>
+      <div class="pc-modes">
+        <button class="pc-mode-btn study" onclick="App.openPrimaryMode('mcq','study',event)">Study Mode</button>
+        <button class="pc-mode-btn exam"  onclick="App.openPrimaryMode('mcq','exam',event)">Timed Exam</button>
+      </div>
+    </div>
+    <div class="primary-card" id="pcard-vignette" onclick="App.toggleCardModes('vignette', event)">
+      <div class="pc-label">VIGNETTE QUESTIONS</div>
+      <h3>Vignette Questions</h3>
+      <div class="pc-desc">Complex multi-stage clinical cases with graphs and reasoning</div>
+      <div class="pc-meta">300 cases · tap to choose mode</div>
+      <div class="pc-modes">
+        <button class="pc-mode-btn study" onclick="App.openPrimaryMode('vignette','study',event)">Study Mode</button>
+        <button class="pc-mode-btn exam"  onclick="App.openPrimaryMode('vignette','exam',event)">Timed Exam</button>
+      </div>
+    </div>
+    <div class="primary-card" id="pcard-recall" onclick="App.toggleCardModes('recall', event)">
+      <div class="pc-label">RCPSC REAL RECALL</div>
+      <h3>RCPSC Real Recall</h3>
+      <div class="pc-desc">32 multi-layered RCPSC SEAP-style recall SAQs</div>
+      <div class="pc-meta">32 recall SAQs · tap to choose mode</div>
+      <div class="pc-modes">
+        <button class="pc-mode-btn study" onclick="App.openPrimaryMode('recall','study',event)">Open Recalls</button>
+        <button class="pc-mode-btn exam"  onclick="App.openPrimaryMode('recall','exam',event)">Timed Recall</button>
+      </div>
+    </div>
+    <div class="primary-card" id="pcard-textbook" onclick="App.toggleCardModes('textbook', event)">
+      <div class="pc-label">CNS TEXTBOOK</div>
+      <h3>CNS Textbook</h3>
+      <div class="pc-desc">Rogers Chapters 53–68 · structured neuro-ICU theory</div>
+      <div class="pc-meta">16 chapters · tap to choose mode</div>
+      <div class="pc-modes">
+        <button class="pc-mode-btn study" onclick="App.openPrimaryMode('textbook','study',event)">Open Chapters</button>
+        <button class="pc-mode-btn exam"  onclick="App.openPrimaryMode('textbook','exam',event)">Quick MCQs</button>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- Customize Dashboard modal -->
@@ -1976,61 +2029,4 @@ const App = {
       {n:58, t:"Evaluation of the Comatose Child", z:false, slug:"Evaluation_of_the_Comatose_Child"},
       {n:59, t:"Neurologic Monitoring", z:true,  slug:"Neurologic_Monitoring"},
       {n:60, t:"Neurologic Imaging", z:false, slug:"Neurologic_Imaging"},
-      {n:61, t:"Neurosurgical & Neuroradiologic CC", z:true,  slug:"Neurosurgical_and_Neuroradiologic_Critical_Care"},
-      {n:62, t:"Head & Spinal Cord Trauma", z:true,  slug:"Head_and_Spinal_Cord_Trauma"},
-      {n:63, t:"Abusive Head Trauma", z:false, slug:"Abusive_Head_Trauma"},
-      {n:64, t:"Status Epilepticus", z:false, slug:"Status_Epilepticus"},
-      {n:65, t:"Cerebrovascular Disease & Stroke", z:true,  slug:"Cerebrovascular_Disease_and_Stroke"},
-      {n:66, t:"Hypoxic-Ischemic Encephalopathy", z:false, slug:"Hypoxic_Ischemic_Encephalopathy"},
-      {n:67, t:"Metabolic Encephalopathies", z:true,  slug:"Metabolic_Encephalopathies"},
-      {n:68, t:"Determination of Brain Death", z:true,  slug:"Determination_of_Brain_Death"}
-    ];
-    let html = '';
-    for (let k = 0; k < chapters.length; k++) {
-      const c = chapters[k];
-      const pad = c.n < 10 ? '0'+c.n : ''+c.n;
-      const folder = base + '/Chapter_'+pad+'_'+c.slug;
-      const studyHref = folder + '/NEURO_Ch'+pad+'_StudyMode_v1.html';
-      const examHref = folder + '/NEURO_Ch'+pad+'_ExamMode_v1.html';
-      const zimStudy = folder + '/NEURO_Ch'+pad+'_Zimmerman_study_v1.html';
-      const zimExam = folder + '/NEURO_Ch'+pad+'_Zimmerman_exam_v1.html';
-      const zimBadge = c.z ? '<span class="q-tag" style="background:var(--amber);color:var(--navy);">+ZIMMERMAN</span>' : '';
-      const zimLinks = c.z ?
-        '<a href="'+zimStudy+'" class="btn" style="padding:6px 10px;font-size:0.8em;color:var(--amber);border-color:var(--amber);">Zim Study</a>' +
-        '<a href="'+zimExam+'" class="btn" style="padding:6px 10px;font-size:0.8em;color:var(--amber);border-color:var(--amber);">Zim Exam</a>'
-        : '';
-      html += '<div class="tile-md">' +
-        '<div style="display:flex;justify-content:space-between;"><div class="tile-icon-wrap green"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 4h4v16H4zM10 4h4v16h-4zM16 5l4-1 3 14-4 1z"/></svg></div><span class="q-tag primary">Ch '+c.n+'</span></div>' +
-        '<div class="title">'+c.t+'</div>' +
-        '<div>'+zimBadge+'</div>' +
-        '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:auto;">' +
-        '<a href="'+studyHref+'" class="btn" style="padding:6px 12px;font-size:0.85em;color:var(--green);border-color:var(--green);">Study</a>' +
-        '<a href="'+examHref+'" class="btn" style="padding:6px 12px;font-size:0.85em;color:var(--coral);border-color:var(--coral);">Exam</a>' +
-        zimLinks +
-        '</div>' +
-        '</div>';
-    }
-    document.getElementById('chaptersContent').innerHTML = html;
-    this.showView('chapters');
-  },
-
-  // ===== SEARCH =====
-  bindSearch() {
-    const input = document.getElementById('searchInput');
-    let debounce;
-    input.addEventListener('input', () => {
-      clearTimeout(debounce);
-      debounce = setTimeout(() => this.runSearch(input.value), 180);
-    });
-  },
-
-  openSearch() {
-    document.getElementById('searchModal').classList.add('open');
-    document.getElementById('searchInput').focus();
-  },
-  closeSearch() {
-    document.getElementById('searchModal').classList.remove('open');
-  },
-  setSearchFilter(f) {
-    this.current.searchFilter = f;
-    document.querySelectorAll('[data-search-filter]').forEach(c => c.classList.toggle('active', c.dataset.searchFilter 
+      {n:61, t:"Neurosurgical & Neuroradiologic CC", z:true,  slug:"Neurosurgical_and_Neurorad
